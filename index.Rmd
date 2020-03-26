@@ -87,6 +87,6 @@ tmap_mode("plot")
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr','kableextra', 'rmarkdown','sf','ggplot2','tmap'
+  .packages(), 'bookdown', 'knitr','kableExtra', 'rmarkdown','sf','ggplot2','tmap'
 ), 'packages.bib')
 ```

@@ -44,7 +44,7 @@ DT::datatable(st_drivers() %>% arrange(name))
 
 Exemple de lecture d'une donnée au format `GeoPackage`: les données sur la Leucémie à New York disponibles dans le package `spData`^[Issues de Waller and Gotway (2004) Applied Spatial Statistics for Public Health Data.].
 
-```{r}
+```{r,eval=F}
 geo_fichier <- system.file("shapes/NY8_bna_utm18.gpkg", package = "spData")
 NY_leukemia <- st_read(dsn = geo_fichier)
 ```
