@@ -9,6 +9,7 @@ addons:
       - libgdal-dev
       - libxml2
       - cargo
+      - libv8-dev
 
 script:
 - Rscript -e 'bookdown::render_book("index.Rmd")'
