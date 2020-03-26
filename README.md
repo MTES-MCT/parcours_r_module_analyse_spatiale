@@ -2,10 +2,10 @@ Code source du module « Analyse spatiale » du [parcours de formation à R](htt
 
 Objectifs du module : 
 
-- Introduction aux données spatiales
+- introduction aux données spatiales ;
 
-- Lire et écrire des données spatiales
+- lire et écrire des données spatiales ;
 
-- Manipuler des donnés spatiales
+- manipuler des donnés spatiales ;
 
-- Créer des cartes
+- créer des cartes.
