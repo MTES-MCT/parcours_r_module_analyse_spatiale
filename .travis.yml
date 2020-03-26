@@ -11,6 +11,7 @@ addons:
       - cargo
       - libv8-dev
       - libjq-dev
+      - libprotobuf-dev
 
 script:
 - Rscript -e 'bookdown::render_book("index.Rmd")'
