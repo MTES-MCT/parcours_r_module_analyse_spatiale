@@ -1,0 +1,40 @@
+# (PART) A propos {-}
+
+# A propos de ce document {-}
+
+## Code source {-}
+
+Le code source de ce document se trouve à l'adresse suivante : https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale
+
+Il est généré par l’excellente extension [bookdown](https://bookdown.org/yihui/bookdown/) de [Yihui Xie](https://yihui.name/en/).
+
+## Inspiration {-}
+
+Ce document est largement inspiré des deux supports suivant : 
+
+- [Geocomputation with R](https://geocompr.robinlovelace.net/) de Robin Lovelace, Jakub Nowosad et Jannes Muenchow ;
+
+- le contenu du module [Datavisualisation : produire des graphiques, des cartes et des tableaux avec R](https://rawgit.com/MTES-MCT/parcours-r/master/Supports_formations/m5_valorisation_des_donnees/_book/index.html), de Murielle Lethrones et Maël THEULIERE, du parcours de formation à R du Ministère de la Transition écologique et solidaire et du Ministère de la Cohésion des territoires et des Relations avec les collectivités territoriales pour la partie rappel sur les dataviz et la réalisation de cartes.
+
+## Licence {-}
+
+Ce document est mise à disposition selon les termes de la [Licence Ouverte2.0](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf).
+
+<center>
+<a rel="license" href="https://www.etalab.gouv.fr/licence-ouverte-open-licence"><img alt="Licence Ouverte" style="border-width:0" src="https://www.etalab.gouv.fr/wp-content/uploads/2011/10/licence-ouverte-open-licence.gif" /></a><br />
+</center>
+
+
+
+## Session info {-}
+
+
+```{r,echo = F}
+devtools::session_info()$platform
+
+package <- devtools::session_info()$packages %>% as_tibble() %>% 
+  filter(attached == T,is_base == F,package != "COGiter") %>% 
+  select(package,ondiskversion,source)
+knitr::kable(package) %>% kableExtra::kable_styling()
+```
+
