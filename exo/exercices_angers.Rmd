@@ -1,0 +1,184 @@
+---
+title: "Intitulé et correction des exercices"
+author: "Maël THEULIERE"
+date: "15/07/2019"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Exercice 1 : exploitation des données DVF en API
+
+Le but de cet exercice va être d’exploiter les données DVF sur les transactions immobilières dans l’ancien et la carte des quartiers de Nantes pour obtenir un prix moyen des transactions par quartier. On va utiliser pour DVF l’API mise en place par Christian Quest.
+
+- Données DVF : http://api.cquest.org/dvf
+
+- Contour des quartiers de Nantes : https://data.nantesmetropole.fr/explore/dataset/244400404_quartiers-nantes/information/?disjunctive.nom
+
+On veut produire les infos suivantes par quartier et annee :
+
+- Volume de ventes
+- Pourcentage de maison dans les ventes
+- Prix moyen au m2 par type de bien
+
+## Activation des packages
+```{r}
+library(httr)
+library(jsonlite)
+library(sf)
+library(tidyverse)
+library(lubridate)
+```
+
+## Chargement des données
+
+### DVF
+
+On utilise l'API pour récupérer les données de Angers (code commune 49007)
+On ne garde que les données avec une géolocalisation valide, un prix et une surface renseignés.
+
+```{r}
+get_dvf <- GET("http://api.cquest.org/dvf?code_commune=49007")
+dvf_content <- content(get_dvf, "text")
+
+dvf_json <- fromJSON(dvf_content)$resultats %>%
+  filter(!is.na(lon), !is.na(lat), !is.na(valeur_fonciere), !is.na(surface_relle_bati))
+
+dvf <- st_as_sf(dvf_json,
+  coords = c("lon", "lat"),
+  crs = 4326
+)
+```
+
+### Récupération de la carte des quartiers
+
+```{r}
+# provient data.gouv.fr :https://www.data.gouv.fr/fr/datasets/limite-des-quartiers-de-la-ville-dangers-1/
+quartier_angers <- st_read(dsn = "extdata/quartier_angers/ccq_007.geojson") %>% 
+      select(nom_ccq) %>%
+  rename(quartier = nom_ccq)
+
+```
+
+## Datapréparation
+
+### Jointure spatiale pour récupérer les ventes par quartiers
+
+```{r}
+dvf_avec_quartier <- st_join(
+  dvf,
+  quartier_angers)
+```
+
+### Calculs
+
+#### Volume de ventes
+
+```{r}
+stat <- dvf_avec_quartier %>% 
+  st_drop_geometry() %>% 
+    mutate(
+    date_mutation = ymd(date_mutation),
+    annee_mutation = year(date_mutation)
+  )
+
+ventes <- stat %>% 
+    filter(
+    nature_mutation == "Vente",
+    type_local %in% c("Appartement", "Maison")
+  ) %>% 
+    group_by(quartier, type_local, annee_mutation) %>% 
+  tally()
+```
+
+#### Pourcentage de maisons dans les ventes
+
+```{r}
+pourcentage_maison <- ventes %>% 
+  pivot_wider(names_from = type_local,values_from = n) %>% 
+  mutate(pourcentage_maison = Maison*100/(Maison+Appartement))
+```
+
+#### Prix moyen au m2 par type de bien
+
+```{r}
+prix_m2_moyen <-  stat %>%
+  filter(
+    nature_mutation == "Vente",
+    type_local %in% c("Appartement", "Maison")
+  ) %>%
+  group_by(quartier, type_local, annee_mutation) %>%
+  summarise_at(vars(valeur_fonciere, surface_relle_bati), sum) %>% 
+  mutate(prix_m2=valeur_fonciere/surface_relle_bati)
+
+prix_m2_median <-  stat %>%
+  filter(
+    nature_mutation == "Vente",
+    type_local %in% c("Appartement", "Maison")
+  ) %>%
+  mutate(prix_m2=valeur_fonciere/surface_relle_bati) %>% 
+  group_by(quartier, type_local, annee_mutation) %>%
+  summarise_at(vars(prix_m2), median)
+
+```
+
+
+## Datavisualisaton
+
+### Integration de la couche geomatique
+
+```{r}
+ventes_geo <- quartier_angers %>% 
+  left_join(ventes)
+
+pourcentage_maison_geo <- quartier_angers %>% 
+  left_join(pourcentage_maison)
+prix_m2_moyen_geo <- quartier_angers %>% 
+  left_join(prix_m2_moyen)
+prix_m2_median_geo <- quartier_angers %>% 
+  left_join(prix_m2_median)
+```
+
+```{r}
+ggplot() +
+  geom_sf(
+    data = ventes_geo %>%
+      filter(annee_mutation == 2018,
+             type_local=="Maison"),
+    aes(fill = n)
+  )
+ggplot() +
+  geom_sf(
+    data = ventes_geo %>%
+      filter(annee_mutation == 2018,
+             type_local=="Appartement"),
+    aes(fill = n)
+  )
+ggplot() +
+  geom_sf(
+    data = pourcentage_maison_geo %>%
+      filter(annee_mutation == 2018),
+    aes(fill = pourcentage_maison)
+  )
+ggplot() +
+  geom_sf(
+    data = prix_m2_median_geo %>%
+      filter(annee_mutation == 2018,
+             type_local=="Appartement"),
+    aes(fill = prix_m2)
+  )
+ggplot() +
+  geom_sf(
+    data = prix_m2_median_geo %>%
+      filter(annee_mutation == 2018,
+             type_local=="Maison"),
+    aes(fill = prix_m2)
+  )
+
+```
+
