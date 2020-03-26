@@ -10,6 +10,7 @@ addons:
       - libxml2
       - cargo
       - libv8-dev
+      - libjq
 
 script:
 - Rscript -e 'bookdown::render_book("index.Rmd")'
