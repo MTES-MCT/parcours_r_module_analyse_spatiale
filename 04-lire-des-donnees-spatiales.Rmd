@@ -54,7 +54,7 @@ NY_leukemia <- st_read(dsn = geo_fichier)
 Ecrire des fichiers plats va se faire avec la fonction `st_write()`.
 
 ```{r,message = T,eval=F}
-st_write(obj = NY_leukemia, dsn = "extdata/NY_leukemia.gpkg")
+st_write(obj = NY_leukemia, dsn = "data/NY_leukemia.gpkg")
 ```
 
 Notez que si vous cherchez à exporter une nouvelle fois ce fichier, vous aurez un message d'erreur.
@@ -66,7 +66,7 @@ Pour pouvoir écraser ce fichier, vous avez deux options :
 ```{r,eval=F}
 st_write(
   obj = NY_leukemia,
-  dsn = "extdata/NY_leukemia.gpkg",
+  dsn = "data/NY_leukemia.gpkg",
   layer_options = "OVERWRITE=YES"
 )
 ```
@@ -136,7 +136,7 @@ La fonction `st_set_crs()` permet de définir le crs de notre objet.
 Exemple, nous allons lire les coordonnées géographiques des préfectures de région.
 
 ```{r,message = F}
-prefectures <- read_csv2("extdata/prefecture.csv")
+prefectures <- read_csv2("data/prefecture.csv")
 prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y")) %>%
   st_set_crs(2154)
 ```
