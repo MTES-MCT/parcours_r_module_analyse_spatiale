@@ -1,9 +1,5 @@
 language: R
-cache: 
-  packages
-  directories:
-  - $HOME/.local/share/renv
-  - $TRAVIS_BUILD_DIR/renv/library
+cache: packages
 
 pandoc_version: 2.3.1
 
