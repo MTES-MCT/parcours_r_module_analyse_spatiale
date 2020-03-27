@@ -1,6 +1,5 @@
 language: R
-cache: 
-  packages
+cache: packages
 
 pandoc_version: 2.3.1
 
