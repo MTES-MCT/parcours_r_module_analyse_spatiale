@@ -9,6 +9,7 @@ library(sf)
 library(DT)
 library(tidyverse)
 library(RPostgres)
+library(spData)
 ```
 
 Le package `sf` s'appuie sur `GDAL` (Geospatial Data Abstraction Library) pour lire et écrire les données spatiales.
@@ -20,7 +21,7 @@ Les fonctions de lecture et d'écriture de `sf` s'appellent `st_read()` et `st_w
 Pour lire des données spatiales,s `st_read()` a besoin :
 
 - d'une source de donnée : un fichier, un répertoire, une base de données ;
-- d'un layer: une table de données spatiale spécifique du du fichier, répertoire, ou de la base de données ;
+- d'un layer: une table de données spatiale spécifique du fichier, répertoire, ou de la base de données ;
 
 On peut avoir besoin de rajouter des options spécifiques au format de la source. Par exemple, sur des données en `csv`, il faut pouvoir spécifier la composante spatiale des données.
 
@@ -82,7 +83,7 @@ st_write(
 )
 ```
 
-## Lire/ecrire des données spatiales sur PostGIS
+## Lire/écrire des données spatiales sur PostGIS
 
 `PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les manipuler.
 
