@@ -67,7 +67,7 @@ Pour pouvoir écraser ce fichier, vous avez deux options :
 st_write(
   obj = NY_leukemia,
   dsn = "data/NY_leukemia.gpkg",
-  layer_options = "OVERWRITE=YES"
+  append=FALSE
 )
 ```
 
@@ -77,7 +77,7 @@ st_write(
 ```{r,eval=F}
 st_write(
   obj = NY_leukemia,
-  dsn = "extdata/NY_leukemia.gpkg",
+  dsn = "data/NY_leukemia.gpkg",
   delete_layer = T
 )
 ```
