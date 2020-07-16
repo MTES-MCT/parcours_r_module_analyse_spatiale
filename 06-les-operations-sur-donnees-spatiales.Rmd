@@ -41,7 +41,7 @@ departement_44 <- departements_geo %>%
 
 epci_d44 <- epci_geo[departement_44, , op = st_within]
 
-mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
 ```
 
 L'opération de filtre sur les données spatiales fonctionne en prenant la table en entrée (`epci_geo`), la table avec laquelle on souhaite définir les lignes à garder (`departement_44`),et l'opérateur qui va définir le test entre les deux géométries. Ici cet opérateur est `st_within(x,y)`, qui renvoie `TRUE` si la géométrie de `x` est contenue à l'intérieur de celle de `y`.
@@ -70,13 +70,13 @@ La fonction qui permet de faire cela avec `sf` s'appelle `st_buffer()`.
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
 
-mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = c("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"))
+mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 ```{r}
 epci_d44_buffer <- epci_geo[departement_44_buffer, , op = st_within]
 
-mapview(list(departement_44_buffer, epci_d44_buffer), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44_buffer, epci_d44_buffer), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
 ```
 
 On récupère 2 des 3 epci manquant ainsi. Celui qui manque est l'Epci de Redon qui est à cheval sur la Loire-Atlantique, le Morbihan et l'Ile et Vilaine.
@@ -88,7 +88,7 @@ departement_44_buffer_negatif <- departement_44 %>%
 
 epci_d44 <- epci_geo[departement_44_buffer_negatif, , op = st_intersects]
 
-mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
 ```
 
 ## Prédicats spatiaux
@@ -221,7 +221,7 @@ load("data/sirene.RData")
 sirene44_sel <- sirene44 %>%
   filter(APET700 == "0893Z")
 
-mapview(list(departement_44, epci_d44, sirene44_sel), zcol = c("NOM_DEP", "NOM_EPCI", "NOMEN_LONG"), legend = F)
+mapview(list(departement_44, epci_d44, sirene44_sel), zcol = list("NOM_DEP", "NOM_EPCI", "NOMEN_LONG"), legend = F)
 ```
 
 Nous allons réaliser une jointure spatiale pour récupérer le code sirene de l'EPCI où se trouve chaque entreprise.
@@ -232,7 +232,7 @@ sirene44_sel_avec_code_epci <- sirene44_sel %>%
 ```
 
 ```{r}
-mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = c("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = F)
 ```
 
 ```{block2, type='rmdnote'}
@@ -258,14 +258,15 @@ epci_d44_avec_departement %>%
 
 Une jointure classique va donc rattacher 3 epci à plus de 1 département.
 
-Avec l'option `largest=T` la jointure va attribuer aux epci le département avec lequel il partage le plus de surface.
+Avec l'option `largest = TRUE` la jointure va attribuer aux epci le département avec lequel il partage le plus de surface.
 On voit ici que tout les epci adhérents à la Loire Atlantique se retrouvent alors rattachés à la Loire Atlantique.
 
 ```{r}
 epci_d44_avec_departement <- epci_d44 %>%
-  st_join(departements_geo %>% st_buffer(dist = -1000), largest = T)
+  st_join(departements_geo %>% st_buffer(dist = -1000), largest = TRUE)
 
-mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = c("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), 
+        legend = FALSE)
 ```
 
 ### Exercice
