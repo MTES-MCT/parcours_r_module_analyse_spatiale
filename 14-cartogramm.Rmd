@@ -116,14 +116,14 @@ La fonction `cartogram_dorling()` permet de définir la géométrie attendue.
 On va ici réaliser un cartogramme de dorling sur le PIB par habitant en 2015.
 
 ```{r}
-gdp_dorling <- cartogram_dorling(sdg_indicators_sf %>% 
+gdp_dorling <- cartogram_dorling(sdg_indicators_sf %>%
                                    filter(timeperiod == "2015",!is.na(gdp_per_cap)),"gdp_per_cap")
 
 ```
 
 
 ```{r}
-tm_shape(World) + 
+tm_shape(World %>% st_transform(st_crs(3857))) + 
   tm_borders() +
   tm_shape(gdp_dorling) + 
   tm_polygons("continent") +

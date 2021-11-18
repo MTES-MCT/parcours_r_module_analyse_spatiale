@@ -740,7 +740,8 @@ Pour cela, préalablement, nous allons intégrer à nos données un fond de cart
 data("World")
 
 sdg_indicators_sf <- World %>%
-  left_join(sdg_indicators)
+  left_join(sdg_indicators) %>%
+  st_transform(crs = st_crs(3857))
 ```
 
 ```{r, echo=T,eval=T,warning = F, fig.height=5,fig.width=12}
