@@ -41,11 +41,11 @@ library(variousdata)
 Pour charger une donnée géométrique, il faut utiliser la fonction `tm_shape()`. `tm_shape()` permet de fixer plusieurs options de base de notre carte : la projection, la bbox, un facteur de simplification...
 
 ```{r,eval=T,echo=T}
-wgs_84 <- tm_shape(World, projection = "longlat") + 
+wgs_84 <- tm_shape(World, projection = st_crs(4326)) + 
     tm_polygons() + 
 tm_layout("Le monde en projection WGS84", inner.margins=c(0,0,.1,0), title.size=.8)
 
-robin <- tm_shape(World, projection = "robin") + 
+robin <- tm_shape(World, projection = st_crs(54042)) + 
     tm_polygons() +
 tm_layout(
 "Le monde en project Winkel-Tripel",
