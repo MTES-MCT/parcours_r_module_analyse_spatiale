@@ -10,7 +10,7 @@ Pourquoi travailler avec les projets Rstudio plutôt que les scripts R ?
 > **Fini les `setwd("chemin/qui/marche/uniquement/sur/mon/poste")` !** 
 
 
-- Toujours sur la portabilité, un projet peut être utilisé avec un package comme `packrat` ou `renv` qui vont vous permettre d'internaliser au sein du projet l'ensemble des packages dont vous aurez besoin dans la version avec laquelle vous l'avez utilisé. Cela permet donc à votre collègue à qui vous passez votre projet de ne pas avoir à les installer dans la même version, et si vous mettez à jour votre environnement R, votre projet restera toujours avec les versions des packages avec lesquelles vous l'avez fait tourner à l'époque. Cela évite d'avoir à subir les effets d'une mise à jour d'un package qui casserait votre code.
+- Toujours sur la portabilité, un projet peut être utilisé avec un package comme `renv` qui permet d'internaliser au sein du projet l'ensemble des packages utilisés dans la version utilisée. Cela permet donc à votre collègue à qui vous passez votre projet de ne pas avoir à les installer dans la même version, et si vous mettez à jour votre environnement R, votre projet restera toujours avec les versions des packages avec lesquelles vous l'avez fait tourner à l'époque. Cela évite d'avoir à subir les effets d'une mise à jour d'un package qui casserait votre code.
 
 `Packrat` est intégré à Rstudio. Pour activer `packrat` sur un projet, aller dans `Tools/Project Options->Packrat`
 
