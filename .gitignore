@@ -4,7 +4,8 @@
 .Ruserdata
 A faire.R
 Ressources/
-*.Rproj
 extdata/
-_bookdown_files/
 bac_sable.R
+_book/
+_bookdown_files/
+.html
