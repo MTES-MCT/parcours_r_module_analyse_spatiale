@@ -1,4 +1,4 @@
---- 
+---
 title: "Analyses spatiales avec R"
 author: "Maël THEULIERE"
 date: "`r Sys.Date()`"
@@ -10,76 +10,78 @@ link-citations: yes
 description: "Support de cours du module 7  « Analyse spatiale » de la valise pédagogique parcours-r MTES/MCTRCT"
 ---
 
-# Introduction {-}
+# Introduction {.unnumbered}
 
 ![](pic/odonate.jpg)
 
-<font size="2"> 
-*Crédit photographique Pascal Boulin*
-</font> 
+<font size="2"> *Crédit photographique Pascal Boulin* </font>
 
-
-## Le parcours de formation
+## Le parcours de formation {.unnumbered}
 
 Ce dispositif de formation vise à faire monter en compétence les agents du MTES (Ministère de la transition écologique et solidaire) et du MCT (Ministère de la cohésion des territoires) dans le domaine de la science de la donnée avec le logiciel R. Il est conçu pour être déployé à l'échelle nationale par le réseau des CVRH (Centre de Valorisation des Ressources Humaines).
 
 Le parcours proposé est structuré en modules de 2 jours chacun. Les deux premiers (ou un niveau équivalent) sont des pré-requis pour suivre les suivants qui sont proposés "à la carte" :
 
-1. Socle : Premier programme en R
-2. Socle : Préparation des données
-3. Statistiques descriptives
-4. Analyses multivariées
-5. Datavisualisation : Produire des graphiques, des cartes et des tableaux
-6. Documents reproductibles avec RMarkdown (2^ème^ trimestre 2020)
-7. Analyse spatiale 
-... et en perspective : applis interactives avec Shiny, big data, etc.
+1.  Socle : Premier programme en R
+2.  Socle : Préparation des données
+3.  Statistiques descriptives
+4.  Analyses multivariées
+5.  Datavisualisation : Produire des graphiques, des cartes et des tableaux
+6.  Documents reproductibles avec RMarkdown 
+7.  Analyse spatiale...    
 
+et en perspective : applis interactives avec Shiny, big data, etc.
 
-La mise à disposition des supports de formation se fait désormais par la [page d'accueil du parcours de formation](https://mtes-mct.github.io/parcours-r/). Ces supports sont en [licence ouverte](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf).
+Les supports de formation sont accessibles sur la [page d'accueil du parcours de formation](https://mtes-mct.github.io/parcours-r/). Ces supports sont en [licence ouverte](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf).
 
+Si vous souhaitez accéder aux fichiers sources de ces supports, rendez-vous sur le compte [Github du ministère](https://github.com/MTES-MCT?q=parcours-r).
 
-Si vous souhaitez accéder aux sources ou aux données mobilisées pendant les formations, il faut directement les télécharger depuis le [Github du ministère](https://github.com/MTES-MCT?q=parcours-r).
+Pour vous tenir au courant de l'offre de formation proposée par le réseau des CVRH, [consultez la plateforme OUPS](http://oups-cmvrh.e2.rie.gouv.fr/) (un accès intranet MTES-MCT est nécessaire). 
+Vous pouvez vous y abonner pour recevoir les annonces de formation qui vous intéressent. 
 
-Pour vous tenir au courant de l'offre de formation proposée par le réseau des CVRH, [consultez la plateforme OUPS](http://oups-cmvrh.e2.rie.gouv.fr/) (un accès intranet MTES-MCT est nécessaire). Vous pouvez vous y abonner pour recevoir les annonces de formation qui vous intéressent.
+Au sein du ministère, il existe une liste mail pour échanger de l'information, discuter autour de R ou encore faire part de difficultés pour trouver ensemble les solutions. 
+Pour s'inscrire, envoyer un message vide avec le titre "subscribe labo.communaute-r" à l'adresse [sympa\@developpement-durable.gouv.fr](mailto:sympa@developpement-durable.gouv.fr?subject=subscribe%20labo.communaute-r). 
+Il existe également un canal de discussion Ariane ouvert à tous : utilisateurs_r, et ayant les mêmes objectifs.
 
-Il existe une liste pour échanger de l'information, discuter autour de R ou encore faire part de difficultés pour trouver ensemble les solutions. Pour s'insrire, envoyer un message vide avec le titre "subscribe labo.communaute-r" à l'adresse sympa@developpement-durable.gouv.fr.
+Enfin,
 
-## Objectifs de ce module
+## Objectifs de ce module {.unnumbered}
 
-L’objectif de ce module est de présenter les éléments de manipulation des données spatiales à partir de R. Nous verrons ainsi :
+L'objectif de ce module est de présenter les éléments de manipulation des données spatiales à partir de R. 
+Nous verrons ainsi :
 
-- Ce que sont les données spatiales
-- Comment lire des données spatiales ?
-- Comment manipuler les données spatiales ?
-- Comment visualiser les données spatiales ?
-
-
+-   Ce que sont les données spatiales
+-   Comment lire des données spatiales ?
+-   Comment manipuler les données spatiales ?
+-   Comment visualiser les données spatiales ?
 
 ```{r setup, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(cache = FALSE, echo = TRUE, comment = "", 
                       message = FALSE, warning = FALSE)
 #Chargement des packages et des données.
-library(knitr)
-library(kableExtra)
-library(ggplot2)
-library(tidyverse)
-library(stringr)
-library(purrr)
-library(sf)
-library(tmap)
-library(viridis)
-library(scales)
-library(tmaptools)
-library(leaflet)
+
 library(cowplot)
+library(cartogram)
+library(DT)
+library(ggspatial)
 library(glue)
 library(htmlwidgets)
-library(rmapshaper)
-library(patchwork)
-library(cartogram)
-library(ggspatial)
+library(knitr)
+library(kableExtra)
+library(leaflet)
 library(lwgeom)
 library(mapview)
+library(patchwork)
+library(rmapshaper)
+library(RPostgres)
+library(scales)
+library(sf)
+library(spData)
+library(tmap)
+library(tmaptools)
+library(tidyverse) # comprend ggplot2, stringr, purrr, readr
+library(variousdata)
+library(viridis)
 
 theme_set(theme_gray())
 tmap_mode("plot")
