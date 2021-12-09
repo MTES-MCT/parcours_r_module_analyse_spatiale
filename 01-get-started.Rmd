@@ -12,20 +12,17 @@ Pourquoi travailler avec les projets Rstudio plutôt que les scripts R ?
 
 - Toujours sur la portabilité, un projet peut être utilisé avec un package comme `renv` qui permet d'internaliser au sein du projet l'ensemble des packages utilisés dans la version utilisée. Cela permet donc à votre collègue à qui vous passez votre projet de ne pas avoir à les installer dans la même version, et si vous mettez à jour votre environnement R, votre projet restera toujours avec les versions des packages avec lesquelles vous l'avez fait tourner à l'époque. Cela évite d'avoir à subir les effets d'une mise à jour d'un package qui casserait votre code.
 
-`Packrat` est intégré à Rstudio. Pour activer `packrat` sur un projet, aller dans `Tools/Project Options->Packrat`
-
-[En savoir plus sur Packrat](https://www.rstudio.com/resources/webinars/managing-package-dependencies-in-r-with-packrat/)
+`renv` est intégré à Rstudio. Pour activer `renv` sur un projet, aller dans `Tools / Project Options -> Environment`
 
 ![](pic/creerprojet4.png){#id .class width=500}
 
-`renv` est plus récent que `Packrat`, il n'est pas encore intégré à Rstudio mais apporte des améliorations subsentielles par rapport à son prédécesseur. 
 [En savoir plus sur renv](https://rstudio.github.io/renv/)
 
 - Cela permet de se forcer à travailler en mode projet : on intègre à un seul endroit tous ce qui est lié à ce projet : données brutes, données retravaillées, scripts, illustrations, documentations, publications... et donc y compris packages avec `packrat` ou `renv`.
 
 - On peut travailler sur plusieurs projets en même temps, Rstudio ouvre alors autant de sessions que de projets.
 
-- Les projets Rstudio intègrent une interface avec les outils de gestion de version `git` et `svn.` Cela veut dire que vous pouvez versionniser votre projet et l'héberger simplement comme répertoire sur des plateformes de gestion de code telle que `github` ou `gitlab.`
+- Les projets Rstudio intègrent une interface avec les outils de gestion de version `git` et `svn.` Cela veut dire que vous pouvez versionner votre projet et l'héberger simplement comme répertoire sur des plateformes de gestion de code (forges) telle que `github` ou `gitlab`.
 
 **Pour créer un projet : **
 
@@ -40,7 +37,7 @@ Pourquoi travailler avec les projets Rstudio plutôt que les scripts R ?
 
 Votre code doit être reproductible depuis vos données en entrée vers votre résultat. Pour cela, il est fortement déconseillé de sauvegarder quoique ce soit dans le fichier `.RData` de sauvegarde par défaut. 
 
-Pour cela, aller dans *Tools->Global Options...* et ensuite conformez vous à ceci
+Pour cela, aller dans *Tools -> Global Options...* et ensuite conformez vous à ceci :
 
 ![](pic/RData.png)
 
@@ -59,13 +56,60 @@ Si par la suite vous souhaitez avoir des exemples de bonnes pratiques sur commen
 
 - Créer un répertoire `/figures` où vous mettrez vos illustrations issues de R.
 
+## Utilisation du package savoirfR
+
+Pour faciliter le déroulé de ce module, l'ensemble des exercices (énoncés, corrigés et données) ont été intégrés à un package réalisé par le groupe de référent R: savoirfR
+
+```{r savoirfR, eval = FALSE}
+remotes::install_github("MTES-MCT/savoirfR")
+```
+
+Pour l'utiliser, il suffit de créer un nouveau projet dans un nouveau répertoire, en sélectionnant le "Project Type" **Exercice Parcours R MTES-MCT**.
+
+![](pic/projetsavoirfR1.PNG){#id .class width=500}
+
+Remplissez et sélectionnez le module suivi.
+
+![](pic/projetsavoirfR2.PNG){#id .class width=500}
+
+```{r all_packages}
+
+library(cowplot)
+library(cartogram)
+library(DT)
+library(ggspatial)
+library(glue)
+library(htmlwidgets)
+library(knitr)
+library(kableExtra)
+library(leaflet)
+library(lwgeom)
+library(mapview)
+library(patchwork)
+library(rmapshaper)
+library(RPostgres)
+library(scales)
+library(sf)
+library(spData)
+library(tmap)
+library(tmaptools)
+library(tidyverse) # comprend ggplot2, stringr, purrr, readr
+library(variousdata)
+library(viridis)
+
+
+load("extdata/ .RData")
+
+```
+
+
 ## Activer les packages nécessaires
 
 Commencer par rajouter un script dans le répertoire `/src` à votre projet qui commencera par : 
 
 - activer l'ensemble des packages nécessaires
 
-- charger les données dont vous aurez besoin.
+- charger les données dont vous aurez besoins.
 
 ## Bien structurer ses projets data
 

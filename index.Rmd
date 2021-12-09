@@ -58,30 +58,9 @@ Nous verrons ainsi :
 ```{r setup, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(cache = FALSE, echo = TRUE, comment = "", 
                       message = FALSE, warning = FALSE)
-#Chargement des packages et des données.
 
-library(cowplot)
-library(cartogram)
-library(DT)
-library(ggspatial)
-library(glue)
-library(htmlwidgets)
-library(knitr)
-library(kableExtra)
-library(leaflet)
-library(lwgeom)
-library(mapview)
-library(patchwork)
-library(rmapshaper)
-library(RPostgres)
-library(scales)
-library(sf)
-library(spData)
+library(ggplot2)
 library(tmap)
-library(tmaptools)
-library(tidyverse) # comprend ggplot2, stringr, purrr, readr
-library(variousdata)
-library(viridis)
 
 theme_set(theme_gray())
 tmap_mode("plot")
