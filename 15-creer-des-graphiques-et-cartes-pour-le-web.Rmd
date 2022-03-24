@@ -15,6 +15,8 @@ library(tidyverse)
 library(variousdata)
 ```
 
+Certains proxy empechent la visualisation du fond de carte. Il faut donc modifier les options internet si c'est le cas , en passant par le proxy national qui l'autorise. Les utilisateurs R du ministère vous renseigneront sur ce sujet au besoin.
+
 ### Carte choroplète
 
 Ci-dessous un exemple avancé de carte choroplète avec leaflet.
@@ -162,6 +164,84 @@ carte_rond_proportionnel<-leaflet(sdg_indicators_2015_sf_centroid) %>%
             opacity = 1)
 carte_rond_proportionnel
 ```
+
+### Carte à élements ponctuels (markers)
+
+Leaflet permet aussi de créer des cartes à éléments ponctuels (points/ Markers en anglais) dans une carte.
+
+Les éléments ponctuels sont cartographiable pour les types de données suivantes : 
+
+    • Les `SpatialPoints` ou `SpatialPointsDataFrame` (venant de la library {sp} ) 
+    • Les `POINT`, `sfc_POINT`, et les autres objets {sf} (du package du même nom); avec considération uniquement des coordonnées X et Y 
+    • Les matrices numériques sur 2 colonnes (en considérant la première colonne comme la longitude et la seconde comme la latitude) 
+    • Les Data Frame avec des variables de longitude et latitude. Celles ci peuvent être explicitées dans la fonction de `marker` comme colonne de données (ex. :  addAwesomeMarkers(lng = ~Longitude, lat = ~Latitude)), ou laissées à l'appréciation de la fonction pour les déterminer. Pour cette dernière, les noms suivants lat/latitude and lon/lng/long/longitude sont reconnus (attention : senssible à la casse). 
+    • En fournissant de simple vecteur numérique comme arguments pour lng et lat 
+
+
+Remarque : les `MULTIPOINT` provenant de {sf} ne semblent pas encore supporté.
+
+- Créer des points "maison"
+
+Les markers (points) d’origine de leaflet ne semblent plus disponibles. Il faut donc créer des markers personnalisés. Leaflet supporte ainsi les « awesome markers » du plugin leaflet {awesome markers}. 
+La commande pour cela est `makeAwesomeIcon`. Les arguments sont le nom de l’icone (icon), la couleur souhaitée du marker (markerColor), la couleur de l’icone (iconColor), la base choisie pour le nom de l'icone (library).
+
+``` {r}
+icon.glyphicon <- makeAwesomeIcon(icon = "flag", markerColor = "blue", iconColor = "black", library = "glyphicon", squareMarker =  TRUE)
+```
+
+D’autres icones sont disponibles à partir de différentes sources. La source utilisé est précisée dans l’argument « library » de makeAwesomeIcon.
+Exemple : Glyphicon (https://getbootstrap.com/docs/3.3/components/) , ion (https://ionic.io/ionicons), fa (https://fontawesome.com/icons)
+
+- Création de la carte 
+
+La carte leaflet se crée ensuite comme toutes les autres cartes leaflet. AddAwesomeMarkers ajoute des éléments ponctuels à la carte. Il faut préciser l'icone que l'on souhaite utiliser.
+
+``` {r}
+leaflet() %>% addTiles() %>%
+  addAwesomeMarkers(
+    lng = -118.456554, lat = 34.078039,
+    label = "This is a label",
+    icon = icon.glyphicon)
+```
+Le label avec un texte affichera celui ci au passage de la souris. Si on fait appel à une colonne (tout comme lng et lat) il faut utiliser `~` devant le nom de la colonne.
+
+- Création de carte plus complexes (plusieurs éléments)
+
+Pour des cartes plus complexe ou l’icone ou la couleur depend d’une variable, voici la procedure. 
+
+Pour une variable quantitative nous allons faire varier la couleurs. Dans l'exemple ci dessous nous prenons des magnitudes de tremblements de terres.
+
+```
+# sélection des 20 premiers tremblement de terre
+df.20 <- quakes[1:20,]
+
+# création d’une fonction qui détermine la couleur en fonction de l’intensité
+getColor <- function(quakes) {
+  sapply(quakes$mag, function(mag) {
+  if(mag <= 4) {
+    "green"
+  } else if(mag <= 5) {
+    "orange"
+  } else {
+    "red"
+  } })
+}
+
+# création du type d’icone
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = getColor(df.20)
+)
+
+#creation de la carte, 
+leaflet(df.20) %>% addTiles() %>%
+  addAwesomeMarkers(~long, ~lat, icon=icons, label=~as.character(mag))
+```
+
+La latitude et la longitude sont précisées dans les colonnes `long` et `lat`. Remarquer le ~devant pour préciser que nous faisons appel à des variables.
+Le label précise que au passage de la souris s'affiche l'intensité du tremblement de terre transformé en caractère. Le caractère ~ est avant le code R associé au label.
 
 ## Exporter une sortie html
 
