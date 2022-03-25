@@ -207,9 +207,9 @@ Le label avec un texte affichera celui ci au passage de la souris. Si on fait ap
 
 - Création de carte plus complexes (plusieurs éléments)
 
-Pour des cartes plus complexe ou l’icone ou la couleur depend d’une variable, voici la procedure. 
+Pour des cartes plus complexes où l’icone ou la couleur dependent d’une variable, il y a quelques étapes supplémentaires.
+Dans l'exemple suivant, il s'agit de faire varier la couleur en fonction de la magnitude des tremblements de terre.
 
-Pour une variable quantitative nous allons faire varier la couleurs. Dans l'exemple ci dessous nous prenons des magnitudes de tremblements de terres.
 
 ```
 # sélection des 20 premiers tremblement de terre
