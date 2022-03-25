@@ -213,7 +213,7 @@ Dans l'exemple suivant, il s'agit de faire varier la couleur en fonction de la m
 
 ```
 # sélection des 20 premiers tremblement de terre
-df.20 <- quakes[1:20,]
+tremblement_20 <- quakes[1:20,]
 
 # création d’une fonction qui détermine la couleur en fonction de l’intensité
 getColor <- function(quakes) {
@@ -232,11 +232,11 @@ icons <- awesomeIcons(
   icon = 'ios-close',
   iconColor = 'black',
   library = 'ion',
-  markerColor = getColor(df.20)
+  markerColor = getColor(tremblement_20)
 )
 
 #creation de la carte, 
-leaflet(df.20) %>% addTiles() %>%
+leaflet(tremblement_20) %>% addTiles() %>%
   addAwesomeMarkers(~long, ~lat, icon=icons, label=~as.character(mag))
 ```
 
