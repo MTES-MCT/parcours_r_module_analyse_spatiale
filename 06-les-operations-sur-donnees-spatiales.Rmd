@@ -50,6 +50,14 @@ On peut spécifier différents prédicats spatiaux pour réaliser ce filtre.
 
 En deuxième argument (`, ,`), on peut rajouter, comme dans une opération `[` classique de R les colonnes que l'on souhaite garder.
 
+On aurait aussi pu écrire en *tidyverse* :
+
+```{r}
+epci_d44 <- epci_geo %>%
+  filter(st_within(.,departement_44, sparse = FALSE))
+```
+Il faut noter la présence du paramètre `sparse = FALSE`. L'option `sparse` est abordée dans la partie [Prédicats spatiaux]. Il faut retenir que pour utiliser les prédicats à l'intérieur de la fonction `filter`, il faut utiliser l'option `sparse = FALSE`.
+
 On voit ici que le résultat n'est pas très concluant :  il manque 3 epci du département, ceux qui sortent des frontières de celui-ci.
 Prenons un buffer autour du département.
 
@@ -87,6 +95,15 @@ departement_44_buffer_negatif <- departement_44 %>%
   st_buffer(dist = -2000)
 
 epci_d44 <- epci_geo[departement_44_buffer_negatif, , op = st_intersects]
+
+mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
+```
+
+On aurait pu obtenir le même résultat en prenant les EPCI  à l'intérieur du département 44 (avec `st_within`) ainsi que les EPCI qui chevauchent (avec `st_overlaps`)  le département 44.
+
+```{r}
+epci_d44 <- epci_geo %>%
+  filter(st_within(.,departement_44, sparse = FALSE) | st_overlaps(., departement_44, sparse = FALSE))
 
 mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
 ```
