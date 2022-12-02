@@ -53,6 +53,11 @@ En deuxième argument (`, ,`), on peut rajouter, comme dans une opération `[` c
 On aurait aussi pu écrire en *tidyverse* :
 
 ```{r}
+# 1er méthode
+epci_d44 <- epci_geo %>% 
+  st_filter(departement_44, .predicate = st_within)
+
+# 2e méthode
 epci_d44 <- epci_geo %>%
   filter(st_within(.,departement_44, sparse = FALSE))
 ```
