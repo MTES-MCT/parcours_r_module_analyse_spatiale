@@ -18,7 +18,7 @@ Le package `sf` s'appuie sur `GDAL` (Geospatial Data Abstraction Library) pour l
 
 Les fonctions de lecture et d'écriture de `sf` s'appellent `st_read()` et `st_write()`.
 
-Pour lire des données spatiales,s `st_read()` a besoin :
+Pour lire des données spatiales, `st_read()` a besoin :
 
 - d'une source de donnée : un fichier, un répertoire, une base de données ;
 - d'un layer: une table de données spatiale spécifique du fichier, répertoire, ou de la base de données ;
