@@ -161,16 +161,16 @@ Le résultat de cette opération est une liste. Par défaut, la fonction `st_int
 
 Si on souhaite mieux utiliser cette information, on peut vouloir privilégier la *matrice dense*, qui renvoie une matrice de booléen pour chaque relation possible.
 
-Pour cela on peut utiliser l'option `sparse=F`.
+Pour cela on peut utiliser l'option `sparse = FALSE`.
 
 ```{r}
-st_intersects(p, a, sparse = F)
+st_intersects(p, a, sparse = FALSE)
 ```
 
 `st_within()` est une variante de `st_intersect()` qui ne renvoie `TRUE` que pour les points *à l'intérieur* du polygone.
 
 ```{r}
-st_within(p, a, sparse = F)
+st_within(p, a, sparse = FALSE)
 ```
 
 Une variante de `st_within()` permet d'ajouter un critère de distance pour intégrer des points *presque* dans le polygone, `st_is_within_distance()`.
@@ -182,25 +182,25 @@ st_is_within_distance(p, a, dist = 0.8)
 `st_touches()` permet de récupérer les points qui *touchent* le polygone sans sans être à l'intérieur du polygone.
 
 ```{r}
-st_touches(p, a, sparse = F)
+st_touches(p, a, sparse = FALSE)
 ```
 
 `st_contains(x,y)` est équivalent à `st_within(y,x)`. Par exemple si nous voulons savoir lesquelles de nos lignes `l` sont contenues dans `a`.
 
 ```{r}
-st_contains(a, l, sparse = F)
+st_contains(a, l, sparse = FALSE)
 ```
 
 Equivalent à :
 
 ```{r}
-st_within(l, a, sparse = F)
+st_within(l, a, sparse = FALSE)
 ```
 
 `st_crosses()`  renvoie TRUE si l'intersection des deux géométries est une géométrie de dimension n-1 ou n est le maximum des dimensions des deux objets et si l'intersection est à l'intérieur des deux objets.
 
 ```{r}
-st_crosses(l, a, sparse = F)
+st_crosses(l, a, sparse = FALSE)
 ```
 
 Il existent encore d'autres prédicats qu'on ne détaillera pas ici : 
