@@ -70,7 +70,17 @@ Pour l'utiliser, il suffit de créer un nouveau projet dans un nouveau répertoi
 
 Remplissez et sélectionnez le module suivi.
 
-![](pic/projetsavoirfR2.PNG){#id .class width=500}
+![](pic/projetsavoirfR2.PNG){#id .class width=500} 
+
+
+
+## Activer les packages nécessaires
+
+Commencez par rajouter un script dans le répertoire `/src` à votre projet qui commencera par : 
+
+- activez l'ensemble des packages nécessaires,
+
+- chargez les données dont vous aurez besoin.
 
 ```{r all_packages}
 
@@ -97,19 +107,11 @@ library(tidyverse) # comprend ggplot2, stringr, purrr, readr
 library(variousdata)
 library(viridis)
 
-
-load("extdata/ .RData")
+load("extdata/admin_express.RData")
+load("extdata/sirene.RData")
+prefectures <- read_csv2("extdata/prefecture.csv")
 
 ```
-
-
-## Activer les packages nécessaires
-
-Commencer par rajouter un script dans le répertoire `/src` à votre projet qui commencera par : 
-
-- activer l'ensemble des packages nécessaires
-
-- charger les données dont vous aurez besoins.
 
 ## Bien structurer ses projets data
 

@@ -1,20 +1,15 @@
-
-# Contruction de la table des départements --------------------------------
-
 library(sf)
-library(stringr)
-library(readr)
 library(readxl)
 library(tidyverse)
 
-epci_geo <- st_read(dsn = "extdataraw/epci/", layer = "EPCI")
+epci_geo <- st_read(dsn = "data-raw_extdata/epci/", layer = "EPCI")
 
-departements_geo <- st_read(dsn = "extdataraw/departements/", layer = "DEPARTEMENT") %>%
+departements_geo <- st_read(dsn = "data-raw_extdata/departements/", layer = "DEPARTEMENT") %>%
   mutate(AREA = st_area(geometry))
 
-regions_geo <- st_read(dsn = "extdataraw/regions/", layer = "REGION")
+regions_geo <- st_read(dsn = "data-raw_extdata/regions/", layer = "REGION")
 
-prefecture_de_region_geo <- st_read(dsn = "extdataraw/adminexpress/", layer = "CHEF_LIEU") %>%
+prefecture_de_region_geo <- st_read(dsn = "data-raw_extdata/adminexpress/", layer = "CHEF_LIEU") %>%
   filter(STATUT == "Préfecture de région") %>%
   mutate(coords = as.character(geometry) %>%
     str_replace_all("c\\(", "") %>%
@@ -27,6 +22,7 @@ prefecture_de_region_geo <- st_read(dsn = "extdataraw/adminexpress/", layer = "C
   select(-coords) %>%
   st_drop_geometry()
 
-write_csv2(prefecture_de_region_geo, "extdataraw/prefecture.csv")
 
-save(epci_geo, departements_geo, regions_geo, file = "data/admin_express.RData")
+write_csv2(prefecture_de_region_geo, "extdata/prefecture.csv")
+
+save(epci_geo, departements_geo, regions_geo, file = "extdata/admin_express.RData")

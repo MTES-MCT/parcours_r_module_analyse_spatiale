@@ -15,8 +15,8 @@ library(ggplot2)
 Nous utiliserons les données de la table des régions de la France métropolitaine et des établissements publics de coopération intercommunale (EPCI)^[https://fr.wikipedia.org/wiki/%C3%89tablissement_public_de_coop%C3%A9ration_intercommunale] de la France Métropolitaine
 
 
-```{r}
-load("data/admin_express.RData")
+```{r, eval = FALSE}
+load("extdata/admin_express.RData")
 ```
 
 ```{r}
@@ -216,8 +216,12 @@ Ce cas est relativement simple, une jointure spatiale entre une liste de points 
 On va utiliser ici le fichier sirene du département de Loire Atlantique géocodé par Christian Quest^[http://data.cquest.org/geo_sirene/].
 Prenons les entreprises de production de sel sur ce département et regardons dans quelle partie du territoire elles se trouvent.
 
+```{r, eval = FALSE}
+load("extdata/sirene.RData")
+```
+
+
 ```{r}
-load("data/sirene.RData")
 sirene44_sel <- sirene44 %>%
   filter(APET700 == "0893Z")
 
