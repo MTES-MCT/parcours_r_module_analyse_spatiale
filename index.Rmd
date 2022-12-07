@@ -1,6 +1,6 @@
 ---
 title: "Analyses spatiales avec R"
-author: "Maël THEULIERE"
+author: "Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
