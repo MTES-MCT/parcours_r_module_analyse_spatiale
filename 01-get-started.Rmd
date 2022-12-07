@@ -1,78 +1,26 @@
 # Bien commencer
 
-
 ## Créer un projet sous Rstudio pour vous permettre de recenser vos travaux.
 
-Pourquoi travailler avec les projets Rstudio plutôt que les scripts R ?
+```{r collecte prez projet rstudio, warning=FALSE, echo=FALSE, results='asis'}
+# Utilisation du chapitre de présentation des projets RStudio présent dans https://github.com/MTES-MCT/parcours-r
+cat(text = stringi::stri_read_lines("https://raw.githubusercontent.com/MTES-MCT/parcours-r/master/parties_communes/bien_commencer.Rmd", encoding = "UTF-8"), sep = '\n')
+```
 
-- Cela permet la portabilité : le répertoire de travail par défaut d'un projet est le répertoire où est ce projet. Si vous transmettez celui-ci à un collègue, le fait de lancer un programme ne dépend pas de l'arborescence de votre machine.
-
-> **Fini les `setwd("chemin/qui/marche/uniquement/sur/mon/poste")` !** 
-
-
-- Toujours sur la portabilité, un projet peut être utilisé avec un package comme `renv` qui permet d'internaliser au sein du projet l'ensemble des packages utilisés dans la version utilisée. Cela permet donc à votre collègue à qui vous passez votre projet de ne pas avoir à les installer dans la même version, et si vous mettez à jour votre environnement R, votre projet restera toujours avec les versions des packages avec lesquelles vous l'avez fait tourner à l'époque. Cela évite d'avoir à subir les effets d'une mise à jour d'un package qui casserait votre code.
-
-`renv` est intégré à Rstudio. Pour activer `renv` sur un projet, aller dans `Tools / Project Options -> Environment`
-
-![](pic/creerprojet4.png){#id .class width=500}
-
-[En savoir plus sur renv](https://rstudio.github.io/renv/)
-
-- Cela permet de se forcer à travailler en mode projet : on intègre à un seul endroit tous ce qui est lié à ce projet : données brutes, données retravaillées, scripts, illustrations, documentations, publications... et donc y compris packages avec `packrat` ou `renv`.
-
-- On peut travailler sur plusieurs projets en même temps, Rstudio ouvre alors autant de sessions que de projets.
-
-- Les projets Rstudio intègrent une interface avec les outils de gestion de version `git` et `svn.` Cela veut dire que vous pouvez versionner votre projet et l'héberger simplement comme répertoire sur des plateformes de gestion de code (forges) telle que `github` ou `gitlab`.
-
-**Pour créer un projet : **
-
-- Cliquez sur *Project* en haut à droite puis *New Project*.
-![](pic/creerprojet1.png){#id .class width=500}
+## Utilisation du package `{savoirfR}`
 
 
-- Cliquez sur *New Directory*.
-![](pic/creerprojet2.png){#id .class width=500}
-
-## Désactiver les options de sauvegarde automatique de Rstudio
-
-Votre code doit être reproductible depuis vos données en entrée vers votre résultat. Pour cela, il est fortement déconseillé de sauvegarder quoique ce soit dans le fichier `.RData` de sauvegarde par défaut. 
-
-Pour cela, aller dans *Tools -> Global Options...* et ensuite conformez vous à ceci :
-
-![](pic/RData.png)
-
-## Intégrer vos données
-
-Une bonne pratique est de créer un sous répertoire `/extdata` pour stocker les données sur lesquelles vous aurez à travailler et un dossier `/data` pour stocker les données après préparation. 
-
-Vous pouvez le faire de l'explorateur de fichier de votre système d'exploitation ou directement à partir de l'explorateur de fichier de RStudio.
-![](pic/creerprojet3.png){#id .class width=500}
-
-Si par la suite vous souhaitez avoir des exemples de bonnes pratiques sur comment structurer vos données, vous pouvez vous référer au [chapitre data](http://r-pkgs.had.co.nz/data.html) du livre d'Hadley Wickham sur la construction de package R (tout package R étant aussi un projet !)
+```{r collecte prez savoirfR, warning=FALSE, echo=FALSE, results='asis'}
+# Utilisation du chapitre de présentation de savoirfR présent dans https://github.com/MTES-MCT/parcours-r
+a <-  knitr::knit_child(text = stringi::stri_read_lines("https://raw.githubusercontent.com/MTES-MCT/parcours-r/master/parties_communes/savoir_faire.Rmd", encoding = "UTF-8"), quiet = TRUE)
+cat(a, sep = '\n')
+```
 
 ## Créer votre arborescence de projet
 
 - Créer un répertoire `/src` où vous mettrez vos scripts R.
 
 - Créer un répertoire `/figures` où vous mettrez vos illustrations issues de R.
-
-## Utilisation du package savoirfR
-
-Pour faciliter le déroulé de ce module, l'ensemble des exercices (énoncés, corrigés et données) ont été intégrés à un package réalisé par le groupe de référent R: savoirfR
-
-```{r savoirfR, eval = FALSE}
-remotes::install_github("MTES-MCT/savoirfR")
-```
-
-Pour l'utiliser, il suffit de créer un nouveau projet dans un nouveau répertoire, en sélectionnant le "Project Type" **Exercice Parcours R MTES-MCT**.
-
-![](pic/projetsavoirfR1.PNG){#id .class width=500}
-
-Remplissez et sélectionnez le module suivi.
-
-![](pic/projetsavoirfR2.PNG){#id .class width=500} 
-
-
 
 ## Activer les packages nécessaires
 
