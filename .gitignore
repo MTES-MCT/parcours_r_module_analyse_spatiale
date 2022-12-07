@@ -4,6 +4,9 @@
 .Ruserdata
 A faire.R
 Ressources/
-extdata/
+data-raw_extdata/
+bac_sable.R
 _book/
 _bookdown_files/
+.html
+NY_leukemia.gpkg

@@ -10,6 +10,7 @@ library(tidyverse)
 library(mapview)
 library(ggplot2)
 library(rmapshaper)
+library(patchwork)
 ```
 
 On distingue deux types d'opérations : les opérations unaires et binaires.
@@ -25,9 +26,12 @@ Le package `sf` contient une fonction `st_simplify` qui implémente l'algorithme
 
 La fonction utilise le paramètre `dTolerance` pour controler le niveau de simplification.
 
-```{r}
-load("data/admin_express.RData")
+```{r, eval = FALSE}
+load("extdata/admin_express.RData")
+```
 
+
+```{r}
 departement_56 <- departements_geo %>%
   filter(INSEE_DEP == "56")
 
@@ -150,7 +154,7 @@ Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire o
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
 
-mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = c("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"))
+mapview(list(departement_44_buffer, departement_44), layer.name = list("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 ## Opérations binaires
@@ -174,7 +178,7 @@ departement_44_trans <- st_set_geometry(departement_44, departement_44_sfc_trans
 
 st_crs(departement_44_trans) <- st_crs(departement_44)
 
-mapview(list(departement_44_trans, departement_44), layer.name = c("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), zcol = c("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"))
+mapview(list(departement_44_trans, departement_44), layer.name = list("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 #### Changement d'échelle
@@ -195,7 +199,7 @@ epci_d44_centroid_scale <- st_set_geometry(epci_d44, epci_d44_centroid_sfc_scale
 st_crs(epci_d44_centroid_scale) <- st_crs(epci_d44)
 
 
-mapview(list(epci_d44, epci_d44_centroid_scale), layer.name = c("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), zcol = c("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = F)
+mapview(list(epci_d44, epci_d44_centroid_scale), layer.name = list("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), zcol = list("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 
@@ -223,7 +227,7 @@ ggplot() +
 
 `st_intersection()` permet de ne garder que la partie commune des deux géométries
 
-```{r,warning=F,message=F}
+```{r,warning=F, message=F}
 redon_et_departement_44 <- st_intersection(epci_redon, departement_44) %>%
   mutate(NOM_EPCI = "Communes du 44 de la CA Redon Agglomération")
 ```
