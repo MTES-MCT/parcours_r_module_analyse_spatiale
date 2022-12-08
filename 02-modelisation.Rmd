@@ -2,7 +2,7 @@
 
 # La modélisation des données spatiales
 
-Dans ce chapitre,nous allons développer une brève introduction à la modélisation des données géographiques.
+Dans ce chapitre, nous allons développer une brève introduction à la modélisation des données géographiques.
 
 ## Les données vecteur
 

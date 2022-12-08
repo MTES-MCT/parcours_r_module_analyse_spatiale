@@ -26,8 +26,6 @@ On va distinguer deux types de datum : les datum *locaux* et les datum *globaux*
 
 Historiquement n'existait que des datum locaux, c'est à dire qui définissait une ellipse optimale pour correspondre à une partie déterminée de la surface de la terre. Cette contrainte était liée à la façon de définir le géoïde : avant les techniques spatiales, on utilisait des mesures de triangulation à partir d'un point défini par mesure astronomique.
 
-![](http://www.ngi.be/images/2/1/lokalgeodatf.gif)
-
 Depuis l'avènement des techniques spatiales, on est capable de définir un *datum global* grâce aux mesures satellitaires. Le système mondial de référence est aujourd'hui le WGS 84, associé au GPS.
 
 Il y a donc aujourd'hui beaucoup de *datum*, un pour la plupart des pays, qui maximise la modélisation de l'ellipsoïde sur leur territoire, et des datums globaux.
