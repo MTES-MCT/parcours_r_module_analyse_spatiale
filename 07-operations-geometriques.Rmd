@@ -1,4 +1,4 @@
-# Les opérations géométriques
+# Les opérations géométriques {#operations-geometriques}
 
 Nous allons voir dans ce chapitre comment opérer des opérations géométriques sur nos vecteurs.
 

@@ -1,4 +1,4 @@
-# Les reprojections
+# Les reprojections {#les-reprojections}
 
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 

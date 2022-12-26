@@ -1,14 +1,15 @@
-name: Image docker parcours_r_module_analyse_spatiale
+name: Image docker parcours_r_module7_analyse_spatiale
 
 on:
   push:
     branches:
       - main
       - master
+      - dev
     paths:
       - .github/workflows/rstudio-image-build.yml
       - Dockerfile
-      - renv.lock
+      - DESCRIPTION
       
   pull_request:
     types:
@@ -16,12 +17,11 @@ on:
     branches:
       - main
       - master
+      - dev
     paths:
       - .github/workflows/rstudio-image-build.yml
       - Dockerfile
-      - renv.lock
-      
-  workflow_dispatch:
+      - DESCRIPTION
 
 jobs:
   build-rstudio-image:

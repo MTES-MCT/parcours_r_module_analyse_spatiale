@@ -4,10 +4,8 @@ author: "Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [packages.bib]
-biblio-style: apalike
 link-citations: yes
-description: "Support de cours du module 7  « Analyse spatiale » de la valise pédagogique parcours-r MTES/MCTRCT"
+description: "Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT"
 ---
 
 # Introduction {.unnumbered}
@@ -23,7 +21,8 @@ description: "Support de cours du module 7  « Analyse spatiale » de la valise 
 cat(stringi::stri_read_lines("https://raw.githubusercontent.com/MTES-MCT/parcours-r/master/parties_communes/le_parcours_R.Rmd", encoding = "UTF-8"), sep = "\n")
 ```
 
-## Le groupe de référents R du pôle ministériel
+
+## Le groupe de référents R du pôle ministériel {.unnumbered}
 
 ```{r collecte prez ref, warning=FALSE, echo=FALSE, results='asis'}
 # Utilisation du chapitre de présentation des référents présent dans https://github.com/MTES-MCT/parcours-r
@@ -52,9 +51,4 @@ theme_set(theme_gray())
 tmap_mode("plot")
 ```
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr','kableExtra', 'rmarkdown','sf','ggplot2','tmap'
-), 'packages.bib')
-```
+

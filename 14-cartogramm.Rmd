@@ -1,4 +1,4 @@
-# Créer des cartogrammes
+# Créer des cartogrammes {#cartogramm}
 
 Un cartogramme est une carte pour laquelle une variable continue, remplace la surface des territoires représentés. La géométrie de l'espace de la carte est déformée afin de se conformer aux informations relatives à cette variable.
 
