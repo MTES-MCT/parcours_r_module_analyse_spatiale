@@ -13,8 +13,8 @@ library(mapview)
 Nous utiliserons les contours des territoires de la France métropolitaine issus de Admin Express.
 
 
-```{r}
-load("data/admin_express.RData")
+```{r, eval = FALSE}
+load("extdata/admin_express.RData")
 ```
 
 Prenons la table des départements, cette table est un `spatial dataframe`.
@@ -26,7 +26,7 @@ class(departements_geo)
 On peut utiliser `mapview()` pour voir ce jeu de données.
 
 ```{r}
-mapview(departements_geo, zcol = "NOM_DEP", legend = F)
+mapview(departements_geo, zcol = "NOM_DEP", legend = FALSE)
 ```
 
 Comme évoqué dans la partie 1, on peut tout à fait appliquer sur un `spatial dataframe` les verbes du `tidyverse` comme sur un `dataframe`, notamment utiliser  les verbes de `dplyr`.

@@ -10,6 +10,7 @@ library(tidyverse)
 library(mapview)
 library(ggplot2)
 library(rmapshaper)
+library(patchwork)
 ```
 
 On distingue deux types d'opérations : les opérations unaires et binaires.
@@ -25,9 +26,12 @@ Le package `sf` contient une fonction `st_simplify` qui implémente l'algorithme
 
 La fonction utilise le paramètre `dTolerance` pour controler le niveau de simplification.
 
-```{r}
-load("data/admin_express.RData")
+```{r, eval = FALSE}
+load("extdata/admin_express.RData")
+```
 
+
+```{r}
 departement_56 <- departements_geo %>%
   filter(INSEE_DEP == "56")
 

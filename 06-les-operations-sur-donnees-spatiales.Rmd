@@ -15,8 +15,8 @@ library(ggplot2)
 Nous utiliserons les données de la table des régions de la France métropolitaine et des établissements publics de coopération intercommunale (EPCI)^[https://fr.wikipedia.org/wiki/%C3%89tablissement_public_de_coop%C3%A9ration_intercommunale] de la France Métropolitaine
 
 
-```{r}
-load("data/admin_express.RData")
+```{r, eval = FALSE}
+load("extdata/admin_express.RData")
 ```
 
 ```{r}
@@ -49,6 +49,19 @@ L'opération de filtre sur les données spatiales fonctionne en prenant la table
 On peut spécifier différents prédicats spatiaux pour réaliser ce filtre.
 
 En deuxième argument (`, ,`), on peut rajouter, comme dans une opération `[` classique de R les colonnes que l'on souhaite garder.
+
+On aurait aussi pu écrire en *tidyverse* :
+
+```{r}
+# 1er méthode
+epci_d44 <- epci_geo %>% 
+  st_filter(departement_44, .predicate = st_within)
+
+# 2e méthode
+epci_d44 <- epci_geo %>%
+  filter(st_within(.,departement_44, sparse = FALSE))
+```
+Il faut noter la présence du paramètre `sparse = FALSE`. L'option `sparse` est abordée dans la partie [Prédicats spatiaux]. Il faut retenir que pour utiliser les prédicats à l'intérieur de la fonction `filter`, il faut utiliser l'option `sparse = FALSE`.
 
 On voit ici que le résultat n'est pas très concluant :  il manque 3 epci du département, ceux qui sortent des frontières de celui-ci.
 Prenons un buffer autour du département.
@@ -89,6 +102,15 @@ departement_44_buffer_negatif <- departement_44 %>%
 epci_d44 <- epci_geo[departement_44_buffer_negatif, , op = st_intersects]
 
 mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
+```
+
+On aurait pu obtenir le même résultat en prenant les EPCI  à l'intérieur du département 44 (avec `st_within`) ainsi que les EPCI qui chevauchent (avec `st_overlaps`)  le département 44.
+
+```{r}
+epci_d44 <- epci_geo %>%
+  filter(st_within(.,departement_44, sparse = FALSE) | st_overlaps(., departement_44, sparse = FALSE))
+
+mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
 ```
 
 ## Prédicats spatiaux
@@ -144,16 +166,16 @@ Le résultat de cette opération est une liste. Par défaut, la fonction `st_int
 
 Si on souhaite mieux utiliser cette information, on peut vouloir privilégier la *matrice dense*, qui renvoie une matrice de booléen pour chaque relation possible.
 
-Pour cela on peut utiliser l'option `sparse=F`.
+Pour cela on peut utiliser l'option `sparse = FALSE`.
 
 ```{r}
-st_intersects(p, a, sparse = F)
+st_intersects(p, a, sparse = FALSE)
 ```
 
 `st_within()` est une variante de `st_intersect()` qui ne renvoie `TRUE` que pour les points *à l'intérieur* du polygone.
 
 ```{r}
-st_within(p, a, sparse = F)
+st_within(p, a, sparse = FALSE)
 ```
 
 Une variante de `st_within()` permet d'ajouter un critère de distance pour intégrer des points *presque* dans le polygone, `st_is_within_distance()`.
@@ -165,25 +187,25 @@ st_is_within_distance(p, a, dist = 0.8)
 `st_touches()` permet de récupérer les points qui *touchent* le polygone sans sans être à l'intérieur du polygone.
 
 ```{r}
-st_touches(p, a, sparse = F)
+st_touches(p, a, sparse = FALSE)
 ```
 
 `st_contains(x,y)` est équivalent à `st_within(y,x)`. Par exemple si nous voulons savoir lesquelles de nos lignes `l` sont contenues dans `a`.
 
 ```{r}
-st_contains(a, l, sparse = F)
+st_contains(a, l, sparse = FALSE)
 ```
 
 Equivalent à :
 
 ```{r}
-st_within(l, a, sparse = F)
+st_within(l, a, sparse = FALSE)
 ```
 
 `st_crosses()`  renvoie TRUE si l'intersection des deux géométries est une géométrie de dimension n-1 ou n est le maximum des dimensions des deux objets et si l'intersection est à l'intérieur des deux objets.
 
 ```{r}
-st_crosses(l, a, sparse = F)
+st_crosses(l, a, sparse = FALSE)
 ```
 
 Il existent encore d'autres prédicats qu'on ne détaillera pas ici : 
@@ -216,8 +238,12 @@ Ce cas est relativement simple, une jointure spatiale entre une liste de points 
 On va utiliser ici le fichier sirene du département de Loire Atlantique géocodé par Christian Quest^[http://data.cquest.org/geo_sirene/].
 Prenons les entreprises de production de sel sur ce département et regardons dans quelle partie du territoire elles se trouvent.
 
+```{r, eval = FALSE}
+load("extdata/sirene.RData")
+```
+
+
 ```{r}
-load("data/sirene.RData")
 sirene44_sel <- sirene44 %>%
   filter(APET700 == "0893Z")
 
