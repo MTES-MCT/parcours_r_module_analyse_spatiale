@@ -1,3 +1,3 @@
 if (Sys.getenv("USERNAME") != "onyxia") {
-  source("renv/activate.R")
+  # source("renv/activate.R")
 }

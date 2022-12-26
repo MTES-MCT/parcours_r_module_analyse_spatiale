@@ -1,12 +1,12 @@
 # (PART) A propos {-}
 
-# A propos de ce document {-}
+# A propos de ce document {#a-propos}
 
 ## Code source {-}
 
 Le code source de ce document se trouve à l'adresse suivante : https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale
 
-Il est généré par l’excellente extension [bookdown](https://bookdown.org/yihui/bookdown/) de [Yihui Xie](https://yihui.name/en/).
+Il est généré par l'excellente extension [bookdown](https://bookdown.org/yihui/bookdown/) de [Yihui Xie](https://yihui.name/en/).
 
 ## Inspiration {-}
 

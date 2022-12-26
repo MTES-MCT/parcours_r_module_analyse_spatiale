@@ -1,6 +1,6 @@
 # (PART) Créer des cartes sous R {-}
 
-# Créer des cartes avec ggplot2
+# Créer des cartes avec ggplot2 {#creer-des-cartes-avec-ggplot2}
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
 ```{r, eval=T,echo=F}

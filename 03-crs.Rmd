@@ -1,4 +1,4 @@
-# Les Systèmes de Coordonnées de Référence
+# Les Systèmes de Coordonnées de Référence {#crs}
 
 Les données spatiales vises à modéliser la terre. 
 La terre est un objet dont la mesure a une longue histoire, qu'on a pensé plate, cylindrique, ronde,  ellipsoïde. Maintenant, on sait que la terre a cette forme là : 
