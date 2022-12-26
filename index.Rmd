@@ -4,10 +4,8 @@ author: "Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [packages.bib]
-biblio-style: apalike
 link-citations: yes
-description: "Support de cours du module 7  « Analyse spatiale » de la valise pédagogique parcours-r MTES/MCTRCT"
+description: "Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT"
 ---
 
 # Introduction {.unnumbered}
@@ -52,9 +50,4 @@ theme_set(theme_gray())
 tmap_mode("plot")
 ```
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr','kableExtra', 'rmarkdown','sf','ggplot2','tmap'
-), 'packages.bib')
-```
+
