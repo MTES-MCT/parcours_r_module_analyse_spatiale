@@ -5,6 +5,7 @@ Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
 ```{r pkg_chap_12_ggplot}
 library(sf)
+library(tmap)
 library(tidyverse)
 library(ggplot2)
 library(patchwork)
@@ -24,7 +25,7 @@ theme_set(theme_gray())
 
 `{ggplot2}` est un package de visualisation de données qui dispose de templates (thèmes, palettes) à la Marque Etat grâce au package `{gouvdown}`, créé par la communauté d'agents de l'Etat [Spyrales](https://www.spyrales.fr/).
 
-![](images/spyrales.PNG){#id .class width=500}
+![](pic/spyrales.PNG){#id .class width=500}
 
 
 ### Présentation du package ggplot2
@@ -490,7 +491,7 @@ sdg_indicators %>%
 
 Il s'agit d'ensemble de fonctionnalités qui permet de produire des documents/éléments avec une charte graphique prenant en compte la marque État.
 
-![](images/palette.PNG){#id .class width=500}
+![](fig/palette.PNG){#id .class width=500}
 
 L'utilisation de [theme_gouv()](https://spyrales.github.io/gouvdown/reference/theme_gouv.html) permet d'appliquer cette charte.
 

@@ -13,7 +13,7 @@ library(tmap)
 
 Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/latitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
 
-La plupart des fonctions de `sf` présupposent s'appliquer sur un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent le font aussi.
+Autrefois, la plupart des fonctions de `sf` présupposaient de s'appliquer sur un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent le font aussi.
 
 ## Un premier exemple de reprojection
 
@@ -38,17 +38,14 @@ mapview(nantes)
 st_is_longlat(nantes)
 ```
 
-Essayons de créer un buffer de 1km autour de Nantes
+Essayons de créer un buffer de 1 km autour de Nantes.
 
 ```{r, warning=TRUE}
-nantes_buffer <- st_buffer(nantes, dist = 1)
-```
-
-```{r}
+nantes_buffer <- st_buffer(nantes, dist = 1000)
 mapview(list(nantes, nantes_buffer))
 ```
 
-Le message est clair et indique qu'un buffer ne marchera pas correctement sur des données en projection longitude / lattitude.
+Le buffer est pixelisé en longitude / latitude.
 
 Tentons une reprojection. La fonction permettant une reprojection est `st_transform()`.
 On va ici passer en lambert 93 nos données.
@@ -64,10 +61,8 @@ st_is_longlat(nantes_proj)
 ```
 
 ```{r, warning=TRUE}
-nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1)
-```
+nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1000)
 
-```{r}
 mapview(list(nantes_proj, nantes_proj_buffer))
 ```
 
@@ -81,7 +76,7 @@ Quelques cas usuels qui peuvent vous amener à reprojeter vos données :
 
 - le besoin de visualiser vos données suivant la conversion de certaines propriétés des objets à la surface de la terre.
 
-- l'usage de fonctions demandant à utiliser des CRS projetés (comme `st_buffer()` ci-dessus)
+- l'usage de fonctions recommandant d'utiliser des CRS projetés (comme `st_buffer()` ci-dessus)
 
 Un exemple d'usage : la distance de Rennes à Nantes
 
@@ -112,11 +107,18 @@ st_distance(rennes, nantes)
 
 ## Quel CRS utiliser ?
 
-A cette question, il y a rarement une bonne réponse.
+A cette question, il y a rarement une bonne réponse.  
 
-En ce qui concerne les CRS géométriques, le plus simple est d'utiliser le WGS 84, qui est de loin le plus populaire, avec lequel beaucoup de données sont fournies.
+En ce qui concerne les CRS géométriques, le plus simple est d'utiliser le WGS 84 (EPSG 4326), qui est de loin le plus populaire, avec lequel beaucoup de données sont fournies. 
 
-En ce qui concerne les CRS projetés, utiliser par défaut le lambert 93, le CRS officiel français, pour les données nationales fait sens.
+En ce qui concerne les CRS projetés, il existe des CRS officiels à utiliser préférentiellement pour les données françaises. 
+En métropole, on utilise le Lambert 93 (EPSG 2154).
+Pour les DROM, on utilise les CRS :  
+
+* RGAF09 / UTM zone 20N, code EPSG 5490, pour les Antilles françaises,  
+* RGFG95 / UTM zone 22N, code EPSG 2972, pour la Guyane,
+* RGR92 / UTM zone 40S, code EPSG 2975, pour la Réunion, 
+* RGM04 / UTM zone 38S, code EPSG 4471, pour Mayotte.
 
 Ensuite votre choix va dépendre des propriétés que vous souhaitez conserver.
 

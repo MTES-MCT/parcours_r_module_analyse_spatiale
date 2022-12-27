@@ -10,7 +10,9 @@ chap <- c("index.Rmd", list.files(".", ".Rmd")) %>%
   gsub("^[[:digit:]]*-", "", .)
 
 
-propre.rpls::creer_pdf_book(nom_pdf = "Parcours_R_support_m7_Analyses_spaciales.pdf",
+propre.rpls::creer_pdf_book(nom_pdf = "Parcours_R_support_m7_Analyses_spatiales.pdf",
                             pages_html = chap)
 
-"1-25;28-39;51-60;72-136;138-146"
+# Des pages blanches ajoutées inutilement
+# Pour imprimer, garder les pages
+# "1-25;28-39;51-60;72-136;138-146"
