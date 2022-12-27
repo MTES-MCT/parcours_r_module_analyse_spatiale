@@ -491,7 +491,7 @@ sdg_indicators %>%
 
 Il s'agit d'ensemble de fonctionnalités qui permet de produire des documents/éléments avec une charte graphique prenant en compte la marque État.
 
-![](fig/palette.PNG){#id .class width=500}
+![](pic/palette.PNG){#id .class width=500}
 
 L'utilisation de [theme_gouv()](https://spyrales.github.io/gouvdown/reference/theme_gouv.html) permet d'appliquer cette charte.
 
