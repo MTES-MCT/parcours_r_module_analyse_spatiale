@@ -2,7 +2,7 @@
 
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
-```{r}
+```{r pkg_chap_8_reproj}
 library(sf)
 library(tidyverse)
 library(patchwork)
@@ -11,7 +11,7 @@ library(tmap)
 ```
 
 
-Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/lattitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
+Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/latitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
 
 La plupart des fonctions de `sf` présupposent s'appliquer sur un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent le font aussi.
 

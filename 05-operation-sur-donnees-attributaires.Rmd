@@ -4,7 +4,7 @@
 
 Dans ce chapitre, nous allons utiliser les packages suivants :
 
-```{r}
+```{r pkg_chap_5_donnees_attr}
 library(sf)
 library(tidyverse)
 library(mapview)

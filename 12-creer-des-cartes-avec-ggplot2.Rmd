@@ -3,11 +3,7 @@
 # Créer des cartes avec ggplot2 {#creer-des-cartes-avec-ggplot2}
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
-```{r, eval=TRUE, echo=FALSE}
-theme_set(theme_gray())
-```
-
-```{r}
+```{r pkg_chap_12_ggplot}
 library(sf)
 library(tidyverse)
 library(ggplot2)
@@ -20,7 +16,16 @@ library(gouvdown)
 library(gouvdown.fonts)
 ```
 
+```{r, eval=TRUE, echo=FALSE}
+theme_set(theme_gray())
+```
+
 ## Quelques rappels sur ggplot2
+
+`{ggplot2}` est un package de visualisation de données qui dispose de templates (thèmes, palettes) à la Marque Etat grâce au package `{gouvdown}`, créé par la communauté d'agents de l'Etat [Spyrales](https://www.spyrales.fr/).
+
+![](images/spyrales.PNG){#id .class width=500}
+
 
 ### Présentation du package ggplot2
 
@@ -78,7 +83,7 @@ Par exemple, si l'on souhaite représenter le taux de mortalité maternelle (Mat
 
 ```{r, fig.height=3.5, warning=FALSE}
 sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
+  filter(timeperiod == 2015) %>% 
   ggplot() +
     geom_point(aes(x = gdp_per_cap, y = sh_sta_mmr))
 
@@ -266,7 +271,6 @@ Par exemple: `theme_classic()`, `theme_bw()`, `theme_dark()`, ...
 Des packages externes permettent d'enrichir cette collection de thèmes, par exemple `ggthemes` ou `hrbrthemes`.
 
 Lorsque l'on souhaite garder une cohérence entre plusieurs graphiques, le mieux est d'en définir un à part pour l'appeler ensuite.
-
 
 #### Les fonctions "élément"
 
@@ -481,6 +485,31 @@ sdg_indicators %>%
   theme_mtes()
 ```
 
+#### Thème - package `{gouvdown}`
+
+
+Il s'agit d'ensemble de fonctionnalités qui permet de produire des documents/éléments avec une charte graphique prenant en compte la marque État.
+
+![](images/palette.PNG){#id .class width=500}
+
+L'utilisation de [theme_gouv()](https://spyrales.github.io/gouvdown/reference/theme_gouv.html) permet d'appliquer cette charte.
+
+
+```{r fg7_6_1}
+
+ggplot(sdg_indicators) +
+  geom_point(aes(x = gdp_per_cap, y = sh_sta_mmr, color = continent)) +
+  labs(title = "Mortalité maternelle en fonction du PIB par habitant",
+    subtitle = "En 2015",
+    x = "PIB",
+    y = "Taux de mortalité de la mère \n(pour 100 000 naissances)",
+    caption = "Source : ODD / ONU") +
+  theme_gouv(plot_title_size = 15,
+    subtitle_size = 11,
+    base_size = 10)
+```
+
+NB: Pour les cartes, [theme_gouv_map()](https://spyrales.github.io/gouvdown/reference/theme_gouv_map.html) sera privilégié.
 
 ### Les scales
 
@@ -690,13 +719,13 @@ sdg_indicators_sf <- World %>%
   st_transform(crs = st_crs(3857))
 ```
 
-```{r, echo=TRUE, eval=TRUE, warning= ALSE, fig.height=5, fig.width=12}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=12}
 map_sdg_indicators <- sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   ggplot() +
-  geom_sf(aes(fill = log(sh_sta_mmr)),color="white",size=.2)+
-  scale_fill_viridis_c()+
-  theme_minimal()+
+  geom_sf(aes(fill = log(sh_sta_mmr)), color="white", size=.2)+
+  scale_fill_viridis_c() + 
+  theme_minimal() +
   theme(panel.background = element_rect(fill = "light blue"))
 map_sdg_indicators
 ```
@@ -705,9 +734,9 @@ On peut exploiter de la même façon les différentes fonctions vues précédemm
 
 ```{r, warning=FALSE, fig.height=12, fig.width=14}
 sdg_indicators_sf %>% 
-  filter(timeperiod %in% c("2000","2005","2010","2015")) %>% 
+  filter(timeperiod %in% c("2000", "2005", "2010", "2015")) %>% 
            ggplot() +
-           geom_sf(aes(fill = log(sh_sta_mmr)),color="white",size=.2)+
+           geom_sf(aes(fill = log(sh_sta_mmr)), color="white", size=.2)+
            scale_fill_viridis_c(
              option = "magma",
              direction = 1,
@@ -738,24 +767,21 @@ sdg_indicators_sf %>%
 
 ### Les cartes à ronds proportionnels
 
-ggplot ne peut attribuer par défaut un rond proportionnel à un polygone.
+## Les cartes à ronds proportionnels
 
-Pour travailler sur des ronds proportionnels, il faut d'abord créer le centroïde de nos zones et ensuite tracer un rond proportionnel avec `geom_sf()`.
+La fonction ***stat_sf_coordinates()*** permet d'extraire les coordonnées d'un objet 'sf'.
+Ainsi un rond proportionnel peut être attribué à un polygone.
 
-```{r, echo=TRUE, eval=TRUE, warning= FALSE, fig.height=5, fig.width=12}
-World_centroid <- st_centroid(World, of_largest_polygon = TRUE)
-sdg_indicators_sf_centroid <- World_centroid %>%
-  left_join(sdg_indicators)
+```{r cart_3, echo=T, eval=T, fig.height=5, fig.width=12, cache=TRUE}
 
-map_sdg_indicators_centroid <- sdg_indicators_sf_centroid %>% 
+sdg_indicators_sf %>% 
   filter(timeperiod == "2015", !is.na(sh_sta_mmr)) %>% 
-  ggplot() +
-  geom_sf(data = World, fill = "white") +
-  geom_sf(aes(color = sh_sta_mmr, size = sh_sta_mmr))+
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "light blue"))
+    ggplot() + 
+    geom_sf(fill = "white") +
+    stat_sf_coordinates(aes(color = sh_sta_mmr, size = sh_sta_mmr)) +
+    theme_gouv_map() +
+    theme(panel.background = element_rect(fill = "light blue"))
 
-map_sdg_indicators_centroid
 ```
 
 ### Ajouter une barre d'échelle et la flèche du nord
@@ -792,7 +818,8 @@ Filtrons par exemple sur le continent africain.
 
 ```{r}
 bbox_africa <- World %>% 
-  filter(continent=="Africa") %>% 
+  filter(continent == "Africa") %>%
+  st_transform(crs = st_crs(3857)) %>% 
   st_bbox()
 ```
 
@@ -807,7 +834,7 @@ map_sdg_indicators_africa <- sdg_indicators_sf %>%
            ylim = c(bbox_africa[2], bbox_africa[4])
            ) +
   scale_fill_viridis_c() +
-  theme_minimal() +
+  theme_void() +
   theme(legend.position = "right", panel.background = element_rect(fill = "light blue"))
 ```
 

@@ -8,7 +8,7 @@ R permet de produire des cartes en exploitant cette bibliothèque.
 La limitation de `{leaflet}` est qu'il ne permet de visualiser que des données en projection WGS84.
 
 Dans ce chapitre, nous utiliserons les packages suivants
-```{r}
+```{r pkg_chap_15_carto_web}
 library(leaflet)
 library(sf)
 library(tidyverse)
@@ -87,11 +87,16 @@ leaflet(sdg_indicators_2015_sf) %>%
 
 ### Carte à ronds proportionnels
 
-Pour réaliser des ronds proportionnels, il va falloir comme pour `ggplot2` partir des centroides de nos polygones.
+Pour réaliser des ronds proportionnels, il va faut partir des centroïdes de nos polygones.
 
 - Création de la table en entrée 
 
 ```{r}
+World_centroid <- st_centroid(World, of_largest_polygon = T)
+sdg_indicators_sf_centroid <- World_centroid %>%
+  left_join(sdg_indicators)
+
+
 sdg_indicators_2015_sf_centroid <- sdg_indicators_sf_centroid %>% 
   filter(timeperiod ==2015)
 ```

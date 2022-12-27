@@ -4,7 +4,7 @@ Nous allons voir dans ce chapitre comment opérer des opérations géométriques
 
 Dans ce chapitre, nous allons utiliser les packages suivants.
 
-```{r}
+```{r pkg_chap_7_ope_geom}
 library(sf)
 library(tidyverse)
 library(mapview)

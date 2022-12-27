@@ -16,6 +16,8 @@ Imports:
     ggplot2,
     ggspatial,
     glue,
+    gouvdown,
+    gouvdown.fonts,
     htmltools,
     htmlwidgets,
     httr,

@@ -9,7 +9,7 @@ On peut ensuite utiliser cette nouvelle géométrie pour la visualiser avec tout
 
 Dans ce chapitre nous allons utiliser les packages suivants.
 
-```{r}
+```{r pkg_chap_14_cartogram}
 library(cartogram)
 library(tmap)
 library(ggplot2)

@@ -29,7 +29,7 @@ Ce document est mise à disposition selon les termes de la [Licence Ouverte2.0](
 ## Session info {-}
 
 
-```{r, echo = FALSE}
+```{r a_propos, echo = FALSE}
 devtools::session_info()$platform
 
 package <- devtools::session_info()$packages %>% as_tibble() %>% 

@@ -1,6 +1,6 @@
 # Créer des cartes avec tmap {#creer-des-cartes-avec-tmap}
 
-```{r, echo=FALSE, eval=TRUE}
+```{r tmap, echo=FALSE, eval=TRUE}
 tmap_mode("plot")
 ```
 

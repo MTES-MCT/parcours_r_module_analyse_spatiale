@@ -5,7 +5,7 @@ Les opérations spatiales sont des opérations prenant nos données en entrée p
 
 Dans ce chapitre, nous allons utiliser les packages suivants.
 
-```{r}
+```{r pkg_chap_6_ope_spatiales}
 library(sf)
 library(tidyverse)
 library(mapview)

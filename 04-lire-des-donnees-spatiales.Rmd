@@ -4,7 +4,7 @@
 
 Dans ce chapitre, nous allons utiliser les packages suivants : 
 
-```{r}
+```{r pkg_chap_4_lecture}
 library(sf)
 library(DT)
 library(tidyverse)
