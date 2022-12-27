@@ -26,7 +26,7 @@ Le package `sf` contient une fonction `st_simplify` qui implémente l'algorithme
 
 La fonction utilise le paramètre `dTolerance` pour controler le niveau de simplification.
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 load("extdata/admin_express.RData")
 ```
 
@@ -42,7 +42,7 @@ departement_56_super_simplifie <- departement_56 %>%
   st_simplify(dTolerance = 2000)
 ```
 
-```{r,echo=TRUE,}
+```{r, echo=TRUE}
 p1 <- ggplot() + 
   geom_sf(data = departement_56) + 
   theme_void() + 
@@ -71,7 +71,9 @@ object.size(departement_56_simplifie)
 object.size(departement_56_super_simplifie)
 ```
 
-Le problème de l'algorithme Douglas-Peucker est qu'il simplifie les géométries objet par objet. Cela conduit à perdre la topologie, et à des trous ou des chevauchements. L'option `preserveTopology = T` de `st_simplify()` doit permettre en théorie d'éviter ce problème, mais ne marche pas au delà d'un certain seuil.
+Le problème de l'algorithme Douglas-Peucker est qu'il simplifie les géométries objet par objet. 
+Cela conduit à perdre la topologie, et à des trous ou des chevauchements. 
+L'option `preserveTopology = TRUE` de `st_simplify()` doit permettre en théorie d'éviter ce problème, mais ne marche pas au delà d'un certain seuil.
 
 Par exemple, prenons 2 départements autour du Morbihan.
 
@@ -100,7 +102,7 @@ On constate clairement des trous à la frontière des 3 départements.
 
 Un autre algorithme peut être utilisé qui n'a pas les mêmes limitations, l'algorithme de Visvalingam^[Visvalingam, M., and J. D. Whyatt. 1993. “Line Generalisation by Repeated Elimination of Points.” The Cartographic Journal 30 (1): 46–51. https://doi.org/10.1179/000870493786962263.].
 
-Le package `rmapshaper` contient une fonction `ms_simplify()` qui implémente cet algorithme.
+Le package `rmapshaper` contient une fonction `ms_simplify()` qui implémente cet algorithme. 
 Ce package est une interface vers Mapshaper^[https://mapshaper.org/], un site en ligne d'édition de données cartographiques.
 
 ```{r}
@@ -124,8 +126,10 @@ p1 + p3 + plot_layout(nrow = 1)
 
 ### Centroïde
   
-Le centroïde permet d'identifier le centre d'un objet géométrique. Il y a plusieurs façons de définir un centroïde. La plus usuelle est le centroïde géographique, qui peut être défini comme le point d'équilibre d'un objet (celui en dessous duquel votre doigt peut faire tenir en équilibre cet objet).
-La fonction permettant de définir un centroïde dans `sf` est `st_centroid()`.
+Le centroïde permet d'identifier le centre d'un objet géométrique. 
+Il y a plusieurs façons de définir un centroïde. 
+La plus usuelle est le centroïde géographique, qui peut être défini comme le point d'équilibre d'un objet (celui en dessous duquel votre doigt peut faire tenir en équilibre cet objet). 
+La fonction permettant de définir un centroïde dans `sf` est `st_centroid()`. 
 
 ```{r}
 centres_departements <- st_centroid(departements_geo)
@@ -146,9 +150,12 @@ Parfois, le centroïde peut se placer en dehors de l'objet lui même. Par exempl
 
 Dans ce cas on peut utiliser `st_point_on_surface()` qui garantit que le point est sur la surface de l'objet de départ.
 
+<!-- TO DO st_centroid(departements_geo, of_largest_polygon = ) -->
+
 ### Buffer
 
-Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire ou polygonal, le buffer va créer une nouvelle couche vectorielle. La géométrie de cette couche représente des objets surfaciques dont les frontières sont positionnées à une distance euclidienne, définie par l'utilisateur, des limites des objets vectoriels de la couche de départ.
+Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire ou polygonal, le buffer va créer une nouvelle couche vectorielle. 
+La géométrie de cette couche représente des objets surfaciques dont les frontières sont positionnées à une distance euclidienne, définie par l'utilisateur, des limites des objets vectoriels de la couche de départ. 
 
 ```{r}
 departement_44_buffer <- departement_44 %>%

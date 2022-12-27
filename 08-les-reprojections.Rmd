@@ -40,7 +40,7 @@ st_is_longlat(nantes)
 
 Essayons de créer un buffer de 1km autour de Nantes
 
-```{r, warning=T}
+```{r, warning=TRUE}
 nantes_buffer <- st_buffer(nantes, dist = 1)
 ```
 
@@ -63,7 +63,7 @@ Le CRS lambert 93 est bien un CRS projeté :
 st_is_longlat(nantes_proj)
 ```
 
-```{r,warning=T}
+```{r, warning=TRUE}
 nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1)
 ```
 
@@ -148,7 +148,7 @@ st_crs(World)
 st_crs(World_pekin)
 ```
 
-```{r,echo = F}
+```{r, echo=FALSE}
 p1 <- ggplot() +
   geom_sf(data = World)
 p2 <- ggplot() +

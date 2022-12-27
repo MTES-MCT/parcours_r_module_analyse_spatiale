@@ -1,6 +1,6 @@
 # Créer des cartes avec tmap {#creer-des-cartes-avec-tmap}
 
-```{r,echo=F,eval=T}
+```{r, echo=FALSE, eval=TRUE}
 tmap_mode("plot")
 ```
 
@@ -40,7 +40,7 @@ library(variousdata)
 
 Pour charger une donnée géométrique, il faut utiliser la fonction `tm_shape()`. `tm_shape()` permet de fixer plusieurs options de base de notre carte : la projection, la bbox, un facteur de simplification...
 
-```{r,eval=T,echo=T}
+```{r, eval=TRUE, echo=TRUE}
 wgs_84 <- tm_shape(World, projection = st_crs(4326)) + 
     tm_polygons() + 
 tm_layout("Le monde en projection WGS84", inner.margins=c(0,0,.1,0), title.size=.8)
@@ -52,7 +52,7 @@ tm_layout(
     inner.margins=c(0,0,.1,0), title.size=.8)
 ```
 
-```{r,echo = F,eval=T}
+```{r, echo=FALSE, eval=TRUE}
 tmap_arrange(wgs_84,robin)
 ```
 
@@ -60,7 +60,7 @@ tmap_arrange(wgs_84,robin)
 
 La fonction `tm_polygons()` permet de faire des cartes choroplèthe.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
@@ -73,12 +73,12 @@ sdg_indicators_sf %>%
 
 La fonction `tm_bubble()` permet de faire des cartes à ronds proportionnels. L'utilisation de `tm_polygons()` permet sans lui spécifier de paramètre d'afficher les frontière des pays avec une couleur de remplissage par défaut.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
   tm_polygons()+
-  tm_bubbles(size="sh_sta_mmr",col="sh_sta_mmr",textNA = "Valeur manquante")
+  tm_bubbles(size = "sh_sta_mmr", col = "sh_sta_mmr", textNA = "Valeur manquante")
 ```
 
 ## Discretisation
@@ -95,23 +95,23 @@ La méthode de jenks par exemple permet de maximiser la variance interclasse.
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA="Valeur manquante", style="jenks")
+  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style="jenks")
 ```
 
-L'option `n=` permet d'imposer un nombre de classes à la méthode utilisée.
+L'option `n =` permet d'imposer un nombre de classes à la méthode utilisée.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks",n = 3)
+  tm_shape() +
+  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks", n = 3)
 ```
 
 ## Exemples de cartes avec facet
 
 `tm_facets()` permet de réaliser des cartes à facette avec la même logique que celle de `ggplot2`.
 
-```{r, echo=T,eval=T,fig.height=6,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, fig.height=6, fig.width=12}
 sdg_indicators_sf %>%
   filter(timeperiod %in% c("2000", "2005", "2010", "2015")) %>%
   tm_shape() +
@@ -125,16 +125,17 @@ sdg_indicators_sf %>%
 
 La fonction `tmaptools::palette_explorer()` permet d'accéder à une interface très simple de définition d'une palette de couleur à partir des palette *brewer*.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=8}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks",palette = get_brewer_pal("OrRd", n = 5, contrast = c(0.2, 1)), plot = F)
+  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks", 
+              palette = get_brewer_pal("OrRd", n = 5, contrast = c(0.2, 1)), plot = FALSE)
 ```
 
 On peut également utiliser n'importe qu'elle palette, par exemple la pelette viridis, mais sans l'interface proposée par `palette_explorer()` : 
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=8}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
@@ -143,15 +144,15 @@ sdg_indicators_sf %>%
 
 ## La mise en page
 
-`tm_layout()` permet de controler les polices, la légende, les marges, les couleurs.
-l'option `design.mode=T` permet de voir visuellement les marges,la position de la légende.
+`tm_layout()` permet de contrôler les polices, la légende, les marges, les couleurs. 
+L'option `design.mode = TRUE` permet de voir visuellement les marges, la position de la légende.
 Le titre de la légende ne se définit pas dans `tm_layout()` mais dans `tm_polygons()`. 
 
 L'option `title` de ces fonctions est l'équivalent d'un libellé de la variable mise dans l'aesthetic.
 
 On peut rajouter une barre d'échelle et la flèche du nord avec `tm_scale_bar()` et `tm_compass()`.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=8}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
@@ -163,7 +164,7 @@ sdg_indicators_sf %>%
             legend.position = c("left","bottom"),
             legend.bg.color = "white",
             legend.bg.alpha = .4,
-            legend.outside = F,
+            legend.outside = FALSE,
             main.title.position = "center",
             frame = FALSE)+
   tm_scale_bar(position = c("center","bottom"))+
@@ -172,7 +173,7 @@ sdg_indicators_sf %>%
 
 Avec les cartes en ronds proportionnels, on peut spécifier un titre pour la couleur et la taille du rond.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=8}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
@@ -185,7 +186,7 @@ sdg_indicators_sf %>%
             main.title.size=1.2,
             outer.margins=c(0,0,0,0),
             legend.position=c("left","bottom"),
-            legend.outside = F,
+            legend.outside = FALSE,
             main.title.position = "center",
             inner.margins = c(0, 0, 0, 0),
             frame = FALSE)+
@@ -208,7 +209,7 @@ tmap_sdg_indicators_africa <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   tm_shape(bbox = bbox_africa)+
   tm_polygons("sh_sta_mmr", style = "jenks",palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))+
-  tm_layout(legend.show	= F)
+  tm_layout(legend.show	= FALSE)
 
 tmap_arrange(tmap_sdg_indicators,tmap_sdg_indicators_africa,nrow = 1)
 ```
@@ -218,7 +219,7 @@ tmap_arrange(tmap_sdg_indicators,tmap_sdg_indicators_africa,nrow = 1)
 
 `tmap` permet simplement de convertir une carte *image* en carte interactive. Pour cela il faut changer le mode d'affichage de la carte avec `tmap_mode()`
 
-```{r,warning=F,message=F}
+```{r, warning=FALSE, message=FALSE}
 tmap_mode("view")
 
 sdg_indicators_sf %>% 
@@ -232,7 +233,7 @@ sdg_indicators_sf %>%
 
 La fonction `tmap_save()`  permet d'exporter une carte `tmap`. Suivant le `tmap_mode()` activé, l'export peut se faire en fichier image ou en fichier html.
 
-```{r echo=T,eval=F,fig.height=5,fig.width=8}
+```{r echo=TRUE, eval=FALSE, fig.height=5, fig.width=8}
 carte <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   tm_shape() +
@@ -248,7 +249,7 @@ carte <- sdg_indicators_sf %>%
     main.title.size = 1.2,
     outer.margins = c(0, 0, 0, 0),
     legend.position = c("left", "bottom"),
-    legend.outside = F,
+    legend.outside = FALSE,
     main.title.position = "center",
     inner.margins = c(0, 0, 0, 0)
   )
@@ -261,7 +262,7 @@ tmap_save(carte, filename = "Taux de mortalité de la mère dans le monde.html")
 ```
 
 
-```{r,eval=T,echo=FALSE,message = F}
+```{r, eval=TRUE, echo=FALSE, message=FALSE}
 tmap_mode("plot")
 ```
 

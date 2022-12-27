@@ -62,7 +62,7 @@ On voit que `summarise` permet non seulement d'agréger nos données attributair
 Cette opération permet donc de retrouver directement notre carte des régions métropolitaines.
 
 ```{r}
-mapview(regions, zcol = "INSEE_REG", legend = F)
+mapview(regions, zcol = "INSEE_REG", legend = FALSE)
 ```
 
 On peut enfin effectuer des jointures attributaines sur nos données en utilisant les verbes à deux dataframe de `dplyr`.
@@ -80,7 +80,7 @@ regions <- regions %>%
 Nous pouvons alors utiliser ce nouvelle attribut pour nos cartes.
 
 ```{r}
-mapview(regions, zcol = "NOM_REG", legend = F)
+mapview(regions, zcol = "NOM_REG", legend = FALSE)
 ```
 
 > Attention, quand vous réalisez une jointure entre deux tables de données :

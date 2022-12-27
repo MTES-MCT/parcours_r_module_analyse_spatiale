@@ -41,7 +41,7 @@ departement_44 <- departements_geo %>%
 
 epci_d44 <- epci_geo[departement_44, , op = st_within]
 
-mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
 L'opération de filtre sur les données spatiales fonctionne en prenant la table en entrée (`epci_geo`), la table avec laquelle on souhaite définir les lignes à garder (`departement_44`),et l'opérateur qui va définir le test entre les deux géométries. Ici cet opérateur est `st_within(x,y)`, qui renvoie `TRUE` si la géométrie de `x` est contenue à l'intérieur de celle de `y`.
@@ -88,7 +88,7 @@ mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlan
 ```{r}
 epci_d44_buffer <- epci_geo[departement_44_buffer, , op = st_within]
 
-mapview(list(departement_44_buffer, epci_d44_buffer), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44_buffer, epci_d44_buffer), zcol = list("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
 On récupère 2 des 3 epci manquant ainsi. Celui qui manque est l'Epci de Redon qui est à cheval sur la Loire-Atlantique, le Morbihan et l'Ile et Vilaine.
@@ -100,7 +100,7 @@ departement_44_buffer_negatif <- departement_44 %>%
 
 epci_d44 <- epci_geo[departement_44_buffer_negatif, , op = st_intersects]
 
-mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
 On aurait pu obtenir le même résultat en prenant les EPCI  à l'intérieur du département 44 (avec `st_within`) ainsi que les EPCI qui chevauchent (avec `st_overlaps`)  le département 44.
@@ -109,7 +109,7 @@ On aurait pu obtenir le même résultat en prenant les EPCI  à l'intérieur du 
 epci_d44 <- epci_geo %>%
   filter(st_within(.,departement_44, sparse = FALSE) | st_overlaps(., departement_44, sparse = FALSE))
 
-mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
 ## Prédicats spatiaux
@@ -132,7 +132,7 @@ p_multi <- st_multipoint(x = p_matrix)
 p <- st_cast(st_sfc(p_multi), "POINT")
 ```
 
-```{r,echo = F}
+```{r, echo=FALSE}
 ggplot() + geom_sf(data = a, color = "red") + geom_sf(data = p) + geom_sf(data = l, color = "green") + theme_minimal()
 ```
 
@@ -246,7 +246,7 @@ load("extdata/sirene.RData")
 sirene44_sel <- sirene44 %>%
   filter(APET700 == "0893Z")
 
-mapview(list(departement_44, epci_d44, sirene44_sel), zcol = list("NOM_DEP", "NOM_EPCI", "NOMEN_LONG"), legend = F)
+mapview(list(departement_44, epci_d44, sirene44_sel), zcol = list("NOM_DEP", "NOM_EPCI", "NOMEN_LONG"), legend = FALSE)
 ```
 
 Nous allons réaliser une jointure spatiale pour récupérer le code sirene de l'EPCI où se trouve chaque entreprise.
@@ -258,7 +258,7 @@ sirene44_sel_avec_code_epci <- sirene44_sel %>%
 
 
 ```{r}
-mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = F)
+mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = FALSE)
 ```
 
 
@@ -318,7 +318,7 @@ Contrairement aux opérations précédentes qui sont binaires, les opérations d
 
 Les distances se calculent avec la fonction `st_distance()`.
 
-```{r, warning = F}
+```{r, warning=FALSE}
 centres_departements_pdl <- st_centroid(departements_geo) %>%
   filter(INSEE_REG == "52")
 
@@ -333,7 +333,10 @@ Trois choses à noter sur le résultat :
 
 - ...et qui a un paramètre `Units` nous donnant l'unité de mesure des distances calculées.
 
-Ici on calcule notre matrice sur un seul objet. Vous pouvez calculer des distances entre deux objets `x` et `y` de classe `sf`. Dans ce cas il fera le calcul des distances pour toutes les combinaisons possibles d'objets de `x` et de `y`. Une option de `st_distance()` vous permet de limiter le résultat aux calculs 2 à 2 : `by_element = T`. Dans ce cas le résultat est un vecteur.
+Ici on calcule notre matrice sur un seul objet. Vous pouvez calculer des distances entre deux objets `x` et `y` de classe `sf`. 
+Dans ce cas il fera le calcul des distances pour toutes les combinaisons possibles d'objets de `x` et de `y`. 
+Une option de `st_distance()` vous permet de limiter le résultat aux calculs 2 à 2 : `by_element = TRUE`. 
+Dans ce cas le résultat est un vecteur.
 
 ### Identification du plus proche voisin
 
