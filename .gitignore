@@ -8,5 +8,8 @@ data-raw_extdata/
 bac_sable.R
 _book/
 _bookdown_files/
-.html
+*.html
 NY_leukemia.gpkg
+support_m7_files
+support_m7.Rmd
+support_m7.knit.md

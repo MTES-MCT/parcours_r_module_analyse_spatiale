@@ -153,8 +153,12 @@ Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire o
 ```{r}
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
+```
 
-mapview(list(departement_44_buffer, departement_44), layer.name = list("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+```{r eval=params$mapview}
+mapview(list(departement_44_buffer, departement_44), 
+        layer.name = list("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), 
+        zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 ## Opérations binaires
@@ -177,8 +181,12 @@ departement_44_sfc_trans <- departement_44_sfc + c(10000, 10000)
 departement_44_trans <- st_set_geometry(departement_44, departement_44_sfc_trans)
 
 st_crs(departement_44_trans) <- st_crs(departement_44)
+```
 
-mapview(list(departement_44_trans, departement_44), layer.name = list("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+```{r eval=params$mapview}
+mapview(list(departement_44_trans, departement_44), 
+        layer.name = list("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), 
+        zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 #### Changement d'échelle
@@ -198,8 +206,12 @@ epci_d44_centroid_scale <- st_set_geometry(epci_d44, epci_d44_centroid_sfc_scale
 
 st_crs(epci_d44_centroid_scale) <- st_crs(epci_d44)
 
+```
 
-mapview(list(epci_d44, epci_d44_centroid_scale), layer.name = list("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), zcol = list("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+```{r eval=params$mapview}
+mapview(list(epci_d44, epci_d44_centroid_scale), 
+        layer.name = list("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), 
+        zcol = list("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 
@@ -285,11 +297,11 @@ On va regarder comment reconsituer la carte des communes à partir de celle des 
 ```{r}
 regions <- departements_geo %>%
   group_by(INSEE_REG) %>%
-  summarise(do_union = T)
+  summarise(do_union = TRUE)
 ```
 
-```{r}
-mapview(regions, legend = F)
+```{r eval=params$mapview}
+mapview(regions, legend = FALSE)
 ```
 
 Derrière cette opération, `summarise()` utilise `st_union()` du package `sf` pour dissourdre les polygones des départements en un seul polygone régional.

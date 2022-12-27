@@ -2,7 +2,7 @@ name: Test compilation de parcours_r_module7_analyse_spatiale
 
 on:
   pull_request:
-    branches: [main, master, dev]
+    branches: [main, master, dev, dev-ci]
     
   workflow_dispatch:
 
