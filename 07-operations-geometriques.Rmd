@@ -154,7 +154,9 @@ Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire o
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
 
-mapview(list(departement_44_buffer, departement_44), layer.name = list("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+mapview(list(departement_44_buffer, departement_44), 
+        layer.name = list("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), 
+        zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 ## Opérations binaires
@@ -178,7 +180,9 @@ departement_44_trans <- st_set_geometry(departement_44, departement_44_sfc_trans
 
 st_crs(departement_44_trans) <- st_crs(departement_44)
 
-mapview(list(departement_44_trans, departement_44), layer.name = list("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+mapview(list(departement_44_trans, departement_44), 
+        layer.name = list("Loire-Atlantique avec déplacement affine de 10 km vers le nord et 10 km vers le sud", "Loire-Atlantique"), 
+        zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 #### Changement d'échelle
@@ -198,25 +202,24 @@ epci_d44_centroid_scale <- st_set_geometry(epci_d44, epci_d44_centroid_sfc_scale
 
 st_crs(epci_d44_centroid_scale) <- st_crs(epci_d44)
 
-
-mapview(list(epci_d44, epci_d44_centroid_scale), layer.name = list("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), zcol = list("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+mapview(list(epci_d44, epci_d44_centroid_scale), 
+        layer.name = list("Epci de Loire-Atlantique", "Epci de Loire-Atlantique avec surface divisées par deux"), 
+        zcol = list("NOM_EPCI", "NOM_EPCI"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 
 ### Découpage
 
-Le découpage spatiale est une forme de filtre sur les géographies.
-
-Le découpage peut seulement s'appliquer à des formes plus complexes que des points : (multi-)lignes, (multi-)polygones.
-
-Nous allons illustrer le découpage à partir des epci à cheval sur plusieurs départements.
+Le découpage spatiale est une forme de filtre sur les géographies.  
+Le découpage peut seulement s'appliquer à des formes plus complexes que des points : (multi-)lignes, (multi-)polygones.  
+Nous allons illustrer le découpage à partir des EPCI à cheval sur plusieurs départements.
 
 ```{r}
 epci_redon <- epci_d44 %>%
   filter(CODE_EPCI == "243500741")
 ```
 
-```{r, echo=F}
+```{r, echo=FALSE}
 ggplot() +
   geom_sf(data = departement_44) +
   geom_sf(data = epci_redon) +
@@ -227,12 +230,12 @@ ggplot() +
 
 `st_intersection()` permet de ne garder que la partie commune des deux géométries
 
-```{r,warning=F, message=F}
+```{r,warning=FALSE, message=FALSE}
 redon_et_departement_44 <- st_intersection(epci_redon, departement_44) %>%
   mutate(NOM_EPCI = "Communes du 44 de la CA Redon Agglomération")
 ```
 
-```{r,echo=F}
+```{r, echo=FALSE}
 ggplot() +
   geom_sf(data = epci_redon) +
   geom_sf(data = departement_44) +
@@ -243,30 +246,29 @@ ggplot() +
 
 `st_difference(x,y)` permet de ne garder que la partie de `x` non présente dans `y`
 
-```{r,warning=F,message=F}
+```{r, warning=FALSE, message=FALSE}
 redon_hors_departement_44 <- st_difference(epci_redon, departement_44) %>%
   mutate(NOM_EPCI = "Communes du 44 et du CA Redon Agglomération hors communes en commun")
 ```
 
-```{r,echo=F}
-
+```{r, echo=FALSE}
 ggplot() +
   geom_sf(data = epci_redon) +
   geom_sf(data = departement_44) +
   geom_sf(data = redon_hors_departement_44, fill = "grey") +
   geom_sf_label(data = epci_redon, aes(label = NOM_EPCI)) +
-  #  geom_sf_label(data=redon_et_departement_44_sans_partie_communes,aes(label = NOM_EPCI))+
+  #  geom_sf_label(data=redon_et_departement_44_sans_partie_communes, aes(label = NOM_EPCI))+
   geom_sf_label(data = departement_44, aes(label = NOM_DEP))
 ```
 
 `st_sym_difference(x,y)` permet de ne garder que les partie de `x` et de `y` non communes.
 
-```{r,warning=F,message=F}
+```{r, warning=FALSE, message=FALSE}
 redon_et_departement_44_sans_partie_communes <- st_sym_difference(epci_redon, departement_44) %>%
   mutate(NOM_EPCI = "Communes du 44 et du CA Redon Agglomération hors communes en commun")
 ```
 
-```{r,echo=F}
+```{r, echo=FALSE}
 
 ggplot() +
   geom_sf(data = epci_redon) +
@@ -285,11 +287,9 @@ On va regarder comment reconsituer la carte des communes à partir de celle des 
 ```{r}
 regions <- departements_geo %>%
   group_by(INSEE_REG) %>%
-  summarise(do_union = T)
-```
+  summarise(do_union = TRUE)
 
-```{r}
-mapview(regions, legend = F)
+mapview(regions, legend = FALSE)
 ```
 
 Derrière cette opération, `summarise()` utilise `st_union()` du package `sf` pour dissourdre les polygones des départements en un seul polygone régional.

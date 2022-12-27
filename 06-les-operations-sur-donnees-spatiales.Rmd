@@ -66,11 +66,9 @@ Il faut noter la présence du paramètre `sparse = FALSE`. L'option `sparse` est
 On voit ici que le résultat n'est pas très concluant :  il manque 3 epci du département, ceux qui sortent des frontières de celui-ci.
 Prenons un buffer autour du département.
 
-```{block2, type='rmdnote'}
-Qu'est ce qu'un buffer ? C'est un tampon qui va nous permettre d'appliquer une transformation sur un objet vectoriel.
-
-A partir d'une couche de départ de type ponctuel, linéaire ou polygonal, le buffer va créer une nouvelle couche vectorielle. La géométrie de cette couche représente des objets surfaciques dont les frontières sont positionnées à une distance euclidienne, définie par l'utilisateur, des limites des objets vectoriels de la couche de départ.
-```
+> Qu'est ce qu'un buffer ? C'est un tampon qui va nous permettre d'appliquer une transformation sur un objet vectoriel.
+>
+> A partir d'une couche de départ de type ponctuel, linéaire ou polygonal, le buffer va créer une nouvelle couche vectorielle. La géométrie de cette couche représente des objets surfaciques dont les frontières sont positionnées à une distance euclidienne, définie par l'utilisateur, des limites des objets vectoriels de la couche de départ.
 
 La fonction qui permet de faire cela avec `sf` s'appelle `st_buffer()`.
 
@@ -83,7 +81,8 @@ La fonction qui permet de faire cela avec `sf` s'appelle `st_buffer()`.
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
 
-mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
+mapview(list(departement_44_buffer, departement_44), layer.name = c("Loire-Atlantique avec un buffer de 5 km", "Loire-Atlantique"), 
+        zcol = list("NOM_DEP", "NOM_DEP"), col.regions = list("#440154FF", "#FDE725FF"), legend = FALSE)
 ```
 
 ```{r}
@@ -257,13 +256,14 @@ sirene44_sel_avec_code_epci <- sirene44_sel %>%
   st_join(epci_geo)
 ```
 
+
 ```{r}
 mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list("NOM_DEP", "NOM_EPCI", "NOM_EPCI"), legend = F)
 ```
 
-```{block2, type='rmdnote'}
-Une jointure entre deux couches de données géographique demande à ce que celles-ci partagent la même projection.
-```
+
+> Une jointure entre deux couches de données géographiques demande à ce que celles-ci partagent la même projection.
+
 
 ### Jointure de polygones avec des polygones
 
@@ -318,7 +318,7 @@ Contrairement aux opérations précédentes qui sont binaires, les opérations d
 
 Les distances se calculent avec la fonction `st_distance()`.
 
-```{r,warning = F}
+```{r, warning = F}
 centres_departements_pdl <- st_centroid(departements_geo) %>%
   filter(INSEE_REG == "52")
 

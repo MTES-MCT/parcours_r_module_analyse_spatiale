@@ -1,6 +1,6 @@
 bookdown::gitbook:
   df_print: tibble
-  self_contained: TRUE
+  self_contained: FALSE
   config:
     toc:
       collapse: section
@@ -10,4 +10,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://mtes-mct.github.io/parcours-r/">Liste des formations R</a></li>
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    pandoc_args: [
+      "-M", "toc-title=Table des matières"
+    ]
    

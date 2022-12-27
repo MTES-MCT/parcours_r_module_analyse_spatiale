@@ -1,8 +1,8 @@
-# (PART) Manipuler des données spatiales {-}
+# (PART) Manipuler des données spatiales {.unnumbered}
 
 # Les opérations sur données attributaires {#operation-sur-donnees-attributaires}
 
-Dans ce chapitre, nous allons utiliser les packages suivants : 
+Dans ce chapitre, nous allons utiliser les packages suivants :
 
 ```{r}
 library(sf)
@@ -11,7 +11,6 @@ library(mapview)
 ```
 
 Nous utiliserons les contours des territoires de la France métropolitaine issus de Admin Express.
-
 
 ```{r, eval = FALSE}
 load("extdata/admin_express.RData")
@@ -29,7 +28,7 @@ On peut utiliser `mapview()` pour voir ce jeu de données.
 mapview(departements_geo, zcol = "NOM_DEP", legend = FALSE)
 ```
 
-Comme évoqué dans la partie 1, on peut tout à fait appliquer sur un `spatial dataframe` les verbes du `tidyverse` comme sur un `dataframe`, notamment utiliser  les verbes de `dplyr`.
+Comme évoqué dans la partie 1, on peut tout à fait appliquer sur un `spatial dataframe` les verbes du `tidyverse` comme sur un `dataframe`, notamment utiliser les verbes de `dplyr`.
 
 Nous pouvons à partir de cette table filtrer les départements d'une certaine région.
 
@@ -84,10 +83,8 @@ Nous pouvons alors utiliser ce nouvelle attribut pour nos cartes.
 mapview(regions, zcol = "NOM_REG", legend = F)
 ```
 
-```{block, type='rmdnote'}
-Attention, quand vous réalisez une jointure entre deux tables de données :
-
-X %>% ZZ_join(Y) 
-
-La composante spatiale n'est conservée que pour la première table X.
-```
+> Attention, quand vous réalisez une jointure entre deux tables de données :
+>
+> `X %>% ZZ_join(Y)`
+>
+> La composante spatiale n'est conservée que pour la première table X.

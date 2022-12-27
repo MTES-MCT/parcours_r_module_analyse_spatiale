@@ -24,7 +24,7 @@ cat(stringi::stri_read_lines("https://raw.githubusercontent.com/MTES-MCT/parcour
 
 ## Le groupe de référents R du pôle ministériel {.unnumbered}
 
-```{r collecte prez ref, warning=FALSE, echo=FALSE, results='asis'}
+```{r collecte prez ref, warning=FALSE, echo=FALSE, message=FALSE, results='asis'}
 # Utilisation du chapitre de présentation des référents présent dans https://github.com/MTES-MCT/parcours-r
 a <- knitr::knit_child(text = stringi::stri_read_lines("https://raw.githubusercontent.com/MTES-MCT/parcours-r/master/parties_communes/les_referents_R.Rmd", encoding = "UTF-8"), quiet = TRUE)
 cat(a, sep = '\n')
