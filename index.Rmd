@@ -51,4 +51,4 @@ theme_set(theme_gray())
 tmap_mode("plot")
 ```
 
-
+Pour aller plus loin dans l'analyse spatiale des données : https://r-spatial.org/book/.

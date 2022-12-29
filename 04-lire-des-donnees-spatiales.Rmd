@@ -4,19 +4,23 @@
 
 Dans ce chapitre, nous allons utiliser les packages suivants : 
 
-```{r pkg_chap_4_lecture}
+```{r pkg_chap_4_lecture, message=FALSE, warning=FALSE}
 library(sf)
 library(DT)
 library(tidyverse)
 library(RPostgres)
 library(spData)
+library(remotes)
+library(datalibaba)
+library(COGiter)
+library(CARTElette)
 ```
 
-Le package `sf` s'appuie sur `GDAL` (Geospatial Data Abstraction Library) pour lire et écrire les données spatiales.
+Le package `{sf}` s'appuie sur la librairie externe `GDAL` (Geospatial Data Abstraction Library) pour lire et écrire les données spatiales.
 
 `GDAL` est une librairie permettant de lire et d'écrire des données vecteur et raster de n'importe quel format de fichier ou base de données.
 
-Les fonctions de lecture et d'écriture de `sf` s'appellent `st_read()` et `st_write()`.
+Les fonctions de lecture et d'écriture de `{sf}` s'appellent `st_read()` et `st_write()`.
 
 Pour lire des données spatiales, `st_read()` a besoin :
 
@@ -33,7 +37,7 @@ Le format de fichier plat le plus populaire en géomatique est `ESRI Shapefile`.
 
 Avec l'avènement du web, le format `GeoJSON` se développe beaucoup, bien qu'il soit aussi limité.
 
-Le format considéré comme le plus prometeur est le format `OGC GeoPackage` promu par l'Open Geospatial Consortium^[https://www.geopackage.org/].
+Le format considéré comme le plus prometteur est le format `OGC GeoPackage` promu par l'Open Geospatial Consortium^[https://www.geopackage.org/].
 
 Mais la liste des formats lisibles par `sf` est bien plus vaste.
 
@@ -83,17 +87,20 @@ st_write(
 )
 ```
 
+<!-- TODO st_write csv avec colonnes x y -->
+
+
 ## Lire/écrire des données spatiales sur PostGIS
 
 `PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les manipuler.
 
-R va vous permettre de vous connecter simplement à une base PostGIS, pour cela vous aurez besoin du package `DBI` (package permettant de s'interfacer à des bases de données) et du package `RPostgres` (interface à PostgreSQL)
+R va vous permettre de vous connecter simplement à une base PostGIS, pour cela vous aurez besoin du package `DBI` (package permettant de s'interfacer à des bases de données) et du package `RPostgres` (interface à PostgreSQL). 
 
 Rstudio a développé tout un site sur les interactions entre les bases de données et R, vous pouvez le trouver à l'adresse suivante : [db.rstudio.com](https://db.rstudio.com/).
 
-Rstudio possède même depuis la version 1.1 un onglet de connexion vous permetttant de visualiser vos connexions aux bases.
+Rstudio possède même depuis la version 1.1 un onglet de connexion vous permettant de visualiser vos connexions aux bases.
 
-Pour se connecter à une base, on va définir un driver (à quelle type de base on veut se connecter) et un connecteur (les informations de connexion).
+Pour se connecter à une base, on va définir un driver (à quelle type de base on veut se connecter et selon quel protocole) et un connecteur (les informations de connexion).
 
 ```{r, eval = FALSE}
 drv <- dbDriver("Postgres")
@@ -115,7 +122,7 @@ ma_table <- st_read(con, query = "SELECT * FROM le_schema.ma_table")
 
 L'avantage ici est que vous pouvez faire travailler le serveur directement sans avoir à faire travailler votre poste de travail.
 
-Vous pouvez très bien dans cette requête sql réaliser quelques filtres, sélections et aggrégations. Celles-ci seront alors réalisées par le serveur posgreSQL et non R qui ne récupèrera que le résultat.
+Vous pouvez très bien dans cette requête sql réaliser quelques filtres, sélections et agrégations. Celles-ci seront alors réalisées par le serveur posgreSQL et non R qui ne récupérera que le résultat.
 
 Vous pouvez écrire vos données ensuite de la même façon avec `st_write()`
 
@@ -125,6 +132,25 @@ st_write(ma_table,
   layer = ID(schema = "schema", table = "ma_table")
 )
 ```
+
+Un package, encore expérimental, de la DREAL Pays de la Loire,  [{datalibaba}](https://dreal-datalab.gitlab.io/datalibaba/index.htmlhttps://dreal-pdl.gitlab-pages.din.developpement-durable.gouv.fr/csd/datalibaba/index.html) simplifie l'écriture des instructions de lecture/écriture de données vers ou depuis un SGBD Postgresql/postgis.  
+
+Il propose de stocker vos identifiants de connexion dans vos variables d'environnement afin d'en préserver la confidentialité et de vous éviter de les réécrire dans chaque script.  
+
+L'utilisateur n'a plus à se préoccuper du driver de connexion ni de la fonction de lecture ou de comment placer le nom du schéma par rapport au nom de la table.
+
+Les types propres à R, comme les facteurs, sont préservés au ré-import. 
+
+Les instruction précédentes deviennent : 
+```{r datalibaba, eval=FALSE}
+remotes::install_gitlab('dreal-pdl/csd/datalibaba', host = "gitlab-forge.din.developpement-durable.gouv.fr")
+library(datalibaba)
+
+poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", pk = 'REG', db = 'referentiels')
+station <- importer_data(table = "station", schema = "pesticides", base = "production")
+```
+
+<!-- TODO : config base sspcloud -->
 
 ## Convertir un dataframe
 
@@ -142,4 +168,52 @@ prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y")) %>%
   st_set_crs(2154)
 ```
 
- 
+
+## Données contenues dans des packages
+
+Depuis le développement de sf, de nombreux packages proposent des données géographiques.
+
+Pour la France, les packages `{CARTElette}` et `{COGiter}` propose des fonds de cartes aux contours administratifs.   
+
+Ils s'installent depuis github :
+
+```{r, eval = FALSE}
+remotes::install_github("MaelTheuliere/COGiter")
+remotes::install_github("antuki/CARTElette/CARTElette@RPackage")
+```
+
+`{CARTElette}` propose de télécharger les différents fond de plan administratif d'admin-Express COG de l'IGN, selon leur millésime jusque 2021.
+```{r}
+charger_carte(COG = 2021, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
+  st_geometry() %>% 
+  plot()
+```
+
+`{COGiter}` contient le dernier millésime des fonds de plan administratif. 
+Ces couches sont obtenues par simplification des couches admin-express COG de l'IGN et sont adaptées à la visualisation d'indicateurs statistiques.
+
+Il existe pour la métropole et chaque drom un fond de carte pour les niveaux communes, epci, départements, régions :
+```{r COGiter1}
+ls("package:COGiter", pattern = "_geo$")
+```
+
+
+La fonction `filtrer_cog_geo()` vous permet d'obtenir une liste de spatial dataframe centrée sur une partie du territoire (que ce soit une commune, un EPCI, un département ou une région) dès lors que vous connaissez son code officiel.
+
+Exemple sur Nantes métropole :
+```{r COGiter}
+normandie <- filtrer_cog_geo(reg = "28")
+glimpse(normandie)
+plot(normandie$epci)
+```
+
+Le package COGiter propose également :   
+
+-   les tables du COG 2022 de l'Insee,
+-   une table de passage des COG historiques vers le COG millésimé 2022,
+-   des fonctions d'aide à au passage de jeux de données vers le millésime du COG 2022,  
+-   des fonctions de calculs d'agrégats aux différentes échelles territoriales,  
+-   des fonctions d'aide à la sélection des différents fond de cartes nécessaire à la mise en page de cartes statistiques.
+
+Son utilisation est désormais [vue lors du module 2](https://mtes-mct.github.io/parcours_r_socle_preparation_des_donnees/nettoyer-des-donn%C3%A9es-territoriales-g%C3%A9rer-les-%C3%A9volutions-du-cog-code-officiel-g%C3%A9ographique.html).  
+

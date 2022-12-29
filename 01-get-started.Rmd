@@ -32,9 +32,10 @@ Commencez par rajouter un script dans le répertoire `/src` à votre projet qui 
 - chargez les données dont vous aurez besoin.
 
 ```{r all_packages}
-
+library(banR)
 library(cowplot)
 library(cartogram)
+library(datalibaba)
 library(DT)
 library(ggspatial)
 library(gouvdown)
@@ -46,6 +47,9 @@ library(kableExtra)
 library(leaflet)
 library(lwgeom)
 library(mapview)
+library(osmdata)
+library(osmextract)
+library(osrm)
 library(patchwork)
 library(rmapshaper)
 library(RPostgres)

@@ -6,11 +6,13 @@ Description: Valise pédagogique pour la formation à R
 License: MIT
 URL: https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale
 Imports: 
+    banR,
     bookdown,
     cartogram,
     CARTElette,
     COGiter,
     cowplot,
+    datalibaba,
     devtools,
     DT,
     ggplot2,
@@ -30,6 +32,9 @@ Imports:
     mapview,
     pagedown,
     patchwork,
+    osmdata,
+    osmextract,
+    osrm,
     rmapshaper,
     rmarkdown,
     RPostgres,
@@ -44,10 +49,13 @@ Imports:
     viridis
 Remotes: 
     antuki/CARTElette/CARTElette@RPackage,
-    maeltheuliere/COGiter,
+    joelgombin/banR,
+    MaelTheuliere/COGiter,
     MaelTheuliere/variousdata,
     spyrales/gouvdown,
     spyrales/gouvdown.fonts,
+    git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@main,
     git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@main
+    
 Encoding: UTF-8
 RoxygenNote: 7.2.1

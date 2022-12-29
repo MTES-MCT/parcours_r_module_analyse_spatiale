@@ -5,7 +5,7 @@ Les opérations spatiales sont des opérations prenant nos données en entrée p
 
 Dans ce chapitre, nous allons utiliser les packages suivants.
 
-```{r pkg_chap_6_ope_spatiales}
+```{r pkg_chap6_op_spat}
 library(sf)
 library(tidyverse)
 library(mapview)
@@ -44,7 +44,7 @@ epci_d44 <- epci_geo[departement_44, , op = st_within]
 mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
-L'opération de filtre sur les données spatiales fonctionne en prenant la table en entrée (`epci_geo`), la table avec laquelle on souhaite définir les lignes à garder (`departement_44`),et l'opérateur qui va définir le test entre les deux géométries. Ici cet opérateur est `st_within(x,y)`, qui renvoie `TRUE` si la géométrie de `x` est contenue à l'intérieur de celle de `y`.
+L'opération de filtre sur les données spatiales fonctionne en prenant la table en entrée (`epci_geo`), la table avec laquelle on souhaite définir les lignes à garder (`departement_44`), et l'opérateur qui va définir le test entre les deux géométries. Ici cet opérateur est `st_within(x, y)`, qui renvoie `TRUE` si la géométrie de `x` est contenue à l'intérieur de celle de `y`.
 
 On peut spécifier différents prédicats spatiaux pour réaliser ce filtre.
 
@@ -98,12 +98,12 @@ Une méthode pour le récupérer est de prendre l'opérateur de filtre `st_inter
 departement_44_buffer_negatif <- departement_44 %>%
   st_buffer(dist = -2000)
 
-epci_d44 <- epci_geo[departement_44_buffer_negatif, , op = st_intersects]
+epci_d44 <- epci_geo[departement_44_buffer_negatif, op = st_intersects]
 
 mapview(list(departement_44, epci_d44), zcol = list("NOM_DEP", "NOM_EPCI"), legend = FALSE)
 ```
 
-On aurait pu obtenir le même résultat en prenant les EPCI  à l'intérieur du département 44 (avec `st_within`) ainsi que les EPCI qui chevauchent (avec `st_overlaps`)  le département 44.
+On aurait pu obtenir le même résultat en prenant les EPCI à l'intérieur du département 44 (avec `st_within`) ainsi que les EPCI qui chevauchent (avec `st_overlaps`)  le département 44.
 
 ```{r}
 epci_d44 <- epci_geo %>%
@@ -114,8 +114,9 @@ mapview(list(departement_44, epci_d44), zcol = c("NOM_DEP", "NOM_EPCI"), legend 
 
 ## Prédicats spatiaux
 
-Les prédicats spatiaux décrivent les relations spatiales entre objets. Pour bien les illustrer on va utiliser quelques données de test.
-Nous allons utiliser un polygone (a), des lignes (l) et des points (p).
+Les prédicats spatiaux décrivent les relations spatiales entre objets. Pour bien les illustrer, on va utiliser quelques données de test.
+
+Nous allons utiliser un polygone (a), des lignes (l) et des points (p), que nous créons à partir de leur coordonnées.
 
 ```{r}
 # polygone (a)
@@ -133,7 +134,11 @@ p <- st_cast(st_sfc(p_multi), "POINT")
 ```
 
 ```{r, echo=FALSE}
-ggplot() + geom_sf(data = a, color = "red") + geom_sf(data = p) + geom_sf(data = l, color = "green") + theme_minimal()
+ggplot() + 
+  geom_sf(data = a, color = "red") + 
+  geom_sf(data = p) + 
+  geom_sf(data = l, color = "green") + 
+  theme_minimal()
 ```
 
 A partir de ces objets, on peut se poser les questions suivantes :
@@ -310,7 +315,17 @@ On veut produire les infos suivantes par quartier et année :
 - Pourcentage de maisons dans les ventes
 - Prix moyen au m2 par type de bien
 
-## Les calculs de distance
+## Les mesures
+
+### Calcul de surface
+Le calcul de surface se fait à l'aide de la fonction `st_area()`. 
+Le résultat sera exprimé dans l'unité du crs. 
+
+```{r st_area}
+st_area(epci_d44)
+```
+
+
 
 ### Matrice de distances
 
@@ -383,5 +398,79 @@ ggplot() +
     title = "Département ligérien le plus proche de chaque département français",
     fill = NULL
   )
+```
+
+
+## Carroyage
+
+### Créer une grille régulière
+
+La fonction `st_make_grid()` permet de créer une grille  régulière (carroyage) à partir d'un objet géo. 
+Elle produit un objet rectangulaire de type `sfc`, il faut ensuite utiliser la fonction `st_sf()` pour transformer
+cet objet `sfc` en objet `sf`. 
+
+Lors de cette transformation nous rajoutons ici une colonne d'identifiants uniques.   
+
+```{r grid}
+grille <- st_make_grid(epci_d44, cellsize = 10000) %>% 
+  st_as_sf() %>% 
+  rowid_to_column("id")
+
+mapview(list(grille, epci_d44))
+```
+
+On constate que plusieurs carreaux sont inutiles. On peut réduire leur nombre avec `st_intersects()` comme vu précédemment.
+```{r}
+grille_ajustee <- grille[epci_d44, , op = st_intersects]
+mapview(list(grille_ajustee, epci_d44))
+```
+
+
+### Compter des points dans un polygone
+
+On cherche ici à compter par carreau, le nombre d'entreprises de type "Boulangerie et boulangerie-pâtisserie" (code APE 1071C) du fichier sirene 44 .
+```{r}
+boul_44 <- filter(sirene44, APET700 == "1071C") %>% select(SIREN, NOMEN_LONG)
+mapview(list(grille_ajustee, epci_d44, boul_44))
+```
+
+La grille ajustée comprend `r nrow(grille_ajustee)` carreaux. 
+Le 44 comprend `r nrow(boul_44)` boulangeries.
+
+```{r}
+intersection <- st_intersects(grille_ajustee, boul_44, sparse = TRUE)
+
+dim(intersection)
+
+```
+
+L'objet **intersection** est une liste de la longueur de l'objet **grille_ajustee** et chaque élément de la liste contient l'index des éléments de l'objet **boul_44** qu'il intersecte.
+Exemple avec le 46e carreau :
+
+```{r}
+intersection[[46]]
+
+```
+Le 46e carreau comprend les boulangeries des lignes `r intersection[[46]] %>% paste(collapse = ", ")` de la table boul_44.
+
+Pour compter le nombre de boulangerie par carreau, on peut parcourir la liste et de reporter la longueur de chacun de ces éléments. 
+
+```{r intersect3.4}
+grille_boul <- mutate(grille_ajustee, nb_boulang = map_dbl(intersection, length))
+select(grille_boul, nb_boulang) %>% 
+  plot
+```
+Une autre solution est de passer par les jointures spatiales :
+
+```{r}
+nb_boul_par_carreau <- st_join(x = grille_ajustee, y = boul_44, join = st_contains, left = FALSE) %>% 
+  st_drop_geometry() %>% 
+  group_by(id) %>% 
+  summarise(nb_boulang = n())
+
+grille_boul2 <- grille_ajustee %>% 
+  left_join(nb_boul_par_carreau, by = "id")
+
+select(grille_boul2, nb_boulang) %>% plot
 ```
 
