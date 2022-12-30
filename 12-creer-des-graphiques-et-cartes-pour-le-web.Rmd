@@ -8,13 +8,16 @@ R permet de produire des cartes en exploitant cette bibliothèque.
 La limitation de `{leaflet}` est qu'il ne permet de visualiser que des données en projection WGS84.
 
 Dans ce chapitre, nous utiliserons les packages suivants
-```{r pkg_chap_15_carto_web}
+```{r pkg_chap_15_carto_web, message=FALSE, warning=FALSE}
 library(leaflet)
 library(sf)
 library(tidyverse)
-#remotes::install_github("MaelTheuliere/variousdata")
-library(variousdata)
+library(COGiter)
+library(htmltools)
+library(htmlwidgets)
 ```
+
+Les données utilisées sont issues de `{COGiter}`.
 
 ### Carte choroplète
 
@@ -23,20 +26,26 @@ Ci-dessous un exemple avancé de carte choroplète avec leaflet.
 - Définition des données de départ
 
 ```{r}
-sdg_indicators_2015_sf <- sdg_indicators_sf %>% 
-  filter(timeperiod == 2015)
+pop2015_dep_geo <- pop2015 %>% 
+  # mise à jour du COG et agrégation à l'échelle départementale
+  cogifier(code_commune = DEPCOM, communes = FALSE, epci = FALSE, departements = TRUE, regions = FALSE, metro = FALSE) %>% 
+  inner_join(COGiter::departements_geo, ., by = c("DEP" = "CodeZone")) %>% 
+  mutate(densite = pop2015 / as.numeric(AREA) * 1000000) %>% 
+  filter(substr(DEP, 1, 2) != "97")
+
+glimpse(pop2015_dep_geo)
 ```
 
 - Transformation de la projection car `leaflet` ne connait que le WGS 84
 
 ```{r}
-sdg_indicators_2015_sf <- st_transform(sdg_indicators_2015_sf, crs=("+proj=longlat +datum=WGS84 +no_defs"))
+pop2015_dep_geo <- st_transform(pop2015_dep_geo, crs=("+proj=longlat +datum=WGS84 +no_defs"))
 ```
 
 - Discrétisation de la variable d'intérêt
 
 ```{r}
-bins <- quantile(sdg_indicators_2015_sf$sh_sta_mmr, na.rm = TRUE)
+bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
 ```
 
 - Création d'une palette de couleurs associée
@@ -44,16 +53,15 @@ bins <- quantile(sdg_indicators_2015_sf$sh_sta_mmr, na.rm = TRUE)
 `{leaflet}` intègre une fonction `colorBin()` qui permet d'associer à un vecteur de valeurs numériques un vecteur de couleurs en fonction d'une palette et d'un vecteur de bornes.
 
 ```{r}
-pal <- colorBin("YlOrRd", domain = sdg_indicators_2015_sf$sh_sta_mmr, bins = bins)
+pal <- colorBin("YlOrRd", domain = pop2015_dep_geo$densite, bins = bornes)
 ```
 
-- Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte.
+- Création d'étiquettes popover, à afficher en surbrillance au passage de la souris sur la carte.
 
 ```{r}
-labels <- sprintf(
-  "<strong>%s</strong><br/>%g décès pour 100 000 naissance en 2015",
-  sdg_indicators_2015_sf$geoareaname, sdg_indicators_2015_sf$sh_sta_mmr
-) %>% lapply(htmltools::HTML)
+popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en 2015", 
+                   pop2015_dep_geo$Zone, pop2015_dep_geo$densite) %>% 
+  lapply(htmltools::HTML)
 ```
 
 - Réalisation de la carte
@@ -63,10 +71,10 @@ La fonction `addPolygons()` permet de créer la carte choroplète.
 La fonction `addProviderTiles()` permet de rajouter un fond cartographique parmis les couches fournies par `leaflet`.
 
 ```{r, fig.width=7, fig.height=4}
-leaflet(sdg_indicators_2015_sf) %>%
+leaflet(pop2015_dep_geo) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
-  addPolygons(data = sdg_indicators_2015_sf,
-              fillColor = ~pal(sh_sta_mmr),
+  addPolygons(data = pop2015_dep_geo,
+              fillColor = ~pal(densite),
               weight = 2,
               opacity = 1,
               color = "white",
@@ -78,7 +86,7 @@ leaflet(sdg_indicators_2015_sf) %>%
                 dashArray = "",
                 fillOpacity = 0.7,
                 bringToFront = TRUE),
-              label = labels,
+              label = popover,
               labelOptions = labelOptions(
                 style = list("font-weight" = "normal", padding = "3px 8px"),
                 textsize = "15px",
@@ -87,81 +95,60 @@ leaflet(sdg_indicators_2015_sf) %>%
 
 ### Carte à ronds proportionnels
 
-Pour réaliser des ronds proportionnels, il va faut partir des centroïdes de nos polygones.
+Pour réaliser des ronds proportionnels, il va faut partir des centroïdes de nos polygones. 
+On cherche cette fois à représenter les populations 2015. 
 
 - Création de la table en entrée 
 
 ```{r}
-World_centroid <- st_centroid(World, of_largest_polygon = T)
-sdg_indicators_sf_centroid <- World_centroid %>%
-  left_join(sdg_indicators)
-
-
-sdg_indicators_2015_sf_centroid <- sdg_indicators_sf_centroid %>% 
-  filter(timeperiod ==2015)
+dep_centr <- st_centroid(pop2015_dep_geo)
 ```
-
-- Transformation de la projection car `leaflet` ne connait que le WGS 84
-
-```{r}
-sdg_indicators_2015_sf_centroid <- st_transform(sdg_indicators_2015_sf_centroid,crs=("+proj=longlat +datum=WGS84 +no_defs"))
-```
-
 - Discrétisation de la variable d'intérêt
 
-
 ```{r}
-bins <- quantile(sdg_indicators_2015_sf_centroid$sh_sta_mmr, na.rm = TRUE)
+bornes <- quantile(dep_centr$pop2015 / 1000, na.rm = TRUE)
 ```
 
 - Création d'une palette de couleurs associée
 
 ```{r}
-pal <- colorBin("YlOrRd", domain = sdg_indicators_2015_sf_centroid$sh_sta_mmr, bins = bins)
+pal <- colorBin("YlOrRd", domain = dep_centr$pop2015 / 1000, bins = bornes)
 ```
 
 - Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte.
 
 ```{r}
-labels <- sprintf("<strong>%s</strong><br/>%g décès pour 100 000 naissance en 2015", 
-                  sdg_indicators_2015_sf_centroid$geoareaname, 
-                  sdg_indicators_2015_sf_centroid$sh_sta_mmr) %>% 
+popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015", 
+                  dep_centr$Zone, dep_centr$pop2015 / 1000) %>% 
   lapply(htmltools::HTML)
 ```
 
 - Création de la carte
 
 ```{r, fig.width=7, fig.height=4}
-carte_rond_proportionnel <- leaflet(sdg_indicators_2015_sf_centroid) %>%
+carte_rond_proportionnel <- leaflet(dep_centr) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
-  addPolygons(data = sdg_indicators_2015_sf,
-              fillColor = "#ffffff",
-              opacity = .2,
-              color = "white",
-              dashArray = "3",
-              fillOpacity = 0.7
-  ) %>% 
-  addCircles(data = sdg_indicators_2015_sf_centroid,
-             fillColor = ~pal(sh_sta_mmr),
-             radius = ~100000 * log2(sh_sta_mmr),
+  addCircles(data = dep_centr,
+             fillColor = ~pal(pop2015 / 1000),
+             radius = ~2500*log(pop2015),
              weight = 2,
              opacity = 1,
-             color = "white",
+             color = "gray",
              dashArray = "3",
-             fillOpacity = 0.7,
+             fillOpacity = 0.6,
              highlight = highlightOptions(
                weight = 5,
                color = "#666",
                dashArray = "",
-               fillOpacity = 0.7,
+               fillOpacity = 0.98,
                bringToFront = TRUE),
-             label = labels,
+             label = popover,
              labelOptions = labelOptions(
                style = list("font-weight" = "normal", padding = "3px 8px"),
                textsize = "15px",
                direction = "auto")) %>% 
-  addLegend("bottomright", pal = pal, values = ~sh_sta_mmr,
-            title = "Taux de décès des mères à la naissance",
+  addLegend("bottomright", pal = pal, values = ~pop2015,
+            title = "Nombre d'habitants en 2015 - INSEE - RP",
             opacity = 1)
 
 carte_rond_proportionnel
@@ -170,6 +157,13 @@ carte_rond_proportionnel
 <!-- ## ggplot et ggiraph : TODO -->
 
 <!-- ## Mapfactory : TODO -->
+
+
+## Les cartes ggplot
+TODO
+
+## Les cartes mapfactory
+TODO 
 
 ## Exporter une sortie html
 

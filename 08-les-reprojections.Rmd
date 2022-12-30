@@ -6,7 +6,6 @@ Dans ce chapitre, nous allons utiliser les librairies suivantes.
 library(sf)
 library(tidyverse)
 library(patchwork)
-library(lwgeom)
 library(tmap)
 ```
 
@@ -99,10 +98,15 @@ Avec la données en Lambert 93, la fonction `st_distance()` renvoie un message d
 st_distance(rennes, nantes_proj)
 ```
 
-Avec la données en WGS 84, la fonction `st_distance()` renvoie bien le résultat.
+Avec la données en WGS 84, la fonction `st_distance()` renvoie bien un résultat.
 
 ```{r, error = TRUE}
 st_distance(rennes, nantes)
+```
+
+Avec la données en Lambert 93, la fonction `st_distance()` renvoie un résultat plus précis : 
+```{r}
+st_distance(rennes %>% st_transform(2154), nantes_proj)
 ```
 
 ## Quel CRS utiliser ?

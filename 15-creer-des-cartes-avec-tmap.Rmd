@@ -1,4 +1,4 @@
-# Créer des cartes avec tmap {#creer-des-cartes-avec-tmap}
+# Annexe : créer des cartes avec tmap {#creer-des-cartes-avec-tmap}
 
 ```{r tmap, echo=FALSE, eval=TRUE}
 tmap_mode("plot")
@@ -6,7 +6,7 @@ tmap_mode("plot")
 
 `tmap` est un package dédié à la réalisation de cartes sous R.
 
-La syntaxe est très proche de `ggplot`, avec l'opérateur `+` pour enchainer les options. 
+La syntaxe est très proche de `ggplot`, avec l'opérateur `+` pour enchaîner les options. 
 
 L'équivalent des `geom_xx()` dans `tmap` sont les fonctions suivantes : 
 
@@ -21,63 +21,81 @@ L'équivalent des `geom_xx()` dans `tmap` sont les fonctions suivantes :
 Les différences avec `ggplot2` :
 
 - Les variables s'appellent dans des cotes `""` ;
-- Le facetting peut se faire sur un format de données large (une carte par colonne et non une carte par modalité d'une variable) ;
-- Les fonctions `tm_xx()`  incluent la définition des *classes* (nombre de classe, définition des classes et des palettes) sans passer par une fonction `scale()`  dont l'équivalent n'existe pas.
+- Le facetting peut se faire sur des données au format large (une carte par colonne et non une carte par modalité d'une variable) ;
+- Les fonctions `tm_xx()`  incluent la définition des *classes* (nombre de classe, définition des classes et des palettes) sans passer par une fonction `scale()` dont l'équivalent n'existe pas.
 
 La mise en page se définit avec la fonction `tm_layout()`, la légende avec `tm_legend()`
 
 Dans ce chapitre nous allons utiliser les packages suivants
 
 ```{r pkg_tmap}
-library(tmap)
 library(sf)
 library(tidyverse)
 #remotes::install_github("MaelTheuliere/variousdata")
+library(tmap)
+library(tmaptools)
 library(variousdata)
+library(viridis)
 ```
 
-## tm_shape
+## Fonction `tm_shape()`
 
-Pour charger une donnée géométrique, il faut utiliser la fonction `tm_shape()`. `tm_shape()` permet de fixer plusieurs options de base de notre carte : la projection, la bbox, un facteur de simplification...
+Pour charger une donnée géométrique à visualiser avec {tmap}, il faut utiliser la fonction `tm_shape()`. `tm_shape()` initie la création de la carte, en fixant plusieurs options de base de notre carte : la projection, la bbox, un facteur de simplification...
 
 ```{r, eval=TRUE, echo=TRUE}
+data("World")
 wgs_84 <- tm_shape(World, projection = st_crs(4326)) + 
-    tm_polygons() + 
-tm_layout("Le monde en projection WGS84", inner.margins=c(0,0,.1,0), title.size=.8)
+  tm_polygons() + 
+  tm_layout("Le monde en projection WGS84", inner.margins=c(0,0,.1,0), title.size=.8)
 
-robin <- tm_shape(World, projection = st_crs(54042)) + 
-    tm_polygons() +
-tm_layout(
-"Le monde en project Winkel-Tripel",
-    inner.margins=c(0,0,.1,0), title.size=.8)
+robin <- tm_shape(World, projection = st_crs("+proj=wintri")) + 
+  tm_polygons() +
+  tm_layout("Le monde en projection Winkel-Tripel", inner.margins=c(0,0,.1,0), title.size=.8)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-tmap_arrange(wgs_84,robin)
+tmap_arrange(wgs_84, robin)
 ```
 
 ## Exemple de carte choroplèthe
 
-La fonction `tm_polygons()` permet de faire des cartes choroplèthe.
+La fonction `tm_polygons()` permet de faire des cartes choroplèthe. 
+
+Nous partons ici des banque d'indicateurs internationaux tenue par l'ONU sur les Objectifs de développement durable, diffusée dans le package `{variousdata}`.
+
+### Préparation des données  
+
+On prépare les données en associant les indicateurs à leur géographie.
+
+```{r}
+sdg_indicators_sf <- World %>%
+  left_join(sdg_indicators, by = c("iso_a3", "continent")) %>%
+  st_transform(crs = st_crs(3857)) 
+```
+
+### Cartographie  
+
+On réalise une analyse thématique de la variable `sh_sta_mmr` qui représente le taux de mortalité de la mère à la naissance (Maternal mortality ratio). 
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons("sh_sta_mmr",textNA="Valeur manquante")+
+  tm_shape() +
+  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante") +
   tm_borders("white", lwd = .5)
 ```
 
 
 ## Exemple de carte à ronds proportionnels
 
-La fonction `tm_bubble()` permet de faire des cartes à ronds proportionnels. L'utilisation de `tm_polygons()` permet sans lui spécifier de paramètre d'afficher les frontière des pays avec une couleur de remplissage par défaut.
+La fonction `tm_bubble()` permet de faire des cartes à ronds proportionnels. 
+L'utilisation de `tm_polygons()` permet sans lui spécifier de paramètre d'afficher les frontières des pays avec une couleur de remplissage par défaut.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons()+
+  tm_shape() +
+  tm_polygons() +
   tm_bubbles(size = "sh_sta_mmr", col = "sh_sta_mmr", textNA = "Valeur manquante")
 ```
 
@@ -121,25 +139,26 @@ sdg_indicators_sf %>%
 
 
 
-## gestion des palettes
+## Gestion des palettes
 
 La fonction `tmaptools::palette_explorer()` permet d'accéder à une interface très simple de définition d'une palette de couleur à partir des palette *brewer*.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
+  tm_shape() +
   tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks", 
-              palette = get_brewer_pal("OrRd", n = 5, contrast = c(0.2, 1)), plot = FALSE)
+              palette = get_brewer_pal("OrRd", n = 5, contrast = c(0.2, 1), plot = FALSE))
 ```
 
-On peut également utiliser n'importe qu'elle palette, par exemple la pelette viridis, mais sans l'interface proposée par `palette_explorer()` : 
+On peut également utiliser n'importe qu'elle palette, par exemple la palette viridis, mais sans l'interface proposée par `palette_explorer()` : 
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks",palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))
+  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks",
+              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))
 ```
 
 ## La mise en page
@@ -156,7 +175,8 @@ On peut rajouter une barre d'échelle et la flèche du nord avec `tm_scale_bar()
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
-  tm_polygons("sh_sta_mmr",textNA = "Valeur manquante", style = "jenks",palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"),
+  tm_polygons("sh_sta_mmr",textNA = "Valeur manquante", style = "jenks",
+              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"),
               title = "Taux de mortalité de la mère \n(pour 100 000 naissances)")+
   tm_layout(main.title = "Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde",
             main.title.size = 1.2,
@@ -199,6 +219,11 @@ sdg_indicators_sf %>%
 `tmap_arrange()` permet d'assembler plusieurs cartes ensemble. La limite de `tmap_arrange()` :  la fonction ne permet pas de fixer un vecteur de largeur différent pour les cartes. A utiliser donc sur des cas qui peuvent convenir à cette contrainte.
 
 ```{r}
+
+bbox_africa <- World %>% 
+  filter(continent=="Africa") %>% 
+  st_bbox()
+
 tmap_sdg_indicators <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   tm_shape()+
@@ -208,10 +233,11 @@ tmap_sdg_indicators <- sdg_indicators_sf %>%
 tmap_sdg_indicators_africa <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   tm_shape(bbox = bbox_africa)+
-  tm_polygons("sh_sta_mmr", style = "jenks",palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))+
+  tm_polygons("sh_sta_mmr", style = "jenks",
+              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))+
   tm_layout(legend.show	= FALSE)
 
-tmap_arrange(tmap_sdg_indicators,tmap_sdg_indicators_africa,nrow = 1)
+tmap_arrange(tmap_sdg_indicators, tmap_sdg_indicators_africa, nrow = 1)
 ```
 
 
@@ -258,7 +284,7 @@ tmap_mode("plot")
 tmap_save(carte, filename = "Taux de mortalité de la mère dans le monde.png")
 
 tmap_mode("view")
-tmap_save(carte, filename = "Taux de mortalité de la mère dans le monde.html")```
+tmap_save(carte, filename = "Taux de mortalité de la mère dans le monde.html")
 ```
 
 

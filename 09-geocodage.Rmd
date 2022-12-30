@@ -32,7 +32,7 @@ mes_adresses_geoc %>%
 
 Le champ `result_score` fournit un indicateur de la qualité de la géolocalisation.
 
-Il reste alors à transformer le résultat en df spatial, grâce à la fonction `st_as_sf()` vue au chap \@ref(lire-des-donnees-spatiales).
+Il reste alors à transformer le résultat en df spatial, grâce à la fonction `st_as_sf()` vue au chapitre \@ref(lire-des-donnees-spatiales).
 
 ```{r}
 mes_adresses_sf <- st_as_sf(mes_adresses_geoc, coords = c("longitude", "latitude"), crs = 4326)

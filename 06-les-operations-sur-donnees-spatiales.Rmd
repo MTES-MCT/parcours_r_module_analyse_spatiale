@@ -365,6 +365,8 @@ index_dep_pdl <- st_nearest_feature(
   departements_geo,
   centres_departements_pdl
 )
+
+index_dep_pdl 
 ```
 
 `st_nearest_feature()` renvoie un vecteur d'index en résultat. 
@@ -416,13 +418,13 @@ grille <- st_make_grid(epci_d44, cellsize = 10000) %>%
   st_as_sf() %>% 
   rowid_to_column("id")
 
-mapview(list(grille, epci_d44))
+mapview(grille) + mapview(epci_d44, col.regions = "white", alpha.regions = 0.5)
 ```
 
 On constate que plusieurs carreaux sont inutiles. On peut réduire leur nombre avec `st_intersects()` comme vu précédemment.
 ```{r}
 grille_ajustee <- grille[epci_d44, , op = st_intersects]
-mapview(list(grille_ajustee, epci_d44))
+mapview(grille_ajustee) + mapview(epci_d44, col.regions = "white", alpha.regions = 0.5)
 ```
 
 
@@ -431,7 +433,7 @@ mapview(list(grille_ajustee, epci_d44))
 On cherche ici à compter par carreau, le nombre d'entreprises de type "Boulangerie et boulangerie-pâtisserie" (code APE 1071C) du fichier sirene 44 .
 ```{r}
 boul_44 <- filter(sirene44, APET700 == "1071C") %>% select(SIREN, NOMEN_LONG)
-mapview(list(grille_ajustee, epci_d44, boul_44))
+mapview(grille_ajustee) + mapview(epci_d44, col.regions = "white", alpha.regions = 0.5) + mapview(boul_44, col.regions = "grey")
 ```
 
 La grille ajustée comprend `r nrow(grille_ajustee)` carreaux. 
@@ -444,7 +446,7 @@ dim(intersection)
 
 ```
 
-L'objet **intersection** est une liste de la longueur de l'objet **grille_ajustee** et chaque élément de la liste contient l'index des éléments de l'objet **boul_44** qu'il intersecte.
+L'objet **intersection** est une liste de la longueur de l'objet **grille_ajustee** et chaque élément de la liste contient le ou les index des éléments de l'objet **boul_44** qu'il intersecte.
 Exemple avec le 46e carreau :
 
 ```{r}
@@ -453,7 +455,7 @@ intersection[[46]]
 ```
 Le 46e carreau comprend les boulangeries des lignes `r intersection[[46]] %>% paste(collapse = ", ")` de la table boul_44.
 
-Pour compter le nombre de boulangerie par carreau, on peut parcourir la liste et de reporter la longueur de chacun de ces éléments. 
+Pour compter le nombre de boulangeries par carreau, on peut parcourir la liste et de reporter la longueur de chacun de ces éléments. 
 
 ```{r intersect3.4}
 grille_boul <- mutate(grille_ajustee, nb_boulang = map_dbl(intersection, length))
@@ -463,14 +465,10 @@ select(grille_boul, nb_boulang) %>%
 Une autre solution est de passer par les jointures spatiales :
 
 ```{r}
-nb_boul_par_carreau <- st_join(x = grille_ajustee, y = boul_44, join = st_contains, left = FALSE) %>% 
-  st_drop_geometry() %>% 
+nb_boul_par_carreau <- st_join(x = grille_ajustee, y = boul_44) %>% 
   group_by(id) %>% 
-  summarise(nb_boulang = n())
+  summarise(nb_boulang = length(SIREN))
 
-grille_boul2 <- grille_ajustee %>% 
-  left_join(nb_boul_par_carreau, by = "id")
-
-select(grille_boul2, nb_boulang) %>% plot
+select(nb_boul_par_carreau, nb_boulang) %>% plot
 ```
 
