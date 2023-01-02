@@ -542,7 +542,7 @@ La fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** col
 Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
 
 ```{r, fig.height=6,fig.width=12}
-plot_grid(calvados + normandie, rel_widths = c(1, 2))
+plot_grid(calvados, normandie, rel_widths = c(1, 2))
 ```
 
 
