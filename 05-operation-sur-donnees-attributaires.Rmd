@@ -5,9 +5,10 @@
 Dans ce chapitre, nous allons utiliser les packages suivants :
 
 ```{r pkg_chap_5_donnees_attr}
+# CRAN
+library(mapview)
 library(sf)
 library(tidyverse)
-library(mapview)
 ```
 
 Nous utiliserons les contours des territoires de la France métropolitaine issus de Admin Express.
@@ -45,7 +46,10 @@ departements_geo %>%
   glimpse()
 ```
 
-A noter que par défaut, un dataframe spatial gardera toujours la géométrie.
+A noter que par défaut, un dataframe spatial gardera toujours la géométrie. 
+On dit qu'elle est collante. 
+Au besoin, pour la supprimer d'un jeu de donnée, il faut lui appliquer la fonction `st_drop_geometry()` qui ne renverra que les données attributaires.
+
 
 Nous pouvons agréger nos données.
 

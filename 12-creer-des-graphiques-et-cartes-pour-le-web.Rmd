@@ -9,21 +9,23 @@ La limitation de `{leaflet}` est qu'il ne permet de visualiser que des données 
 
 Dans ce chapitre, nous utiliserons les packages suivants
 ```{r pkg_chap_15_carto_web, message=FALSE, warning=FALSE}
+# CRAN
+library(htmltools)
+library(htmlwidgets)
 library(leaflet)
 library(sf)
 library(tidyverse)
-library(COGiter)
-library(htmltools)
-library(htmlwidgets)
+# Github 
+library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
 ```
 
 Les données utilisées sont issues de `{COGiter}`.
 
 ### Carte choroplète
 
-Ci-dessous un exemple avancé de carte choroplète avec leaflet.
+Ci-dessous un exemple avancé de carte choroplète avec `{leaflet}`.
 
-- Définition des données de départ
+- Définition des données de départ :  
 
 ```{r}
 pop2015_dep_geo <- pop2015 %>% 
@@ -36,19 +38,19 @@ pop2015_dep_geo <- pop2015 %>%
 glimpse(pop2015_dep_geo)
 ```
 
-- Transformation de la projection car `leaflet` ne connait que le WGS 84
+- Transformation de la projection car `leaflet` ne connait que le WGS 84 :  
 
 ```{r}
 pop2015_dep_geo <- st_transform(pop2015_dep_geo, crs=("+proj=longlat +datum=WGS84 +no_defs"))
 ```
 
-- Discrétisation de la variable d'intérêt
+- Discrétisation de la variable d'intérêt : 
 
 ```{r}
 bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
 ```
 
-- Création d'une palette de couleurs associée
+- Création d'une palette de couleurs associée : 
 
 `{leaflet}` intègre une fonction `colorBin()` qui permet d'associer à un vecteur de valeurs numériques un vecteur de couleurs en fonction d'une palette et d'un vecteur de bornes.
 
@@ -56,7 +58,7 @@ bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
 pal <- colorBin("YlOrRd", domain = pop2015_dep_geo$densite, bins = bornes)
 ```
 
-- Création d'étiquettes popover, à afficher en surbrillance au passage de la souris sur la carte.
+- Création d'étiquettes popover, à afficher en surbrillance au passage de la souris sur la carte :  
 
 ```{r}
 popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en 2015", 
@@ -64,7 +66,7 @@ popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en 2015",
   lapply(htmltools::HTML)
 ```
 
-- Réalisation de la carte
+- Réalisation de la carte :  
 
 La fonction `addPolygons()` permet de créer la carte choroplète.
 
@@ -98,24 +100,24 @@ leaflet(pop2015_dep_geo) %>%
 Pour réaliser des ronds proportionnels, il va faut partir des centroïdes de nos polygones. 
 On cherche cette fois à représenter les populations 2015. 
 
-- Création de la table en entrée 
+- Création de la table en entrée :  
 
 ```{r}
 dep_centr <- st_centroid(pop2015_dep_geo)
 ```
-- Discrétisation de la variable d'intérêt
+- Discrétisation de la variable d'intérêt :  
 
 ```{r}
 bornes <- quantile(dep_centr$pop2015 / 1000, na.rm = TRUE)
 ```
 
-- Création d'une palette de couleurs associée
+- Création d'une palette de couleurs associée : 
 
 ```{r}
 pal <- colorBin("YlOrRd", domain = dep_centr$pop2015 / 1000, bins = bornes)
 ```
 
-- Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte.
+- Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte : 
 
 ```{r}
 popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015", 
@@ -123,7 +125,7 @@ popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015",
   lapply(htmltools::HTML)
 ```
 
-- Création de la carte
+- Création de la carte : 
 
 ```{r, fig.width=7, fig.height=4}
 carte_rond_proportionnel <- leaflet(dep_centr) %>%

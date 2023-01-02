@@ -29,13 +29,14 @@ La mise en page se définit avec la fonction `tm_layout()`, la légende avec `tm
 Dans ce chapitre nous allons utiliser les packages suivants
 
 ```{r pkg_tmap}
+# CRAN
 library(sf)
 library(tidyverse)
-#remotes::install_github("MaelTheuliere/variousdata")
 library(tmap)
 library(tmaptools)
-library(variousdata)
 library(viridis)
+# Github
+library(variousdata)   # remotes::install_github("MaelTheuliere/variousdata")
 ```
 
 ## Fonction `tm_shape()`

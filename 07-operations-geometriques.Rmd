@@ -5,12 +5,12 @@ Nous allons voir dans ce chapitre comment opérer des opérations géométriques
 Dans ce chapitre, nous allons utiliser les packages suivants.
 
 ```{r pkg_chap_7_ope_geom}
+# CRAN
 library(sf)
 library(tidyverse)
 library(mapview)
-library(ggplot2)
 library(rmapshaper)
-library(patchwork)
+library(cowplot)
 ```
 
 On distingue deux types d'opérations : les opérations unaires et binaires.
@@ -56,7 +56,7 @@ p3 <- ggplot() +
   geom_sf(data = departement_56_super_simplifie) + 
   theme_void()
 
-p1 + p2 + p3 + plot_layout(nrow = 1)
+plot_grid(p1, p2, p3, nrow = 1, labels = c('departement 56', 'simplifié', 'super simplifié'))
 ```
 
 On peut mesurer le gain réalisé par chaque opération.
@@ -95,7 +95,7 @@ p3 <- ggplot() +
   geom_sf(data = departements_35_44_56_super_simplifie) + 
   theme_void()
 
-p1 + p3 + plot_layout(nrow = 1)
+plot_grid(p1, p3, nrow = 1)
 ```
 
 On constate clairement des trous à la frontière des 3 départements.
@@ -121,7 +121,7 @@ p3 <- ggplot() +
   geom_sf(data = departements_35_44_56_ms_simplifie) + 
   theme_void()
 
-p1 + p3 + plot_layout(nrow = 1)
+plot_grid(p1, p3, nrow = 1)
 ```
 
 ### Centroïde
@@ -158,6 +158,9 @@ Comme déjà vu, à partir d'une couche de départ de type ponctuel, linéaire o
 La géométrie de cette couche représente des objets surfaciques dont les frontières sont positionnées à une distance euclidienne, définie par l'utilisateur, des limites des objets vectoriels de la couche de départ. 
 
 ```{r}
+departement_44 <- departements_geo %>% 
+  filter(INSEE_DEP == "44")
+
 departement_44_buffer <- departement_44 %>%
   st_buffer(dist = 5000)
 
@@ -170,7 +173,8 @@ mapview(list(departement_44_buffer, departement_44),
 
 ### Transformation affine
 
-Les tranformations affines regrouppent les transformations qui préservent les lignes et le parallélisme. A l'inverse les angles et les tailles ne le sont pas forcément.
+Les tranformations affines regroupent les transformations qui préservent les lignes et le parallélisme. 
+A l'inverse les angles et les tailles ne le sont pas forcément.
 
 Les transformations affines intègrent notamment les translations, les rotations et les changements d'échelle.
 
@@ -194,10 +198,12 @@ mapview(list(departement_44_trans, departement_44),
 
 #### Changement d'échelle
 
-Dans l'exemple suivant on va réduire par deux la surface de chacun des epci du département.
-Pour cela on va recentrer les epci pour que les coodonnées des centroids soient à l'origine avant de diviser par deux les cordonnées des contours et réappliquer la translation au centroid.
+Dans l'exemple suivant on va réduire par deux la surface de chacun des EPCI du département.
+Pour cela on va recentrer les EPCI pour que les coodonnées des centroides soient à l'origine, avant de diviser par deux les cordonnées des contours et réappliquer la translation au centroid.
 
 ```{r}
+
+epci_d44 <- st_filter(x = epci_geo, y = departement_44 %>% st_buffer(-3000), .predicate = st_intersects)
 
 epci_d44_sfc <- st_geometry(epci_d44)
 
@@ -235,11 +241,11 @@ ggplot() +
 ```
 
 
-`st_intersection()` permet de ne garder que la partie commune des deux géométries
+`st_intersection()` permet de garder la partie commune des deux géométries. 
 
 ```{r,warning=FALSE, message=FALSE}
 redon_et_departement_44 <- st_intersection(epci_redon, departement_44) %>%
-  mutate(NOM_EPCI = "Communes du 44 de la CA Redon Agglomération")
+  mutate(NOM_EPCI = "Communes du 44\ndans la CA de Redon")
 ```
 
 ```{r, echo=FALSE}
@@ -247,15 +253,14 @@ ggplot() +
   geom_sf(data = epci_redon) +
   geom_sf(data = departement_44) +
   geom_sf(data = redon_et_departement_44, fill = "grey") +
-  geom_sf_label(data = epci_redon, aes(label = NOM_EPCI)) +
-  geom_sf_label(data = departement_44, aes(label = NOM_DEP))
+  geom_sf_text(data = redon_et_departement_44, aes(label = NOM_EPCI), nudge_x = 10000)
 ```
 
-`st_difference(x,y)` permet de ne garder que la partie de `x` non présente dans `y`
+`st_difference(x,y)` permet de ne garder que la partie de `x` absente de `y`
 
 ```{r, warning=FALSE, message=FALSE}
 redon_hors_departement_44 <- st_difference(epci_redon, departement_44) %>%
-  mutate(NOM_EPCI = "Communes du 44 et du CA Redon Agglomération hors communes en commun")
+  mutate(NOM_EPCI = "Com. de la CA de Redon hors 44")
 ```
 
 ```{r, echo=FALSE}
@@ -263,12 +268,10 @@ ggplot() +
   geom_sf(data = epci_redon) +
   geom_sf(data = departement_44) +
   geom_sf(data = redon_hors_departement_44, fill = "grey") +
-  geom_sf_label(data = epci_redon, aes(label = NOM_EPCI)) +
-  #  geom_sf_label(data=redon_et_departement_44_sans_partie_communes, aes(label = NOM_EPCI))+
-  geom_sf_label(data = departement_44, aes(label = NOM_DEP))
+  geom_sf_label(data = redon_hors_departement_44, aes(label = NOM_EPCI)) 
 ```
 
-`st_sym_difference(x,y)` permet de ne garder que les partie de `x` et de `y` non communes.
+`st_sym_difference(x,y)` permet de ne garder que les parties de distinctes `x` et de `y`. 
 
 ```{r, warning=FALSE, message=FALSE}
 redon_et_departement_44_sans_partie_communes <- st_sym_difference(epci_redon, departement_44) %>%
@@ -282,14 +285,13 @@ ggplot() +
   geom_sf(data = departement_44) +
   geom_sf(data = redon_et_departement_44_sans_partie_communes, fill = "grey") +
   geom_sf_label(data = epci_redon, aes(label = NOM_EPCI)) +
-  #  geom_sf_label(data=redon_et_departement_44_sans_partie_communes,aes(label = NOM_EPCI))+
   geom_sf_label(data = departement_44, aes(label = NOM_DEP))
 ```
 
 ### Union
 
-Union permet de fusionner les géométries de plusieurs objets.
-On va regarder comment reconsituer la carte des communes à partir de celle des départements
+`st_union()` permet de fusionner les géométries de plusieurs objets.
+On va regarder comment reconstituer la carte des régions à partir de celle des départements.
 
 ```{r}
 regions <- departements_geo %>%

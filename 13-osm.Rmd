@@ -4,7 +4,7 @@
 </div>
 
 [OpenStreetMap (OSM)](https://www.openstreetmap.org){target="_blank"} est un projet de cartographie participative qui a pour but de constituer une base de données géographiques libre à l'échelle mondiale. 
-OpenStreetMap vous permet de voir, modifier et utiliser des données géographiques dans le monde entier. 
+OpenStreetMap vous permet de voir, modifier et d'utiliser des données géographiques du monde entier. 
 
 **Conditions d'utilisation**  
 
@@ -22,16 +22,21 @@ R propose une série de packages qui se basent sur OpenStreetMap.
 Dans ce chapitre nous allons utiliser les packages suivants : 
 
 ```{r pkg_osm}
+# packages CRAN
 library(ggspatial)
-library(gouvdown)
 library(leaflet)
+library(maptiles)
 library(mapview)
 library(osmdata)
 library(osmextract)
 library(osrm)
 library(sf)
 library(tidyverse)
+# packages Github
+library(COGiter)      # remotes::install_github("MaelTheuliere/COGiter")
+library(gouvdown)     # remotes::install_github("spyrales/gouvdown")
 
+# Données
 load("extdata/sirene.RData")
 load("extdata/admin_express.RData")
 
@@ -134,49 +139,50 @@ En cas d'utilisation intensive [il est fortement recommandé d'utiliser sa propr
 
 
 ### Calcul d'un itinéraire
-La fonction `osrmRoute()` permet de calculer des itinéraires.  
+
+La fonction `osrmRoute()` permet de calculer des itinéraires. 
+On l'utilise ici pour un trajet du CVRH de Nantes à la gare SNCF. 
+Le paramètre `osrm.profile` sert à indiquer le profil du voyageur : véhiculé ("car"), cycliste ("bike") ou piéton ("foot").  
+Par défaut elle renvoie un objet géo, correspondant à l'itinéraire calculé. 
+
 ```{r osrmroute, fig.width = 3, fig.height = 5}
-library(sf)
-library(osrm)
-# TODO : Exemple CVRH Gare SNCF Nantes
 
-# library(maptiles)
-# com <- st_read("data/lot46.gpkg", layer = "commune", quiet = TRUE)
-# com <- st_transform(com, 3857)
-# # Itinéraire entre Cahors et Puybrun
-# cahors  <- com[com$INSEE_COM == "46042", ]
-# puybrun <- com[com$INSEE_COM == "46229", ]
-# route <- osrmRoute(src = cahors, 
-#                    dst = puybrun, 
-#                    returnclass = "sf")
-# osm <- get_tiles(route, crop = TRUE)
-# plot_tiles(osm)
-# plot(st_geometry(route), col = "grey10", lwd = 6, add = T)
-# plot(st_geometry(route), col = "grey90", lwd = 1, add = T)
+mes_adresses <- data.frame(services = c("CVRH Nantes", "Gare Nord Nantes"),
+                           lat = c(47.22542, 47.217777),
+                           long = c(-1.574013, -1.542315)) %>% 
+  st_as_sf(coords = c("long", "lat"), crs = 4326) %>% 
+  st_transform(3857)
+
+mapview(mes_adresses)
+
+trajet <- osrmRoute(src = mes_adresses[1,], dst = mes_adresses[2,], osrm.profile = "bike")
+mapview(list(mes_adresses, trajet))
+
+osrmRoute(src = mes_adresses[1,], dst = mes_adresses[2,], overview = FALSE, osrm.profile = "bike")
+
 ```
-
+Le paramètre overview lorsqu'il est mis à FALSE, permet de récupérer la durée et la longueur de l'itinéraire.
 
 ### Calcul d'une matrice de temps
 La fonction `osrmTable()` permet de calculer des matrices de distances ou de temps par la route. 
 
-Dans cet exemple nous calculons une matrice de temps entre 2 adresses et les restaurants de Cahors à pied. 
+Dans cet exemple nous calculons une matrice de temps entre les 2 adresses et les restaurants de Nantes Métropole à pied. 
 ```{r osrmtable, fig.width = 8}
-library(sf)
-# library(tidygeocoder)
-# restaurant <- st_read("data/lot46.gpkg", layer = "restaurant", quiet = TRUE)
-# # Sélection des restaurants de Cahors
-# restaurant_cahors <- restaurant[restaurant$DEPCOM == "46042", ]
-# # geocodage de 2 adresses à Cahors
-# adresses <- data.frame(ad = c("3 rue Montaudié, Cahors, France", 
-#                               "5 rue Albert Camus, Cahors, France")
-#                        )
-# places <- tidygeocoder::geocode(.tbl = adresses,address = ad)
-# places
-# # Calcul de la matrice de distance entre les 2 adresses et les restaurants de Cahors
-# mat <- osrmTable(src = places[, c(1,3,2)], 
-#                  dst = restaurant_cahors, 
-#                  osrm.profile = "foot")
-# mat$durations[1:2,1:5]
-# # Quelle adresse possède une meilleurs accessibilité aux restaurants de Cahors?
-# boxplot(t(mat$durations[,]), cex.axis = .7)
+load("extdata/sirene.RData")
+emprise_nantes <- COGiter::communes_geo %>% 
+  filter(DEPCOM == "44109")
+
+restaurants_nantes <- filter(sirene44, APET700 == "5610A")%>% 
+  st_filter(emprise_nantes) %>% 
+  st_transform(4326) 
+
+# Calcul de la matrice de distance entre les 2 adresses et les restaurants de Nantes
+mat <- osrmTable(src = mes_adresses,
+                 dst = restaurants_nantes,
+                 osrm.profile = "foot")
+
+mat$durations[,1:5] 
+# Quelle adresse possède une meilleurs accessibilité en temps aux restaurants ? 
+boxplot(t(mat$durations), cex.axis = .7)
+
 ```

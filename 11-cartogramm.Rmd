@@ -10,10 +10,12 @@ On peut ensuite utiliser cette nouvelle géométrie pour la visualiser avec tout
 Dans ce chapitre nous allons utiliser les packages suivants.
 
 ```{r pkg_chap_14_cartogram, message=FALSE, warning=FALSE}
+# CRAN
 library(cartogram)
 library(tidyverse)
-library(COGiter)
-library(gouvdown)
+# Github
+library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
+library(gouvdown)   # remotes::install_github("spyrales/gouvdown")
 ```
 
 Les données utilisées sont issues de {COGiter} :

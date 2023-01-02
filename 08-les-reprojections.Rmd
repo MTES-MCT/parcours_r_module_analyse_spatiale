@@ -3,16 +3,17 @@
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
 ```{r pkg_chap_8_reproj}
+# CRAN
 library(sf)
 library(tidyverse)
-library(patchwork)
+library(cowplot)
 library(tmap)
 ```
 
 
 Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/latitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
 
-Autrefois, la plupart des fonctions de `sf` présupposaient de s'appliquer sur un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent le font aussi.
+Autrefois, la plupart des fonctions de `sf` présupposaient de travailler avec un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent, le nécessitaient aussi.
 
 ## Un premier exemple de reprojection
 
@@ -31,7 +32,7 @@ mapview(nantes)
 ```
 
 
-`st_is_longlat()` est une fonction de `sf` qui permet de faire un test sur la famille de CRS à laquelle on a à faire.
+`st_is_longlat()` est une fonction de `sf` qui permet de faire un test sur la famille de CRS à laquelle on a affaire.
 
 ```{r}
 st_is_longlat(nantes)
@@ -45,6 +46,7 @@ mapview(list(nantes, nantes_buffer))
 ```
 
 Le buffer est pixelisé en longitude / latitude.
+
 
 Tentons une reprojection. La fonction permettant une reprojection est `st_transform()`.
 On va ici passer en lambert 93 nos données.
@@ -65,6 +67,17 @@ nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1000)
 mapview(list(nantes_proj, nantes_proj_buffer))
 ```
 
+Les contours du buffer sont cette fois plus nets, également les mesures de surfaces sont plus précises avec un crs projeté adapté à la zone observée. 
+
+```{r}
+st_area(nantes_buffer)
+st_area(nantes_proj_buffer)
+pi*1000^2
+```
+
+
+
+
 ## Quand reprojeter ?
 
 Quelques cas usuels qui peuvent vous amener à reprojeter vos données : 
@@ -75,7 +88,7 @@ Quelques cas usuels qui peuvent vous amener à reprojeter vos données :
 
 - le besoin de visualiser vos données suivant la conversion de certaines propriétés des objets à la surface de la terre.
 
-- l'usage de fonctions recommandant d'utiliser des CRS projetés (comme `st_buffer()` ci-dessus)
+- l'usage de fonctions recommandant d'utiliser des CRS projetés (comme `st_buffer()`, `st_area()` ci-dessus)
 
 Un exemple d'usage : la distance de Rennes à Nantes
 
@@ -134,7 +147,7 @@ Reprojeter des données vecteur se fait à l'aide de la fonction `st_transform()
 
 ### Modifier la projection d'une carte.
 
-Parfois on souhaite pouvoir aller plus loin dans les reprojections, en adaptant le centre de la projection, pour cela on peut utiliser un `proj4string` ad hoc.
+Parfois on souhaite pouvoir aller plus loin dans les reprojections, en adaptant le centre de la projection, pour cela on peut utiliser une `proj4string` ad hoc.
 
 Pour cela, on va modifier l'argument `+proj` de notre crs avec `st_transform`.
 
@@ -159,5 +172,5 @@ p1 <- ggplot() +
   geom_sf(data = World)
 p2 <- ggplot() +
   geom_sf(data = World_pekin)
-p1 + p2 + plot_layout(nrow = 1)
+plot_grid(p1, p2)
 ```

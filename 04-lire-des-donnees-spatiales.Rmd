@@ -5,19 +5,24 @@
 Dans ce chapitre, nous allons utiliser les packages suivants : 
 
 ```{r pkg_chap_4_lecture, message=FALSE, warning=FALSE}
-library(sf)
+
+# CRAN
 library(DT)
-library(tidyverse)
-library(RPostgres)
-library(spData)
 library(remotes)
+library(RPostgres)
+library(sf)
+library(spData)
+library(tidyverse)
+
+# Gitlab-forge
 library(datalibaba)
+
+# Github
 library(COGiter)
 library(CARTElette)
 ```
 
-Le package `{sf}` s'appuie sur la librairie externe `GDAL` (Geospatial Data Abstraction Library) pour lire et écrire les données spatiales.
-
+Le package `{sf}` s'appuie sur la librairie externe `GDAL` (Geospatial Data Abstraction Library) pour lire et écrire les données spatiales. 
 `GDAL` est une librairie permettant de lire et d'écrire des données vecteur et raster de n'importe quel format de fichier ou base de données.
 
 Les fonctions de lecture et d'écriture de `{sf}` s'appellent `st_read()` et `st_write()`.
@@ -27,7 +32,8 @@ Pour lire des données spatiales, `st_read()` a besoin :
 - d'une source de donnée : un fichier, un répertoire, une base de données ;
 - d'un layer: une table de données spatiale spécifique du fichier, répertoire, ou de la base de données ;
 
-On peut avoir besoin de rajouter des options spécifiques au format de la source. Par exemple, sur des données en `csv`, il faut pouvoir spécifier la composante spatiale des données.
+On peut avoir besoin de rajouter des options spécifiques au format de la source. 
+Par exemple, sur des données en `csv`, il faut pouvoir spécifier la composante spatiale des données (les champs X, Y ou longitude, latitude).
 
 ## Lire des fichiers plats
 
@@ -39,9 +45,9 @@ Avec l'avènement du web, le format `GeoJSON` se développe beaucoup, bien qu'il
 
 Le format considéré comme le plus prometteur est le format `OGC GeoPackage` promu par l'Open Geospatial Consortium^[https://www.geopackage.org/].
 
-Mais la liste des formats lisibles par `sf` est bien plus vaste.
+Mais la liste des formats lisibles par `{sf}` est bien plus vaste.
 
-Pour l'obtenir, on peut utiliser `st_drivers()`
+Pour l'obtenir, on peut utiliser `st_drivers()`, qui liste les drivers utilisables par `{sf}` :  
 
 ```{r}
 DT::datatable(st_drivers() %>% arrange(name))
@@ -87,20 +93,32 @@ st_write(
 )
 ```
 
-<!-- TODO st_write csv avec colonnes x y -->
+A noter que `st_write()` peut exporter des tables géographiques au format csv :
 
+```{r, eval=FALSE}
+st_write(
+  obj = NY_leukemia,
+  dsn = "extdata/NY_leukemia.csv",
+  layer_options = "GEOMETRY=AS_XY",
+  delete_layer = TRUE
+)
+```
+
+Il faut juste lui préciser comment on souhaite écrire la géométrie dans la table exportée, avec 
+`layer_options = "GEOMETRY=AS_WKT"` ou `layer_options = "GEOMETRY=AS_XY"`.
 
 ## Lire/écrire des données spatiales sur PostGIS
 
 `PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les manipuler.
 
-R va vous permettre de vous connecter simplement à une base PostGIS, pour cela vous aurez besoin du package `DBI` (package permettant de s'interfacer à des bases de données) et du package `RPostgres` (interface à PostgreSQL). 
+R vous permet de vous connecter simplement à une base PostGIS. 
+Pour cela vous aurez besoin du package `{DBI}` (package permettant de s'interfacer à des bases de données) et du package `{RPostgres}` (interface à PostgreSQL en particulier). 
 
 Rstudio a développé tout un site sur les interactions entre les bases de données et R, vous pouvez le trouver à l'adresse suivante : [db.rstudio.com](https://db.rstudio.com/).
 
 Rstudio possède même depuis la version 1.1 un onglet de connexion vous permettant de visualiser vos connexions aux bases.
 
-Pour se connecter à une base, on va définir un driver (à quelle type de base on veut se connecter et selon quel protocole) et un connecteur (les informations de connexion).
+Pour se connecter à une base, il faut définir un driver (à quelle type de base on veut se connecter et selon quel protocole) et un connecteur (les informations de connexion).
 
 ```{r, eval = FALSE}
 drv <- dbDriver("Postgres")
@@ -122,7 +140,8 @@ ma_table <- st_read(con, query = "SELECT * FROM le_schema.ma_table")
 
 L'avantage ici est que vous pouvez faire travailler le serveur directement sans avoir à faire travailler votre poste de travail.
 
-Vous pouvez très bien dans cette requête sql réaliser quelques filtres, sélections et agrégations. Celles-ci seront alors réalisées par le serveur posgreSQL et non R qui ne récupérera que le résultat.
+Vous pouvez très bien, dans cette requête sql, réaliser quelques filtres, sélections et agrégations. 
+Celles-ci seront alors réalisées par le serveur posgreSQL et non par votre session R qui ne récupérera que le résultat.
 
 Vous pouvez écrire vos données ensuite de la même façon avec `st_write()`
 
@@ -135,7 +154,7 @@ st_write(ma_table,
 
 Un package, encore expérimental, de la DREAL Pays de la Loire,  [{datalibaba}](https://dreal-datalab.gitlab.io/datalibaba/index.htmlhttps://dreal-pdl.gitlab-pages.din.developpement-durable.gouv.fr/csd/datalibaba/index.html) simplifie l'écriture des instructions de lecture/écriture de données vers ou depuis un SGBD Postgresql/postgis.  
 
-Il propose de stocker vos identifiants de connexion dans vos variables d'environnement afin d'en préserver la confidentialité et de vous éviter de les réécrire dans chaque script.  
+Il propose de stocker vos identifiants de connexion dans vos variables d'environnement, c'est à dire en dehors de votre script, afin d'en préserver la confidentialité, mais aussi de vous éviter de les réécrire dans chaque script.  
 
 L'utilisateur n'a plus à se préoccuper du driver de connexion ni de la fonction de lecture ou de comment placer le nom du schéma par rapport au nom de la table.
 
@@ -164,14 +183,13 @@ Exemple, nous allons lire les coordonnées géographiques des préfectures de r�
 
 ```{r, message=FALSE}
 prefectures <- read_csv2("extdata/prefecture.csv")
-prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y")) %>%
-  st_set_crs(2154)
+prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y"), crs = 2154) 
 ```
 
 
 ## Données contenues dans des packages
 
-Depuis le développement de sf, de nombreux packages proposent des données géographiques.
+Depuis le développement de `{sf}`, de nombreux packages proposent des données géographiques.
 
 Pour la France, les packages `{CARTElette}` et `{COGiter}` propose des fonds de cartes aux contours administratifs.   
 
@@ -182,25 +200,25 @@ remotes::install_github("MaelTheuliere/COGiter")
 remotes::install_github("antuki/CARTElette/CARTElette@RPackage")
 ```
 
-`{CARTElette}` propose de télécharger les différents fond de plan administratif d'admin-Express COG de l'IGN, selon leur millésime jusque 2021.
+`{CARTElette}` propose de télécharger les différents fonds de plan administratifs d'admin-Express COG de l'IGN, de tous les millésimes jusque 2021.
 ```{r}
 charger_carte(COG = 2021, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
   st_geometry() %>% 
   plot()
 ```
 
-`{COGiter}` contient le dernier millésime des fonds de plan administratif. 
+`{COGiter}` contient le dernier millésime des fonds de plan administratifs. 
 Ces couches sont obtenues par simplification des couches admin-express COG de l'IGN et sont adaptées à la visualisation d'indicateurs statistiques.
 
-Il existe pour la métropole et chaque drom un fond de carte pour les niveaux communes, epci, départements, régions :
+Il comprend pour la métropole et chaque DROM un fond de carte pour les niveaux communes, EPCI, départements, régions :
 ```{r COGiter1}
 ls("package:COGiter", pattern = "_geo$")
 ```
 
 
-La fonction `filtrer_cog_geo()` vous permet d'obtenir une liste de spatial dataframe centrée sur une partie du territoire (que ce soit une commune, un EPCI, un département ou une région) dès lors que vous connaissez son code officiel.
+La fonction `filtrer_cog_geo()` vous permet d'obtenir une liste de spatial dataframes des différentes échelles, centrée sur une partie du territoire (que ce soit une commune, un EPCI, un département ou une région) dès lors que vous connaissez son code officiel.
 
-Exemple sur Nantes métropole :
+Exemple sur la Normandie :
 ```{r COGiter}
 normandie <- filtrer_cog_geo(reg = "28")
 glimpse(normandie)

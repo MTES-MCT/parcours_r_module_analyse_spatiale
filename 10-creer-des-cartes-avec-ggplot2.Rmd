@@ -30,7 +30,7 @@ Pour mettre en page des cartes, 3 packages se distinguent :
 - `{tmap}`,  
 - et `{mapsf}` (successeur de `{cartography}`).
 
-`{ggplot2}` est un package du tidyverse, qui propose une syntaxe cohérente entre dataviz et cartoviz. Il dispose des templates à la Marque Etat, raison pour laquelle son utilisation est à privilégier au sein du pôle ministériel.  
+`{ggplot2}` est un package du tidyverse, qui propose une syntaxe cohérente entre dataviz et cartoviz. Il dispose de templates à la Marque Etat, raison pour laquelle son utilisation est à privilégier au sein du pôle ministériel.  
 
 `{tmap}` a longtemps été plus complet et plus simple que ggplot2. 
 Il constituait un incontournable. 
@@ -44,19 +44,17 @@ Un [support de cours](https://rcarto.github.io/cartographie_avec_r/mapsf.html#re
 Comme l'utilisation de `{ggplot2}` est à privilégier, ce package ne sera pas présenté lors de la formation.
 
 
-# Créer des cartes avec ggplot2 {#creer-des-cartes-avec-ggplot2}   
+# Créer des cartes avec {ggplot2} {#creer-des-cartes-avec-ggplot2}   
 
 Dans ce chapitre, nous allons utiliser les librairies suivantes :
 
 ```{r pkg_chap_12_ggplot, message=FALSE, warning=FALSE}
+# CRAN
 library(sf)
-# library(tmap)
-library(tidyverse)
-library(ggplot2)
+library(tidyverse) #comprend ggplot2
 library(cowplot)
-#remotes::install_github("MaelTheuliere/variousdata")
-# library(variousdata)
 library(ggspatial)
+# Github
 library(gouvdown)
 library(gouvdown.fonts)
 ```
@@ -81,7 +79,7 @@ theme_set(theme_minimal())
 ![le tidyverse](pic/tidyverse.png "le tidyverse"){#id .class width=800}  
 
 
-
+Se référer à [la feuille de triche {ggplot2}](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf) permet de se lancer rapidement.
 
 
 ### `{ggplot2}` : les concepts clefs
@@ -164,11 +162,11 @@ ggplot(pop2015, aes(x = pop2015_totale)) +
 
 Pour en savoir plus sur ggplot2 :   
 
-- [cheatsheet ggplot2](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf),  
+- [cheatsheet {ggplot2}](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf),  
 - [module 5 du parcours R](https://mtes-mct.github.io/parcours_r_module_datavisualisation/package-ggplot2.html) sur la datavisualisation.  
 
 
-### ggplot pour les cartes
+### {ggplot2} pour les cartes
 
 Pour visualiser des données spatiales, ggplot propose maintenant une série de fonctions `geom_sf`, `stat_sf` et `coord_sf` adaptées aux dataframes de type sf. 
 
@@ -183,13 +181,13 @@ ggreg
 
 Quatre types de calques géographiques sont utilisables : 
 
-- `geom_sf()` : pour visualiser nos objets géographiques  
-- `geom_sf_label()` : pour étiqueter nos objets géographiques  
-- `geom_sf_text()` : pour annoter nos objets géographiques  
+- `geom_sf()` : pour visualiser nos objets géographiques tels quels,  
+- `geom_sf_label()` : pour étiqueter nos objets géographiques,  
+- `geom_sf_text()` : pour annoter nos objets géographiques,   
 - `stat_sf_coordinates()` : pour transformer des géométries complexes (lignes, polygones) en points avant de tracer le calque.
 
 `geom_sf()`et ses petites sœurs n'acceptent qu'une seule variable de coordonnées dans le mapping esthétique : celle de la géographie de nos données spatiales.
-Il n'est pas besoin de le préciser quelque soit le nom du champ contenant les coordonnées géo s'il n'y a qu'un champ géo. 
+Il n'est pas besoin de le préciser, quelque soit le nom du champ contenant les coordonnées géo s'il n'y a qu'un champ géo. 
 Dans le cas contraire, on indique le nom de la colonne de coordonnées à utiliser dans l'aesthetic `aes(geometry = mon_champ_geo)`.
 
 Les autres paramètres esthétiques acceptés par les fonctions de traçage de calques sf sont par exemple : 
@@ -205,8 +203,8 @@ Les autres paramètres esthétiques acceptés par les fonctions de traçage de c
 ```{r, echo=FALSE}
 ggreg <- ggreg + theme_void(base_size = 11)
 
-ggreg + geom_sf_text(aes(label = REG)) + labs(title = "geom_sf_text") + 
-  ggreg + geom_sf_label(aes(label = REG)) + labs(title = "geom_sf_label") 
+plot_grid(ggreg + geom_sf_text(aes(label = REG)) + labs(title = "geom_sf_text"),
+          ggreg + geom_sf_label(aes(label = REG)) + labs(title = "geom_sf_label"))
  
 ```
 
@@ -216,12 +214,12 @@ Pour le système de coordonnées, la fonction `coord_sf()` va silencieusement ch
 `coord_sf()` permet également de *zoomer* sur la carte en spécifiant les bornes x et y de la carte, ou également de définir le titre des axes.
 
 
-## Faire des cartes avec ggplot2
+## Faire des cartes avec {ggplot2}
 
 
 ### Préparation des données 
 
-Comme avec d'autres packages, la première étape consiste à préparer le jeu de données à visualiser, c'est à dire d'associer les variables à analyser à leur géométrie. 
+Comme avec d'autres packages, la première étape consiste à préparer le jeu de données à visualiser, c'est à dire d'associer les variables à analyser à leur géographie. 
 
 Ici, nous partons des données de population 2015 et les fonds de carte disponibles dans le package `{COGiter}`, que nous allons préparer avec `{COGiter}` également.
 
@@ -343,11 +341,12 @@ Pour modifier simplement la position de la légende, c'est la fonction [`theme()
 
 - la couleur des grilles primaires et secondaires du graphique
 
+Pour unifier un document, il est vivement conseillé de recourir à un thème.
 
 Il existe des [thèmes prédéfinis](http://ggplot2.tidyverse.org/reference/index.html#section-themes) dans ggplot que l'on peut déjà utiliser.
 Par exemple: `theme_classic()`, `theme_bw()`, `theme_dark()`, ...
 
-Pour les cartes, les thèmes theme_minimal() ou theme_void() sont particulièrement indiqués.  
+Pour les cartes, les thèmes `theme_minimal()` ou `theme_void()` sont particulièrement indiqués.  
 
 Le `theme_gouv_map()` de `{gouvdown}` est tout indiqué pour les services de l'État. 
 Il ne gère pas les couleurs par défaut, mais tout le reste l'est. 
@@ -366,7 +365,6 @@ La fonction `theme_set()` vous permet de définir un thème par défaut pour l'e
 
 theme_set(theme_gouv_map(plot_title_size = 20, subtitle_size = 12))
 
-carte_ronds_prop2
 ```
 
 
@@ -415,7 +413,7 @@ brewer|utiliser une palette de couleur brewer (variable discrète)
 distiller|utiliser une palette de couleur brewer (variable continue)
 
 
-Les palettes de {gouvdown} :   
+`{gouvdown}` propose des fonctions scales_xx_yy() mobilisant les palettes de couleurs à la marque Etat :  
 ![](""pic/palette.PNG")  
 
 La [vignette _graph_gouv_ du site de présentation de {gouvdown}](https://spyrales.github.io/gouvdown/articles/graph_gouv.html) propose des exemples d'utilisation des palettes pour {ggplot2}.
@@ -426,25 +424,40 @@ carte_ronds_prop2 +
 
 ```
 
+`{gouvdown}` propose également de récupérer le code hex des couleurs de la marque Etat grâce à la fonction `gouv_colors()`.
+
+```{r}
+gouv_colors("a1")
+```
+
+On peut utiliser cette fonction pour créer une palette à partir d'un gradient de couleurs : 
+
+```{r}
+carte_ronds_prop2 +
+  scale_colour_gradient(low = gouv_colors("b1")[[1]], high = gouv_colors("p1")[[1]])
+
+```
+
+
 
 #### Formatage spécifique
 
-Le formatage des valeurs des axes ou de la légende se fait à l'aide d'une fonction de formatage des nombres passée à l'argument 'labels' des fonctions scale
+Le formatage des valeurs des axes ou de la légende se fait à l'aide d'une fonction de formatage des nombres passée à l'argument 'labels' des fonctions `scale_xx_yy()`
 
-- Transformation en pourcentage;
+- Transformation en pourcentage ;
 ```{r, echo=TRUE, eval=FALSE}
 scale_color_continuous(labels = scales::percent)
 ```
 
-- Ajout du symbole €;
+- Ajout du symbole € ;
 
 ```{r, echo=TRUE, eval=FALSE}
 scale_y_continuous(labels = function(x) paste(x, " €"))
 ```
 
 
-- Ajout du séparateur des milliers;
-```{r, echo=TRUE, eval=FALSE}
+- Ajout du séparateur des milliers ;
+```{r, echo=TRUE, eval=TRUE}
 carte_ronds_prop2 +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))
@@ -454,7 +467,7 @@ carte_ronds_prop2 +
 
 Lorsque l'on veut pouvoir réaliser une carte pour plusieurs sous-ensembles, les facettes sont alors très utiles. 
 
-Il faut au préalable préparer notre jeu de données en [le passant au format long avec pivot_longer()](https://mtes-mct.github.io/parcours_r_socle_preparation_des_donnees/structurer-ses-tables.html#les-deux-fonctions-clefs-de-tidyr).
+Il faut au préalable préparer notre jeu de données en [le passant au format long avec pivot_longer()](https://mtes-mct.github.io/parcours_r_socle_preparation_des_donnees/structurer-ses-tables.html#les-deux-fonctions-clefs-de-tidyr) de `{tidyr}`. 
 
 
 ```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=8}
