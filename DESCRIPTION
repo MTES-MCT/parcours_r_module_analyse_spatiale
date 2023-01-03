@@ -53,7 +53,7 @@ Remotes:
     MaelTheuliere/variousdata,
     spyrales/gouvdown,
     spyrales/gouvdown.fonts,
-    git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@main,
+    git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@master,
     git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@main
     
 Encoding: UTF-8
