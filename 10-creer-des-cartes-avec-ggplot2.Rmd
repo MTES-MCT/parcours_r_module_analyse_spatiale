@@ -492,6 +492,29 @@ ggplot(data = indic_epci_normands_geo_long) +
   scale_fill_gouv_continuous("pal_gouv_b")
 ```
 
+Un deuxième exemple de facette sur la maille géo.
+```{r fig.height=5, fig.width=12}
+fonds_carto_empiles <- bind_rows(
+  COGiter::communes_geo %>% mutate(TypeZone = "Communes") %>% rename(CodeZone = DEPCOM),
+  COGiter::epci_geo %>% mutate(TypeZone = "Epci") %>% rename(CodeZone = EPCI),
+  COGiter::departements_geo %>% mutate(TypeZone = "Départements") %>% rename(CodeZone = DEP)
+  ) %>% 
+  inner_join(pop2015_preparee) %>% 
+  mutate(densite = round(pop2015 / as.numeric(AREA) * 1000000, 0),
+         TypeZone = fct_inorder(TypeZone))
+
+
+ggplot(fonds_carto_empiles) + 
+  geom_sf(aes(fill = log(densite)), color = "white", size = 0.01) + 
+  facet_wrap(~TypeZone) +
+  scale_fill_gradient(low = gouv_colors("b1")[[1]], high = gouv_colors("p1")[[1]]) + 
+  theme_gouv_map()
+  
+
+```
+
+
+
 ### Ajouter une barre d'échelle et la flèche du nord
 
 Le package `ggspatial` permet d'enrichir simplement nos cartes `ggplot2` avec une barre d'échelle et la flèche du nord.
@@ -591,7 +614,7 @@ pop2015_prepa_nat <- pop2015 %>%
   mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
 
 creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
-                          carto = fond_carto("Martinique", ombre = 0), espace = " ",
+                          carto = fond_carto("Martinique", ombre = 0), espace = "\u202f",
                           palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
                           bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 
@@ -608,7 +631,7 @@ Toutes ces fonctions sont des cas particulier de la fonction `creer_carte()` :
 ```{r, message=FALSE, warning=FALSE}
 creer_carte(data = pop2015_prepa_nat, code_region = "28", indicateur = poids_pop_a_part, maillage = "Département",
             carto = fond_carto("Normandie"), titre = "Proportion de la population comptée à part", sous_titre = "En 2015",
-            bas_de_page = "INSEE - RP", decimales = 1, pourcent = TRUE, palette = "pal_gouv_b", )
+            bas_de_page = "INSEE - RP", decimales = 1, pourcent = TRUE, palette = "pal_gouv_b", espace = "\u202f" )
 ```
 
 
