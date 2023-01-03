@@ -205,8 +205,11 @@ On reprend notre carte ggplot normande en ronds proportionnels :
 
 ```{r}
 carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
-    geom_sf_interactive(aes(tooltip = paste0(Zone, " : ", pop2015_totale, "hab."))) +
-    stat_sf_coordinates(mapping = aes(size = pop2015_totale, color = poids_pop_a_part)) +
+    geom_sf_interactive(aes(tooltip = Zone)) +
+    geom_sf_interactive(st_point_on_surface(pop2015_epci_normands_geo), 
+                        mapping = aes(size = pop2015_totale, color = poids_pop_a_part, 
+                                      tooltip = paste0(Zone, "\n", format_fr_nb(pop2015_totale, dec = 0, big_mark = " "), " hab.\ndont ", 
+                                                       format_fr_nb(poids_pop_a_part, dec = 1, big_mark = " "), " % comptés à part"))) +
     labs(
         title = "Population par EPCI en Normandie",
         subtitle = "En 2015", x = "", y = "",
@@ -215,7 +218,7 @@ carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
         caption = "Source : INSEE - RP"
     )  +
     theme_gouv_map(plot_title_size = 20, subtitle_size = 12) +
-    scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
+    scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = TRUE) +
     scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))  +
     annotation_north_arrow(location = "bl", height = unit(0.7, "cm"), width = unit(0.7, "cm"))
 
@@ -239,7 +242,7 @@ Chaîné de texte désignant le contenu de l'info-bulles. Par défaut, L'étique
 Un nom d'indicateur présent dans data (sans quote) a mobiliser pour le popover. Utiliser `.data$valeur_popover` au niveau du parametre popover pour afficher les valeurs de cet indicateur, par exemple `.data$nom_ter : .data$valeur_popover unites`.
 
 ```{r}
-creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015,
+creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015, espace = " ",
             interactive = TRUE, type_viz = "proportionnel", maillage = "Départements")
 ```
 
@@ -249,5 +252,5 @@ creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015,
 La fonction `saveWidget()` permet d'exporter une sortie d'un `HTML Widget` en fichier HTML.
 
 ```{r, eval=FALSE}
-saveWidget(widget = carte_rond_proportionnel, file="Taux de décès des mères à la naissance.html")
+saveWidget(widget = girafe(ggobj = carte_ronds_prop_dyn), file = "part_pop_a_part_epci_normandie.html")
 ```

@@ -169,7 +169,7 @@ poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", p
 station <- importer_data(table = "station", schema = "pesticides", base = "production")
 ```
 
-<!-- TODO : config base sspcloud -->
+Pour tester ces fonctions, le SSP Cloud permet de lancer des instances de postgresql/postgis et de les interoger depuis une session RStudio. 
 
 ## Convertir un dataframe
 

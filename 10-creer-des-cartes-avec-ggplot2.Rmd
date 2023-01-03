@@ -154,7 +154,7 @@ ggplot(data = iris) +
 
 En résumé et en image :   
 
-![]("pic/ggplot_principe.png")
+![](pic/ggplot_principe.png)
 
 On va ensuite pouvoir partir de cette base pour l'enrichir avec des fonctions supplémentaires, comme le calibrage des palettes, le titre...
 Chaque fonction ggplot s'enchaîne avec des `+` comme les `%>%`.  
@@ -424,7 +424,7 @@ distiller|utiliser une palette de couleur brewer (variable continue)
 
 
 `{gouvdown}` propose des fonctions scales_xx_yy() mobilisant les palettes de couleurs à la marque Etat :  
-![](""pic/palette.PNG")  
+![](pic/palette.PNG)  
 
 La [vignette _graph_gouv_ du site de présentation de {gouvdown}](https://spyrales.github.io/gouvdown/articles/graph_gouv.html) propose des exemples d'utilisation des palettes pour {ggplot2}.
 
@@ -591,7 +591,7 @@ pop2015_prepa_nat <- pop2015 %>%
   mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
 
 creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
-                          carto = fond_carto("Martinique", ombre = 0),
+                          carto = fond_carto("Martinique", ombre = 0), espace = " ",
                           palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
                           bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 
