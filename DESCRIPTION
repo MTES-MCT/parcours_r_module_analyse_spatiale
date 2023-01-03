@@ -15,6 +15,7 @@ Imports:
     datalibaba,
     devtools,
     DT,
+    ggiraph,
     ggspatial,
     glue,
     gouvdown,

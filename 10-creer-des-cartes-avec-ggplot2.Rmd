@@ -50,13 +50,17 @@ Dans ce chapitre, nous allons utiliser les librairies suivantes :
 
 ```{r pkg_chap_12_ggplot, message=FALSE, warning=FALSE}
 # CRAN
-library(sf)
-library(tidyverse) #comprend ggplot2
 library(cowplot)
 library(ggspatial)
+library(sf)
+library(tidyverse) #comprend ggplot2
+
 # Github
-library(gouvdown)
-library(gouvdown.fonts)
+library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
+library(gouvdown)   # remotes::install_github("spyrales/gouvdown")
+
+# Gitlab-forge
+library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
@@ -558,5 +562,48 @@ p <- carte_ronds_prop2 +
 ggsave("pic/pop_epci_2015_normandie.svg", p, width = 12, height = 5)
 ```
 
+## Faire des cartes avec {mapfactory}  
 
-<!-- ## Mapfactory : TODO -->
+mapfactory <img src='https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory/-/raw/main/man/figures/logo.png' align="right" height="139" />
+
+{[`mapfactory`](https://dreal-pdl.gitlab-pages.din.developpement-durable.gouv.fr/csd/mapfactory/)}
+facilite la création de cartes statistiques sur les territoires
+administratifs français, sur la base des packages `{COGiter}`, `{gouvdown}` et `{ggplot2}`. 
+
+Il s'installe depuis la forge gitlab du pôle ministériel : 
+
+```{r, echo=TRUE, eval=FALSE}
+remotes::install_gitlab(repo = "dreal-pdl/csd/mapfactory", 
+                        host = "gitlab-forge.din.developpement-durable.gouv.fr")
+```
+
+Il crée des cartes régionales de visualisation d'indicateurs statistiques préparés par `{COGiter}`, aux maille départements, EPCI ou communes. 
+
+```{r, message=FALSE, warning=FALSE}
+pop2015_prepa_nat <- pop2015 %>% 
+  cogifier() %>% 
+  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
+
+creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
+                          carto = fond_carto("Martinique", ombre = 0),
+                          palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
+                          bas_de_page = "INSEE - RP", decimales = 0, suffixe = "hab", nclass = 4, method = "quantile")
+
+```
+
+Les fonctions principales sont :  
+
+- `creer_carte_categorie_epci()`, `creer_carte_categorie_communes()` : pour créer une carte régionale de visualisation d'un indicateur catégoriel ;  
+- `creer_carte_epci()`, `creer_carte_communes()` pour créer une carte régionale choroplèthe ;  
+- `creer_carte_epci_prop()`, `creer_carte_communes_prop()` pour créer une carte régionale de visualisation d'un indicateur en rond proportionnel.
+
+Toutes ces fonctions sont des cas particulier de la fonction `creer_carte()` :
+
+```{r, message=FALSE, warning=FALSE}
+creer_carte(data = pop2015_prepa_nat, code_region = "28", indicateur = poids_pop_a_part, maillage = "Département",
+            carto = fond_carto("Normandie"), titre = "Proportion de la population comptée à part", sous_titre = "En 2015",
+            bas_de_page = "INSEE - RP", decimales = 1, pourcent = TRUE, palette = "pal_gouv_b", )
+```
+
+
+Il est nécessaire de partir d'un jeu de données national pour utiliser ce package, car les valeurs des territoires voisins sont requises pour la mise en page.  

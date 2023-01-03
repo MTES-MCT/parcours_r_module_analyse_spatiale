@@ -148,7 +148,7 @@ Vous pouvez écrire vos données ensuite de la même façon avec `st_write()`
 ```{r, eval=FALSE}
 st_write(ma_table,
   dsn = con,
-  layer = ID(schema = "schema", table = "ma_table")
+  layer = Id(schema = "schema", table = "ma_table")
 )
 ```
 

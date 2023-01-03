@@ -17,6 +17,9 @@ library(sf)
 library(tidyverse)
 # Github 
 library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
+library(ggiraph)
+# Gitlab-forge
+library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
 ```
 
 Les données utilisées sont issues de `{COGiter}`.
@@ -156,16 +159,90 @@ carte_rond_proportionnel <- leaflet(dep_centr) %>%
 carte_rond_proportionnel
 ```
 
-<!-- ## ggplot et ggiraph : TODO -->
-
-<!-- ## Mapfactory : TODO -->
-
 
 ## Les cartes ggplot
-TODO
 
-## Les cartes mapfactory
-TODO 
+Les cartes créées par {ggplot2}, comme tous les autres graphiques produits avec ggplot d'ailleurs, peuvent être rendues dynamiques [grâce à {ggiraph}](https://davidgohel.github.io/ggiraph) développé par David Gohel.
+ 
+<img src="https://davidgohel.github.io/ggiraph/reference/figures/logo.png" align="right" width="180"/>   
+
+Ce package permet l'ajout d'info-bulles, des effets de survol et d'ajouter des actions JavaScript aux graphiques. 
+L'interactivité est s'applique aux géométries ggplot, aux légendes et aux éléments de thème, grâce aux paramètres esthétiques suivants : 
+
+
+* `tooltip`: info-bulles à afficher lorsque la souris se trouve sur les éléments ;  
+* `onclick`: fonction JavaScript à exécuter lorsque les éléments sont cliqués ;  
+* `data_id`: id à associer aux éléments (utilisé pour les actions de survol et de clic).  
+
+Les choses que vous devez savoir pour créer un graphique interactif :
+
+* Au lieu d'utiliser `geom_sf()`, utilisez `geom_sf_interactive()`, au lieu d'utiliser `geom_sf_label()`, utilisez `geom_sf_label_interactive()`... Fournissez au moins une des esthétiques `tooltip`, `data_id` and `onclick` pour créer des éléments interactifs.  
+* Appelez la fonction girafe avec l'objet ggplot afin que le graphique soit traduit en un graphique web interactif.  
+
+
+```{r, include=FALSE}
+pop2015_preparee <- pop2015 %>% 
+  # mise à jour du COG et agrégation aux différentes échelles adm
+  cogifier(code_commune = DEPCOM, communes = TRUE, epci = TRUE, departements = TRUE, regions = TRUE, metro = FALSE) %>% 
+  # on filtre le jeu de données pour ne garder que les territoires de Normandie et toutes les régions
+  filtrer_cog(reg = "28", garder_supra = ">=") 
+
+# Aperçu du jeu de données
+glimpse(pop2015_preparee)
+
+# Préparation des fonds carto
+fonds_carto_normands <- filtrer_cog_geo(reg = "28")
+
+#jointure du fond carto EPCI aux données EPCI de Normandie
+pop2015_epci_normands_geo <- fonds_carto_normands$epci %>% 
+  left_join(pop2015_preparee, by = c("EPCI" = "CodeZone")) %>% 
+  # calcul des indicateurs a représenter
+  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100,
+         densite_pop = as.numeric(pop2015 / AREA * 1000000))
+```
+
+On reprend notre carte ggplot normande en ronds proportionnels : 
+
+```{r}
+carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
+    geom_sf_interactive(aes(tooltip = paste0(Zone, " : ", pop2015_totale, "hab."))) +
+    stat_sf_coordinates(mapping = aes(size = pop2015_totale, color = poids_pop_a_part)) +
+    labs(
+        title = "Population par EPCI en Normandie",
+        subtitle = "En 2015", x = "", y = "",
+        size = "Nombre d'habitants",
+        color = "Poids population\ncomptée à part (%)",
+        caption = "Source : INSEE - RP"
+    )  +
+    theme_gouv_map(plot_title_size = 20, subtitle_size = 12) +
+    scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
+    scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))  +
+    annotation_north_arrow(location = "bl", height = unit(0.7, "cm"), width = unit(0.7, "cm"))
+
+girafe(ggobj = carte_ronds_prop_dyn)
+```
+
+
+
+## Les cartes {mapfactory}
+
+{mapfactory} s'appuie sur {ggiraph} pour rendre ses cartes dynamiques. 
+Les arguments de la fonction `creer_carte()` en rapport avec l'interactivité sont 
+
+`interactive`	
+TRUE si on veut une carte html interactive.   
+
+`popover`	 
+Chaîné de texte désignant le contenu de l'info-bulles. Par défaut, L'étiquette qui s'affiche au survol contient "nom du territoire : valeur de l'indicateur et suffixe", obtenu a partir de ".data$nom_ter : .data$valeur".   
+
+`indicateur_popover`	
+Un nom d'indicateur présent dans data (sans quote) a mobiliser pour le popover. Utiliser `.data$valeur_popover` au niveau du parametre popover pour afficher les valeurs de cet indicateur, par exemple `.data$nom_ter : .data$valeur_popover unites`.
+
+```{r}
+creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015,
+            interactive = TRUE, type_viz = "proportionnel", maillage = "Départements")
+```
+
 
 ## Exporter une sortie html
 
