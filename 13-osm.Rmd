@@ -166,22 +166,38 @@ Le paramètre overview lorsqu'il est mis à FALSE, permet de récupérer la dur�
 La fonction `osrmTable()` permet de calculer des matrices de distances ou de temps par la route. 
 
 Dans cet exemple nous calculons une matrice de temps entre les 2 adresses et les restaurants de Nantes Métropole à pied. 
-```{r osrmtable, fig.width = 8}
+
+Préparons nos données :  
+```{r osrmtable}
 load("extdata/sirene.RData")
 emprise_nantes <- COGiter::communes_geo %>% 
   filter(DEPCOM == "44109")
 
 restaurants_nantes <- filter(sirene44, APET700 == "5610A")%>% 
   st_filter(emprise_nantes) %>% 
-  st_transform(4326) 
+  st_transform(4326)
+```
 
-# Calcul de la matrice de distance entre les 2 adresses et les restaurants de Nantes
+```{r osrmtable triche pour CI, include=FALSE}
+load("extdata/matrice_duree_osm.RData")
+```
+
+Calculons la matrice de distance entre les 2 adresses et les restaurants de Nantes :  
+
+```{r osrmtable3, eval=FALSE}
 mat <- osrmTable(src = mes_adresses,
                  dst = restaurants_nantes,
                  osrm.profile = "foot")
+mat$durations[,1:5]
+```
 
-mat$durations[,1:5] 
-# Quelle adresse possède une meilleurs accessibilité en temps aux restaurants ? 
+```{r osrmtable3, include=FALSE}
+mat$durations[,1:5]
+```
+
+Quelle adresse possède une meilleurs accessibilité en temps aux restaurants ?  
+
+```{r osrmtable4, eval=FALSE}
 boxplot(t(mat$durations), cex.axis = .7)
 
 ```
