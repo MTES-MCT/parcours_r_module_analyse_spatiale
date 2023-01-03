@@ -25,7 +25,6 @@ Dans ce chapitre nous allons utiliser les packages suivants :
 # packages CRAN
 library(ggspatial)
 library(leaflet)
-library(maptiles)
 library(mapview)
 library(osmdata)
 library(osmextract)
