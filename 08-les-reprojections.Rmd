@@ -4,9 +4,10 @@ Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
 ```{r pkg_chap_8_reproj}
 # CRAN
+library(cowplot) 
+library(mapview) 
 library(sf)
 library(tidyverse)
-library(cowplot)
 library(tmap)
 ```
 
@@ -67,7 +68,7 @@ nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1000)
 mapview(list(nantes_proj, nantes_proj_buffer))
 ```
 
-Les contours du buffer sont cette fois plus nets, également les mesures de surfaces sont plus précises avec un crs projeté adapté à la zone observée. 
+Les contours du buffer sont cette fois plus nets, également les mesures de surfaces sont plus précises en utilisant un crs projeté, adapté à la zone observée. 
 
 ```{r}
 st_area(nantes_buffer)
@@ -124,7 +125,7 @@ st_distance(rennes %>% st_transform(2154), nantes_proj)
 
 ## Quel CRS utiliser ?
 
-A cette question, il y a rarement une bonne réponse.  
+A cette question, il y a rarement une seule bonne réponse.  
 
 En ce qui concerne les CRS géométriques, le plus simple est d'utiliser le WGS 84 (EPSG 4326), qui est de loin le plus populaire, avec lequel beaucoup de données sont fournies. 
 
@@ -143,7 +144,7 @@ Ensuite votre choix va dépendre des propriétés que vous souhaitez conserver.
 
 ### Projeter des vecteurs
 
-Reprojeter des données vecteur se fait à l'aide de la fonction `st_transform()` que nous avons vu en utilisant le code epsg que nous voulons.
+Reprojeter des données vecteur se fait à l'aide de la fonction `st_transform()`, que nous avons vue précédemment.
 
 ### Modifier la projection d'une carte.
 

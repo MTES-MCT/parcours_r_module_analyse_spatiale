@@ -1,5 +1,33 @@
 # (PART) Créer des cartes sous R {-}
 
+# Créer des cartes statiques avec {ggplot2} {#creer-des-cartes-avec-ggplot2}   
+
+## Librairies
+
+Dans ce chapitre, nous allons utiliser les librairies suivantes :
+
+```{r pkg_chap_12_ggplot, message=FALSE, warning=FALSE}
+# CRAN
+library(cowplot)
+library(ggspatial)
+library(sf)
+library(tidyverse) #comprend ggplot2
+
+# Github
+library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
+library(gouvdown)   # remotes::install_github("spyrales/gouvdown")
+
+# Gitlab-forge
+library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
+```
+
+```{r, eval=TRUE, echo=FALSE}
+theme_set(theme_minimal())
+```
+
+## Introduction : les cartes statiques en R
+
+<br>
 Il existe de nombreuses manières de visualiser des données géographiques dans R. 
 Des instructions très concises suffisent pour disposer d'un premier aperçu. 
 Prenons l'exemple de notre couche régionale issue de COGiter.
@@ -41,31 +69,8 @@ Le [package `{mapsf}`](https://riatelab.github.io/mapsf/){target="_blank"} a ét
 Ses fonctionnalités sont assez complètes et la prise en main est plutôt simple, pour des rendus graphiques très aboutis. 
 De plus, le package est relativement léger. 
 Un [support de cours](https://rcarto.github.io/cartographie_avec_r/mapsf.html#ref-R-mapsf){target="_blank"} et une [feuille de triche](https://raw.githubusercontent.com/riatelab/mapsf/master/vignettes/web_only/img/mapsf_cheatsheet.pdf){target="_blank"} facilitent son appropriation. 
-Comme l'utilisation de `{ggplot2}` est à privilégier, ce package ne sera pas présenté lors de la formation.
+Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle minitériel, ce package ne sera pas présenté lors de la formation.
 
-
-# Créer des cartes avec {ggplot2} {#creer-des-cartes-avec-ggplot2}   
-
-Dans ce chapitre, nous allons utiliser les librairies suivantes :
-
-```{r pkg_chap_12_ggplot, message=FALSE, warning=FALSE}
-# CRAN
-library(cowplot)
-library(ggspatial)
-library(sf)
-library(tidyverse) #comprend ggplot2
-
-# Github
-library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
-library(gouvdown)   # remotes::install_github("spyrales/gouvdown")
-
-# Gitlab-forge
-library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
-```
-
-```{r, eval=TRUE, echo=FALSE}
-theme_set(theme_minimal())
-```
 
 ## Quelques rappels sur `{ggplot2}`
 
@@ -102,7 +107,7 @@ Pour construire un graphique avec `{ggplot2}` il faut lui déclarer plusieurs é
 
 - les autres **paramètres** : on définit en dehors de l'aesthetic les autres paramètres graphiques constants (par exemple : je veux que toutes mes lignes soient rouges ou de taille 2 pixels) ;
 
-- le **layer ("forme ou calque géométrique")** : on définit sous quelle représentation graphique on représente les paramètres précédents (nuages de points, diagramme barres,...). Sous ggplot, ces fonctions sont de la forme `geom_XX()` ;
+- le **layer (forme ou calque géométrique)** : on définit sous quelle représentation graphique on représente les paramètres précédents (nuages de points, diagramme barres,...). Sous ggplot, ces fonctions sont de la forme `geom_XX()` ;
 
 - le **système de coordonnées** : on définit quel type de système de coordonnées (polaire, cartésien...) on souhaite utiliser pour visualiser nos données. Par défaut ggplot utilise les coordonnées x, y cartésiennes. Si besoin de changer, on spécifie le système de coordonnées à l'aide d'une fonction de type `coord_XX`.
 
@@ -132,7 +137,8 @@ Par exemple la fonction `geom_bar()` est associé par défaut à la transformati
 ggplot(data = iris) + 
   geom_bar(mapping = aes(x = Species, fill = Species))
 ```
-On peut modifier ici le parametre `stat` de geom_bar pour afficher la moyenne des longueurs de sépales par espèces :
+
+On peut modifier ici le paramètre `stat` de `geom_bar()` pour afficher la moyenne des longueurs de sépales par espèces :
 
 ```{r, echo=TRUE}
 ggplot(data = iris) + 
@@ -212,7 +218,7 @@ plot_grid(ggreg + geom_sf_text(aes(label = REG)) + labs(title = "geom_sf_text"),
  
 ```
 
-Les fonctions `geom_sf_text()` et `geom_sf_label()` sont associées à la fonction de transformation `stat_sf_coordinates()` qui par défaut renvoie un point au centre de nos objets géographiques pour placer l'annotation textuelle (fonction `sf::st_point_on_surface()`).
+Les fonctions `geom_sf_text()` et `geom_sf_label()` sont associées à la fonction de transformation `stat_sf_coordinates()` qui par défaut renvoie un point au centre de nos objets géographiques pour placer l'annotation textuelle (grâce à la fonction `sf::st_point_on_surface()`).
 
 Pour le système de coordonnées, la fonction `coord_sf()` va silencieusement chercher celui de nos données spatiales pour l'appliquer au graphique. Elle peut servir à définir celui qu'on l'on souhaite utiliser pour la visualisation, en spécifiant le datum (les axes représentés).  
 `coord_sf()` permet également de *zoomer* sur la carte en spécifiant les bornes x et y de la carte, ou également de définir le titre des axes.
@@ -564,7 +570,7 @@ ggsave("pic/pop_epci_2015_normandie.svg", p, width = 12, height = 5)
 
 ## Faire des cartes avec {mapfactory}  
 
-mapfactory <img src='https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory/-/raw/main/man/figures/logo.png' align="right" height="139" />
+<img src='https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory/-/raw/main/man/figures/logo.png' align="right" height="139" />
 
 {[`mapfactory`](https://dreal-pdl.gitlab-pages.din.developpement-durable.gouv.fr/csd/mapfactory/)}
 facilite la création de cartes statistiques sur les territoires
@@ -587,7 +593,7 @@ pop2015_prepa_nat <- pop2015 %>%
 creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
                           carto = fond_carto("Martinique", ombre = 0),
                           palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
-                          bas_de_page = "INSEE - RP", decimales = 0, suffixe = "hab", nclass = 4, method = "quantile")
+                          bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 
 ```
 

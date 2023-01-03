@@ -148,9 +148,15 @@ Parfois, le centroïde peut se placer en dehors de l'objet lui même. Par exempl
 
 ![](pic/atoll.jpg)
 
-Dans ce cas on peut utiliser `st_point_on_surface()` qui garantit que le point est sur la surface de l'objet de départ.
+Dans ce cas, on peut utiliser `st_point_on_surface()` qui garantit que le point est sur la surface de l'objet de départ.  
 
-<!-- TO DO st_centroid(departements_geo, of_largest_polygon = ) -->
+Egalement, en cas d'objets multipolygonaux, comme par exemple un chapelet d'îlets, la fonction `st_centroid()` accepte un argument booléen `of_largest_polygon` à utiliser pour forcer le positionnement du point sur le plus gros polygone.  
+
+
+```{r, eval = FALSE}
+centr_dep <- st_centroid(departements_geo, of_largest_polygon = TRUE)
+```
+
 
 ### Buffer
 
