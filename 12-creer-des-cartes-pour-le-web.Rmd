@@ -206,7 +206,7 @@ On reprend notre carte ggplot normande en ronds proportionnels :
 ```{r}
 carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
     geom_sf_interactive(aes(tooltip = Zone)) +
-    geom_sf_interactive(st_point_on_surface(pop2015_epci_normands_geo), 
+    geom_sf_interactive(data = st_point_on_surface(pop2015_epci_normands_geo), 
                         mapping = aes(size = pop2015_totale, color = poids_pop_a_part, 
                                       tooltip = paste0(Zone, "\n", format_fr_nb(pop2015_totale, dec = 0, big_mark = " "), " hab.\ndont ", 
                                                        format_fr_nb(poids_pop_a_part, dec = 1, big_mark = " "), " % comptés à part"))) +

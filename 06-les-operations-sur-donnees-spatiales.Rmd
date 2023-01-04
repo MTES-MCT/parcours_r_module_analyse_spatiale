@@ -140,7 +140,7 @@ p <- st_cast(st_sfc(p_multi), "POINT")
 La fonction `st_cast` sert à passer d'un type de géométrie à l'autre, ici on transforme un multi-points en points.
 
 ```{r, echo=FALSE}
-ggplot() + 
+geom_pred <- ggplot() + 
   geom_sf(data = a, color = "salmon3", fill = "salmon2") + 
   geom_sf(data = p) + 
   geom_sf(data = l, color = "dodgerblue4", size = 1) + 
@@ -231,38 +231,15 @@ Il existent encore d'autres prédicats qu'on ne détaillera pas ici :
 
 - `st_overlaps()`
 
-### Exercices
+### Exercice 1
 
 - Créer un objet des points de p qui intersectent le polygone a.
 
 ```{r exo1, include=FALSE}
-
-# polygone (a - orange)
-a_poly <- st_polygon(list(rbind(c(-1, -1), c(1, -1), c(1, 1), c(-1, -1))))
-a <- st_sfc(a_poly)
-
-# lignes (l - bleues)
-l1 <- st_multilinestring(list(rbind(c(0.5, -1), c(-0.5, 1))))
-l2 <- st_multilinestring(list(rbind(c(.9, -.9), c(.5, 0))))
-l <- st_sfc(l1, l2)
-
-# multi-points (p - noirs)
-p_matrix <- matrix(c(0.5, 1, -1, 0, 0, 1, 0.5, 1), ncol = 2)
-p_multi <- st_multipoint(x = p_matrix)
-p_multi
-p <- st_cast(st_sfc(p_multi), "POINT")
-
-# solution st_filter
 p_filtre <- st_sf(p) %>% 
   st_filter(a)
 
-# solution tidyverse
-p_filtre <- st_sf(p) %>% 
-  filter(st_intersects(., a, sparse = FALSE))
-
-
-# solution crochets
-p_filtre <- st_sf(p)[a, , op = st_intersects]
+geom_pred + geom_sf(data = p_filtre, color = "green3", size = 3.5)
 
 ```
 
@@ -351,7 +328,7 @@ mapview(list(departement_44, epci_d44, sirene44_sel_avec_code_epci), zcol = list
 
 ### Exercice 2 
 
-Le but de cet exercice va être d'exploiter les données *DVF* sur les transactions immobilières dans l'ancien et la carte des quartiers de Nantes pour obtenir un prix moyen des transactions par quartier.
+Le but de cet exercice va être d'exploiter les données *DVF* sur les transactions immobilières dans l'ancien et la carte des quartiers de Nantes pour obtenir des indicateurs des transactions par quartier.
 On va utiliser pour DVF l'API mise en place par Christian Quest.
 
 - Données DVF : http://api.cquest.org/dvf 
@@ -379,12 +356,11 @@ dvf <- st_as_sf(dvf_json,
 quartier_nantes <- st_read("https://data.nantesmetropole.fr/explore/dataset/244400404_quartiers-communes-nantes-metropole/download/?format=geojson&disjunctive.libcom=true&refine.libcom=Nantes&timezone=Europe/Berlin&lang=fr")
 ```
 
-
 On veut produire les infos suivantes par quartier et année :
 
-- Volume de ventes
-- Pourcentage de maisons dans les ventes
-- Prix moyen au m2 par type de bien
+- Volume de ventes (nb) 
+- Pourcentage de maisons dans les ventes 
+- Prix moyen au m2 par type de bien 
 
 ## Les mesures
 
