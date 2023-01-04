@@ -12,9 +12,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
-### Exercice 1 - manipuler des objets sf
+# Exercice 1 - manipuler des objets sf
 
-- Créer un objet des points de p qui intersectent le polygone a.
+-   Créer un objet des points de p qui intersectent le polygone a.
 
 ```{r exo1-consigne, include=TRUE}
 library(sf)
@@ -47,13 +47,9 @@ st_sf(p)[a, , op = st_intersects]
 
 ```
 
-
 # Exercice 2 : exploitation des données DVF en API
 
-Le but de cet exercice va être d'exploiter les données *DVF* sur les transactions immobilières dans l'ancien et la carte des quartiers de Nantes pour obtenir des indicateurs des transactions par quartier.
-On va utiliser pour DVF l'API mise en place par Christian Quest.
-
-- Données DVF : http://api.cquest.org/dvf 
+Le but de cet exercice va être d'exploiter les données *DVF* sur les transactions immobilières dans l'ancien et la carte des quartiers de Nantes pour obtenir des indicateurs des transactions par quartier. On va utiliser pour DVF l'API mise en place par Christian Quest : <http://api.cquest.org/dvf>
 
 ```{r lecture donnees ex 2 dvf}
 ## Activation des packages
@@ -70,23 +66,19 @@ dvf_json <- fromJSON(dvf_content)$resultats %>%
   filter(!is.na(lon), !is.na(lat), !is.na(valeur_fonciere), !is.na(surface_relle_bati))
 
 dvf <- st_as_sf(dvf_json, coords = c("lon", "lat"), crs = 4326)
-```  
+```
 
-- Contour des quartiers de Nantes, ils proviennent de Nantes Métropole Open Data :https://data.nantesmetropole.fr
+-   Contour des quartiers de Nantes, ils proviennent de Nantes Métropole Open Data : <https://data.nantesmetropole.fr>
 
 ```{r lecture donnees ex 2 quartiers}
 quartier_nantes <- st_read("https://data.nantesmetropole.fr/explore/dataset/244400404_quartiers-communes-nantes-metropole/download/?format=geojson&disjunctive.libcom=true&refine.libcom=Nantes&timezone=Europe/Berlin&lang=fr")
 ```
 
+On veut produire les infos suivantes par quartier et année :  
 
-On veut produire les infos suivantes par quartier et année :
-
-- Volume de ventes (nb) 
-- Pourcentage de maison dans les ventes
-- Prix moyen au m2 par type de bien
-
-
-
+- Volume de ventes (nb)  
+- Pourcentage de maisons dans les ventes  
+- Prix moyen au m2 par type de bien  
 
 ## Datapréparation
 
@@ -129,7 +121,7 @@ stat2 <- dvf_filtre %>%
 stat <- bind_rows(stat1, stat2)
 ```
 
-Calcul des indicateurs demandés 
+Calcul des indicateurs demandés
 
 ```{r}
 # Volume des ventes
@@ -157,9 +149,10 @@ indicateurs <- quartier_nantes %>%
   select(quartier = nom) %>%
   left_join(indicateurs)
 ```
+
 # Exercice 3 ggplot chap 10 : Visualisation des données DVF en API
 
-Avec les résultats de l'exercice 2, produire les cartes du nombre de ventes et du prix au m2 des maisons en 2019 par quartier de Nantes.  
+Avec les résultats de l'exercice 2, produire les cartes du nombre de ventes et du prix au m2 des maisons en 2019 par quartier de Nantes.
 
 ```{r}
 library(gouvdown)
@@ -185,16 +178,14 @@ ggplot() +
 
 # Exercice 4 : Assemblage de cartes sur dvf
 
-A partir des données dvf 2014 et 2017 de la région Pays de la Loire contenues dans le package `{variousdata}` et les fonds de carte de `{COGiter}`, produire :  
+A partir des données dvf 2014 et 2017 de la région Pays de la Loire contenues dans le package `{variousdata}` et les fonds de carte de `{COGiter}`, produire :
 
 - une carte régionale à l'EPCI comprenant :  
   - un dégrade de couleur sur l'évolution des prix au m2 des maisons entre 2014 et 2017,  
   - un rond sur le volume des prix au m2 des maisons,  
-
-- un zoom sur les communes des principaux EPCI, c'est à dire une carte à la commune par EPCI de type Métropole (ME) ou Communauté urbaine (CU).
+- un zoom sur les communes des principaux EPCI, c'est à dire une carte à la commune par EPCI de type Métropole (ME) ou Communauté urbaine (CU).  
 
 Puis, assembler ces différentes cartes sur un même graphique.
-
 
 ## Activation des packages
 
@@ -246,8 +237,6 @@ dvf_r52_maisons <- dvf_r52 %>%
   select(-prix_m2)
 ```
 
-  
-
 ### Calcul de l'évolution des prix et du nombre de ventes
 
 #### A l'EPCI
@@ -292,7 +281,6 @@ prix_m2_maisons_com <- dvf_r52_maisons %>%
   ungroup()
 ```
 
-
 #### Intégration des données aux fonds de carte
 
 ```{r}
@@ -310,6 +298,7 @@ prix_m2_maisons_com_sf <- com_epci_ppaux_r52 %>%
 ## Datavisualisation
 
 ### Carte à l'EPCI de la région
+
 ```{r}
 p <- ggplot(prix_m2_maisons_epci_sf) +
   geom_sf(aes(fill = evo_prix_m2)) +
@@ -326,9 +315,10 @@ p <- ggplot(prix_m2_maisons_epci_sf) +
 p
 ```
 
-  
 ### zoom à la commune
+
 Création des cartes zoom EPCI avec une fonction
+
 ```{r}
 creer_zoom <- function(code_epci = "244400404") {
   
@@ -357,7 +347,6 @@ zooms <- map(.x = epci_ppaux_r52, .f = creer_zoom)
 zooms[[1]]
 ```
 
-
 ### Assemblage
 
 ```{r}
@@ -369,7 +358,8 @@ plot_grid(p, plot_grid(zooms[[1]], zooms[[2]], zooms[[4]], nrow = 2, ncol = 3),
 
 # Exercice 5 : cartes pour le web
 
-Adapter la carte régionale à l'EPCI de l'exercice 4, pour le web :   
+Adapter la carte régionale à l'EPCI de l'exercice 4, pour le web :    
+
 - au survol d'un EPCI, afficher son nom, le prix au m2 et son évolution 2014-2017,  
 - au survol du rond d'un EPCI, afficher son nom, le nb de ventes 2017.  
 
@@ -400,4 +390,3 @@ p_web <- prix_m2_maisons_epci_sf %>%
 ggiraph(ggobj = p_web)
 
 ```
-

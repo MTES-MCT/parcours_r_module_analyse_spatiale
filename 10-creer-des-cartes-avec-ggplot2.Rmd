@@ -473,6 +473,11 @@ carte_ronds_prop2 +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))
 ```
 
+
+### Exercice 3 - Carte des données dvf par quartie de Nantes
+
+Avec les résultats de l'exercice 2, produire les cartes du nombre de ventes et du prix au m2 des maisons en 2019 par quartier de Nantes.
+
 ### Les facettes
 
 Lorsque l'on veut pouvoir réaliser une carte pour plusieurs sous-ensembles, les facettes sont alors très utiles. 
@@ -590,6 +595,19 @@ p <- carte_ronds_prop2 +
 
 ggsave("pic/pop_epci_2015_normandie.svg", p, width = 12, height = 5)
 ```
+
+
+### Exercice 4 : Assemblage de cartes sur dvf
+
+A partir des données dvf 2014 et 2017 de la région Pays de la Loire contenues dans le package `{variousdata}` et les fonds de carte de `{COGiter}`, produire :  
+
+- une carte régionale à l'EPCI comprenant :   
+  - un dégrade de couleur sur l'évolution des prix au m2 des maisons entre 2014 et 2017,  
+  - un rond sur le volume des prix au m2 des maisons,  
+
+- un zoom sur les communes des principaux EPCI, c'est à dire une carte à la commune par EPCI de type Métropole (ME) ou Communauté urbaine (CU).  
+
+Puis, assembler ces différentes cartes sur un même graphique.
 
 ## Faire des cartes avec {mapfactory}  
 

@@ -225,8 +225,6 @@ carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
 girafe(ggobj = carte_ronds_prop_dyn)
 ```
 
-
-
 ## Les cartes {mapfactory}
 
 {mapfactory} s'appuie sur {ggiraph} pour rendre ses cartes dynamiques. 
@@ -254,3 +252,8 @@ La fonction `saveWidget()` permet d'exporter une sortie d'un `HTML Widget` en fi
 ```{r, eval=FALSE}
 saveWidget(widget = girafe(ggobj = carte_ronds_prop_dyn), file = "part_pop_a_part_epci_normandie.html")
 ```
+## Exercice 5 : cartes DVF pour le web
+
+Adapter la carte régionale à l'EPCI de l'exercice 4, pour le web :   
+- au survol d'un EPCI, afficher son nom, le prix au m2 et son évolution 2014-2017,  
+- au survol du rond d'un EPCI, afficher son nom, le nb de ventes 2017.  
