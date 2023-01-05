@@ -107,6 +107,55 @@ st_write(
 Il faut juste lui préciser comment on souhaite écrire la géométrie dans la table exportée, avec 
 `layer_options = "GEOMETRY=AS_WKT"` ou `layer_options = "GEOMETRY=AS_XY"`.
 
+## Lire des données spatiales du web
+
+### Lire des données geojson
+
+`sf` peut lire un geojson qu'il soit hébergé sur un serveur compréssé ou non ou encore disponible par api.
+
+#### Exemple 1 (geojson classique):
+
+```{r eval = FALSE, message = TRUE, warning = FALSE}
+st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>% 
+  filter(code > "10") %>% 
+  select(code) %>% 
+  plot()
+```
+
+#### Exemple 2 (api)
+L'api de découpage administratif (https://geo.api.gouv.fr/decoupage-administratif/) permet de charger des contours administratifs.
+Dans l'exemple suivant, nous chargeons les contours des epci du département 44.
+```{r eval = FALSE, message = TRUE, warning = FALSE}
+url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
+st_read(url) %>%
+  select(code) %>% 
+  plot()
+```
+
+### Exemple 3 (geojson compressé)
+
+`sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les batiments de la communes de Nantes provenant du PCI redistribué par Etalab.
+
+```{r eval = FALSE, message = TRUE, warning = FALSE}
+dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
+batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
+```
+
+Pour aller plus loin sur les `Virtual File Systems` : https://gdal.org/user/virtual_file_systems.html
+
+
+### Lire des données WFS
+
+`sf` permet aussi de lire des données WFS.
+
+```{r wfs, eval = FALSE}
+crte <- sf::st_read(dsn = 'https://datacarto.sigloire.fr/wfs?REQUEST=getCapabilities&service=WFS&VERSION=2.0.0', layer = "ms:r_portrait_crte_r52")
+crte %>% select(nom_territ) %>% plot()
+```
+
+On indique au niveau du paramètre `dsn` l'url du webservice WFS de la plateforme et au niveau du parametre `layer` le nom de la couche.
+Pour aller plus loin dans l'exploitation des flux WFS dans R : https://inbo.github.io/tutorials/tutorials/spatial_wfs_services/.
+
 ## Lire/écrire des données spatiales sur PostGIS
 
 `PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les manipuler.
