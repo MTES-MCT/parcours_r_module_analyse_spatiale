@@ -37,6 +37,7 @@ Imports:
     rmapshaper,
     rmarkdown,
     RPostgres,
+    savoirfR,
     scales,
     sf,
     spData,
@@ -51,10 +52,10 @@ Remotes:
     joelgombin/banR,
     MaelTheuliere/COGiter,
     MaelTheuliere/variousdata,
+    MTES-MCT/savoirfR,
     spyrales/gouvdown,
     spyrales/gouvdown.fonts,
     git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@master,
     git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@main
-    
 Encoding: UTF-8
 RoxygenNote: 7.2.1
