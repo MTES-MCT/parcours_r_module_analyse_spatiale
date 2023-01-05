@@ -476,7 +476,8 @@ carte_ronds_prop2 +
 
 ### Exercice 3 - Carte des données dvf par quartie de Nantes
 
-Avec les résultats de l'exercice 2, produire les cartes du nombre de ventes et du prix au m2 des maisons en 2019 par quartier de Nantes.
+```{r mod7_exo3, child=charge_exo("m7", "exo3.rmd"), echo=FALSE}
+```
 
 ### Les facettes
 
