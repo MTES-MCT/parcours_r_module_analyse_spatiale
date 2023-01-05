@@ -123,7 +123,7 @@ st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>%
 ```
 
 #### Exemple 2 (api)
-L'api de découpage administratif (https://geo.api.gouv.fr/decoupage-administratif/) permet de charger des contours administratifs.
+L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administratif/) permet de charger des contours administratifs.
 Dans l'exemple suivant, nous chargeons les contours des epci du département 44.
 ```{r eval = FALSE, message = TRUE, warning = FALSE}
 url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
@@ -141,7 +141,7 @@ dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/lat
 batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
 ```
 
-Pour aller plus loin sur les `Virtual File Systems` : https://gdal.org/user/virtual_file_systems.html
+Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/virtual_file_systems.html](https://gdal.org/user/virtual_file_systems.html)
 
 
 ### Lire des données WFS
