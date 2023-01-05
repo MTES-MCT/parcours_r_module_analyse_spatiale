@@ -231,18 +231,9 @@ Il existent encore d'autres prédicats qu'on ne détaillera pas ici :
 
 - `st_overlaps()`
 
-### Exercice 1
-
-- Créer un objet des points de p qui intersectent le polygone a.
-
-```{r exo1, include=FALSE}
-p_filtre <- st_sf(p) %>% 
-  st_filter(a)
-
-geom_pred + geom_sf(data = p_filtre, color = "green3", size = 3.5)
-
+### Exercice 1 - manipuler des objets sf
+```{r mod7_exo1, child=charge_exo("m7", "exo1.rmd"), echo=FALSE}
 ```
-
 
 
 ## Les jointures spatiales
