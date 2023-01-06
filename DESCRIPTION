@@ -1,8 +1,53 @@
-Package: Parcours-R
 Type: Book
+Package: Parcours-R
 Title: Formations à R
 Version: 0.1.0
-URL: https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale
-Imports: renv
-License: MIT
 Description: Valise pédagogique pour la formation à R
+License: MIT
+URL: https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale
+Imports: 
+    bookdown,
+    cartogram,
+    CARTElette,
+    COGiter,
+    cowplot,
+    devtools,
+    DT,
+    ggplot2,
+    ggspatial,
+    glue,
+    gouvdown,
+    gouvdown.fonts,
+    htmltools,
+    htmlwidgets,
+    httr,
+    jsonlite,
+    kableExtra,
+    knitr,
+    leaflet,
+    lwgeom,
+    lubridate,
+    mapview,
+    pagedown,
+    patchwork,
+    rmapshaper,
+    rmarkdown,
+    RPostgres,
+    scales,
+    sf,
+    spData,
+    stringi,
+    tidyverse,
+    tmap,
+    tmaptools,
+    variousdata,
+    viridis
+Remotes: 
+    antuki/CARTElette/CARTElette@RPackage,
+    maeltheuliere/COGiter,
+    MaelTheuliere/variousdata,
+    spyrales/gouvdown,
+    spyrales/gouvdown.fonts,
+    git::https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@main
+Encoding: UTF-8
+RoxygenNote: 7.2.1

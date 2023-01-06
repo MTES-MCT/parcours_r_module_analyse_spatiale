@@ -1,8 +1,8 @@
-# Les reprojections
+# Les reprojections {#les-reprojections}
 
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
-```{r}
+```{r pkg_chap_8_reproj}
 library(sf)
 library(tidyverse)
 library(patchwork)
@@ -11,7 +11,7 @@ library(tmap)
 ```
 
 
-Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/lattitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
+Pour rappel, il existe deux types de CRS, les CRS géographiques (longitude/latitude avec pour unité de compte des degrés) et les CRS projetés (avec un datum et une unité en mètre par exemple).
 
 La plupart des fonctions de `sf` présupposent s'appliquer sur un CRS projeté, car les fonctions de GEOS sur lesquelles elles se basent le font aussi.
 
@@ -40,7 +40,7 @@ st_is_longlat(nantes)
 
 Essayons de créer un buffer de 1km autour de Nantes
 
-```{r, warning=T}
+```{r, warning=TRUE}
 nantes_buffer <- st_buffer(nantes, dist = 1)
 ```
 
@@ -63,7 +63,7 @@ Le CRS lambert 93 est bien un CRS projeté :
 st_is_longlat(nantes_proj)
 ```
 
-```{r,warning=T}
+```{r, warning=TRUE}
 nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1)
 ```
 
@@ -148,7 +148,7 @@ st_crs(World)
 st_crs(World_pekin)
 ```
 
-```{r,echo = F}
+```{r, echo=FALSE}
 p1 <- ggplot() +
   geom_sf(data = World)
 p2 <- ggplot() +

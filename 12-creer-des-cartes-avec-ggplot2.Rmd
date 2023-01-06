@@ -1,13 +1,9 @@
 # (PART) Créer des cartes sous R {-}
 
-# Créer des cartes avec ggplot2
+# Créer des cartes avec ggplot2 {#creer-des-cartes-avec-ggplot2}
 Dans ce chapitre, nous allons utiliser les librairies suivantes.
 
-```{r, eval=T,echo=F}
-theme_set(theme_gray())
-```
-
-```{r}
+```{r pkg_chap_12_ggplot}
 library(sf)
 library(tidyverse)
 library(ggplot2)
@@ -16,9 +12,20 @@ library(lwgeom)
 #remotes::install_github("MaelTheuliere/variousdata")
 library(variousdata)
 library(ggspatial)
+library(gouvdown)
+library(gouvdown.fonts)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+theme_set(theme_gray())
 ```
 
 ## Quelques rappels sur ggplot2
+
+`{ggplot2}` est un package de visualisation de données qui dispose de templates (thèmes, palettes) à la Marque Etat grâce au package `{gouvdown}`, créé par la communauté d'agents de l'Etat [Spyrales](https://www.spyrales.fr/).
+
+![](images/spyrales.PNG){#id .class width=500}
+
 
 ### Présentation du package ggplot2
 
@@ -29,8 +36,8 @@ library(ggspatial)
 
 - Ce package aujourd'hui s'inscrit dans R dans le **framework Tidyverse** qui propose une approche cohérente sur l'ensemble de la chaîne de vie de la donnée : importation, préparation des données, analyse et valorisation.
 
-### Le Tidyverse
-![le tidyverse](pic/tidyverse.png "le tidyverse"){#id .class width=800}
+### Le Tidyverse  
+![le tidyverse](pic/tidyverse.png "le tidyverse"){#id .class width=800}  
 
 ### ggplot 2 : les concepts clefs
 
@@ -46,20 +53,23 @@ Pour construire un graphique avec ggplot il va falloir lui définir plusieurs é
 
 L'écriture type d'un graphique sera donc: 
 
-```{r, echo=T,eval=F}
+```{r, echo=TRUE, eval=FALSE}
 ggplot(data = <DATA>) + 
   <FORME_GEO>(mapping = aes(<MAPPINGS>),...=<PARAMS>)
 ```
 
 On va ensuite pouvoir partir de cette base pour l'enrichir avec des fonctions supplémentaires.
-Chaque fonction s'enchaine avec des `+` comme les `%>% `.
+Chaque fonction s’enchaîne avec des `+` comme les `%>%`.
 
-```{r, echo=T,eval=F}
+```{r, echo=TRUE, eval=FALSE}
 ggplot(data = <DATA>) + 
   <FORME_GEO>(mapping = aes(<MAPPINGS>),...=<PARAMS>)+
   <FONCTION1>+
   ...
 ```
+
+<!-- ### Le thème et les palettes conformes à la marque Etat -->
+<!-- TODO -->
 
 ### Le mapping
 
@@ -71,9 +81,9 @@ D'autres types de représentations graphiques sont présentées dans la partie s
 L'aesthetic sert à identifier les variables que l'on souhaite représenter.
 Par exemple, si l'on souhaite représenter le taux de mortalité maternelle (Maternal_mortality_ratio) en fonction du produit intérieur brut (Gross_Domestic_Product_GDP) :
 
-```{r, fig.height=3.5, warning = F}
+```{r, fig.height=3.5, warning=FALSE}
 sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
+  filter(timeperiod == 2015) %>% 
   ggplot() +
     geom_point(aes(x = gdp_per_cap, y = sh_sta_mmr))
 
@@ -87,7 +97,7 @@ De plus, la fonction `aes()` admet d'autres arguments qui permettent de modifier
 - `alpha` : la transparence,
 - `fill` : le remplissage ;
 
-```{r, fig.height=3.5,warning = F}
+```{r, fig.height=3.5, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -103,7 +113,7 @@ On retrouve entre autre les mêmes paramètres que proposés dans l'aes mais il 
 
 Par exemple si l'on souhaite modifier la transparance et la taille de l'ensemble des points du graphique précédent:
 
-```{r, fig.height=3.5,warning = F}
+```{r, fig.height=3.5, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -115,9 +125,9 @@ sdg_indicators %>%
   )
 ```
 
-De même si l'on souhaite modifier la couleur générale:
+De même si l'on souhaite modifier la couleur générale :
 
-```{r, fig.height=3.5,warning = F}
+```{r, fig.height=3.5, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -140,11 +150,11 @@ Pour plus d'informations: https://github.com/daattali/colourpicker
 
 #### Titre et libellé des axes
 
-Chaque nouvel élément graphique est à rajouter sous forme de layer, ici nous utilisons la fonction `labs()` qui permet de labelliser tout les éléments possibles de l'aesthétic, ainsi que le titre (`title`), le sous titre (`subtitle`) et le bas de page (`caption`)
+Chaque nouvel élément graphique est à rajouter sous forme de layer, ici nous utilisons la fonction `labs()` qui permet de labelliser tout les éléments possibles de l'aesthetic, ainsi que le titre (`title`), le sous titre (`subtitle`) et le bas de page (`caption`).
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=10,warning=F}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=10, warning=FALSE}
 sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
+  filter(timeperiod == 2015) %>% 
   ggplot() +
   geom_point(aes(x = gdp_per_cap, 
                  y = sh_sta_mmr,
@@ -168,7 +178,7 @@ A noter qu'il existe plusieurs autres façons de spécifier ces élèments par d
 Les fonctions `guide()` et `guides` permettent de modifier finement la légende.
 Les guides peuvent être spécifiées dans chaque `scale_` ou dans une instruction `guides`.
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=10,warning=F}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=10, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -200,7 +210,7 @@ sdg_indicators %>%
 
 Il est aussi possible de rajouter des annotations de type texte, par exemple, "à la volée".
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=10,warning=F}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=10, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -223,7 +233,7 @@ sdg_indicators %>%
 
 La fonction `annotate()` permet aussi d'ajouter d'autres types d'annotation comme par exemple des rectangles:
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=10,warning=F}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=10, warning=FALSE}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -261,7 +271,6 @@ Par exemple: `theme_classic()`, `theme_bw()`, `theme_dark()`, ...
 Des packages externes permettent d'enrichir cette collection de thèmes, par exemple `ggthemes` ou `hrbrthemes`.
 
 Lorsque l'on souhaite garder une cohérence entre plusieurs graphiques, le mieux est d'en définir un à part pour l'appeler ensuite.
-
 
 #### Les fonctions "élément"
 
@@ -321,7 +330,7 @@ panel.background, panel.border, panel.grid.major, panel.grid.minor,...
 
 - Changer le fond du graphique `panel_background()`
 
-```{r, echo=T,eval=T,warning=FALSE,fig.height=5,fig.width=10}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -343,9 +352,9 @@ sdg_indicators %>%
 
 - Changer l'apparence du quadrillage : `panel_background()`
 
-```{r, echo=T,eval=T,warning=FALSE,fig.height=5,fig.width=10}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
+  filter(timeperiod == 2015) %>% 
   ggplot() +
   geom_point(aes(x = gdp_per_cap, 
                  y = sh_sta_mmr,
@@ -365,7 +374,7 @@ sdg_indicators %>%
 
 - Changer l'apparence des étiquettes des axes  : `axis_xxx()`
 
-```{r, echo=T,eval=T,warning=FALSE,fig.height=5,fig.width=10}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -391,9 +400,9 @@ sdg_indicators %>%
 Certains changements de paramètres ne nécessitent pas l'utilisation de fonctions `element_()`.
 Par exemple, pour changer la position de la légende :  `legend.xxx()`
 
-```{r, echo=T,eval=T,warning=FALSE,fig.height=5,fig.width=10}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
+  filter(timeperiod == 2015) %>% 
   ggplot() +
   geom_point(aes(x = gdp_per_cap, 
                  y = sh_sta_mmr,
@@ -415,7 +424,7 @@ sdg_indicators %>%
 
 La fonction `theme_set()` vous permet de définir un thème par défaut pour l'ensemble de vos graphiques.
 
-```{r, echo=T,eval=T,warning=FALSE,fig.height=5,fig.width=10}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 theme_set(theme_dark())
 
 sdg_indicators %>% 
@@ -443,7 +452,7 @@ Un thème est une fonction R qui va prendre en paramètre des éléments que vou
 
 Créons ici un thème avec un fond vert pour le ministère de la transition écologique et solidaire. On rajoute un paramètre pour la taille de la police du titre du graphique.
 
-```{r,warning=FALSE}
+```{r, warning=FALSE}
 theme_mtes <- function(taille_police = 14) {
   theme_bw() +
     theme(
@@ -476,10 +485,35 @@ sdg_indicators %>%
   theme_mtes()
 ```
 
+#### Thème - package `{gouvdown}`
+
+
+Il s'agit d'ensemble de fonctionnalités qui permet de produire des documents/éléments avec une charte graphique prenant en compte la marque État.
+
+![](images/palette.PNG){#id .class width=500}
+
+L'utilisation de [theme_gouv()](https://spyrales.github.io/gouvdown/reference/theme_gouv.html) permet d'appliquer cette charte.
+
+
+```{r fg7_6_1}
+
+ggplot(sdg_indicators) +
+  geom_point(aes(x = gdp_per_cap, y = sh_sta_mmr, color = continent)) +
+  labs(title = "Mortalité maternelle en fonction du PIB par habitant",
+    subtitle = "En 2015",
+    x = "PIB",
+    y = "Taux de mortalité de la mère \n(pour 100 000 naissances)",
+    caption = "Source : ODD / ONU") +
+  theme_gouv(plot_title_size = 15,
+    subtitle_size = 11,
+    base_size = 10)
+```
+
+NB: Pour les cartes, [theme_gouv_map()](https://spyrales.github.io/gouvdown/reference/theme_gouv_map.html) sera privilégié.
 
 ### Les scales
 
-Les fonctions `scales()` permettent globalement de paramétrer les éléments rentrés dans l'aesthétic : 
+Les fonctions `scales()` permettent globalement de paramétrer les éléments rentrés dans l'aesthetic : 
 
 - Si je veux un gradient de couleurs fonction d'une variable continue : quelle palette de couleurs je choisie, comment je cale mon dégradé en fonction de cette variable continue ?
 
@@ -521,7 +555,7 @@ gradient|utiliser un gradient de 2 couleurs
 gradient2|utiliser un gradient divergent de 3 couleurs
 
 
-```{r, echo=T,eval=T,fig.height=3.5}
+```{r, echo=TRUE, eval=TRUE, fig.height=3.5}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -543,7 +577,7 @@ sdg_indicators %>%
 
 Par exemple on peut exploiter une fonction scale pour définir une échelle logarithimique sur un axe.
 
-```{r, echo=T,eval=T,fig.height=3.5}
+```{r, echo=TRUE, eval=TRUE, fig.height=3.5}
 sdg_indicators %>% 
   filter(timeperiod ==2015) %>% 
   ggplot() +
@@ -568,85 +602,25 @@ sdg_indicators %>%
 #### Formatage spécifique
 
 - Transformation en pourcentage;
-```{r, echo=T,eval=F}
+```{r, echo=TRUE, eval=FALSE}
   scale_y_continuous(labels = scales::percent)
 ```
 
 - Ajout du séparateur des milliers;
-```{r, echo=T,eval=F}
+```{r, echo=TRUE, eval=FALSE}
 scale_y_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))
 ```
 - Ajout du symbole €;
 
-```{r, echo=T,eval=F}
+```{r, echo=TRUE, eval=FALSE}
 scale_y_continuous(labels = function(x) paste(x, " €"))
-```
-
-
-
-### La mise en page de plusieurs graphiques
-
-Le package `cowplot` permet la combinaison de plusieurs graphiques. Il est composé de plusieurs fonctions.
-
-- le fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** colonnes et ***j*** lignes
-
-
-```{r, echo=T,eval=T,warning=F,fig.height=3.5}
-gg1 <- sdg_indicators %>% 
-  filter(timeperiod ==2015) %>% 
-  ggplot() +
-  geom_point(aes(x = gdp_per_cap, 
-                 y = sh_sta_mmr,
-                 color = continent),
-    alpha = 0.5, 
-    size = 1.9
-  ) +
-  labs(
-    title = "Mortalité maternelle en fonction du PIB par habitant",
-    subtitle = "En 2015",
-    x = "PIB par habitant",
-    y = "Taux de mortalité de la mère \n(pour 100 000 naissances)",
-    caption = "Source : ODD / ONU"
-  ) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme(axis.title = element_text(size = 9))
-
-  gg2 <- sdg_indicators %>% 
-    filter(timeperiod ==2015) %>% 
-    ggplot()+
-    geom_density(aes(x=gdp_per_cap))+
-    scale_x_log10()
-
-plot_grid(gg1, gg2, ncol = 1, nrow = 2)
-```
-
-- la fonction `draw_plot()` associée à `ggdraw()` qui permet de disposer les graphiques à des places spécifiques.
-
-`ggdraw()` initialise le graphique
-
-```{r, echo=T,eval=T,warning=F,fig.height=3.5}
-
-
-gg3 <- sdg_indicators %>% 
-    filter(timeperiod == 2015) %>% 
-    ggplot() +
-    geom_bar(aes(x = continent, fill = continent)) +
-  theme(
-    axis.title.x = element_blank(),
-    axis.text.x = element_blank()
-  )
-ggdraw() +
-  draw_plot(gg1, x = 0, y = .5, width = 1, height = .5) +
-  draw_plot(gg2, x = 0, y = 0, width = .3, height = .5) +
-  draw_plot(gg3, x = 0.3, y = 0, width = 0.7, height = .5)
 ```
 
 ### Les facettes
 
 Lorsque l'on veut pouvoir réaliser un graphique pour plusieurs sous-ensembles, les facettes sont alors très utiles. On va ici l'illustrer avec la réalisation du même graphique ci-dessus mais pour plusieurs années différentes.
 
-```{r, echo=T,eval=T,warning = F,fig.height=5,fig.width=8}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=8}
 
 sdg_indicators %>% 
   filter(timeperiod  %in% c(2000, 2005, 2010, 2015),
@@ -672,13 +646,13 @@ L'exemple pris ici "scinde" notre table en fonction d'une seule variable, mais o
 
 On peut choisir avec `facet_wrap()` : 
 
-- le nombre de colonnes ou de ligne sur lesquel on veut voir s'afficher le graphique
+- le nombre de colonnes ou de ligne sur lesquels on veut voir s'afficher le graphique
 - si on veut fixer l'échelle de l'un ou l'autre des axes ou les deux
 
-```{r, echo=T,eval=T,fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators %>% 
   filter(timeperiod  %in% c(2000, 2005, 2010, 2015),
-         geoareaname %in% c("France","Canada","Burkina Faso","China","Australia")) %>%
+         geoareaname %in% c("France", "Canada", "Burkina Faso", "China", "Australia")) %>%
   ggplot() +
   geom_bar(aes(x = geoareaname, weight = sh_sta_mmr, fill = continent)) +
   theme_minimal() +
@@ -701,7 +675,7 @@ sdg_indicators %>%
 
 ggplot contient une fonction `ggsave()` qui permet d'exporter nos graphiques au format image dans les formats suivants : eps, ps, tex (pictex), pdf, jpeg, tiff, png, bmp, svg or wmf 
 
-```{r, echo=T,eval=F,fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=FALSE, fig.height=5, fig.width=12}
 p <- sdg_indicators %>% 
   filter(timeperiod  %in% c(2000, 2005, 2010, 2015),
          geoareaname %in% c("France","Canada","Burkina Faso","China","Australia")) %>%
@@ -728,15 +702,16 @@ ggsave("figures/Mortalité maternelle sur quelques pays du globe.svg", p, width 
 
 ### Les cartes choroplèthe
 
-ggplot2 intègre une fonction geom permettant l'utilisation de données géomatrique : `geom_sf()`
+ggplot2 intègre une fonction geom permettant l'utilisation de données géographiques : `geom_sf()`.
 
-Celle ci doit se coupler avec la fonction `coord_sf()` qui permet de s'assurer en cas de superposition de couches que celles-ci utiliseront bien le même crs en spécifiant le datum.  `coord_sf()` permet également de *zoomer* sur la carte en spécifiant les bornes x et y de la carte, ou également de définir les labels des axes.
+Celle-ci doit se coupler avec la fonction `coord_sf()` qui permet de s'assurer en cas de superposition de couches que celles-ci utiliseront bien le même crs en spécifiant le datum.  
+`coord_sf()` permet également de *zoomer* sur la carte en spécifiant les bornes x et y de la carte, ou également de définir les labels des axes.
 
 Le premier exemple que nous allons pouvoir voir, c'est une carte choroplèthe.
 
 Pour cela, préalablement, nous allons intégrer à nos données un fond de carte : le *spatial dataframe* `World` présent dans le package `tmap`
 
-```{r echo=T,eval=T,warning = F}
+```{r echo=TRUE, eval=TRUE, warning=FALSE}
 data("World")
 
 sdg_indicators_sf <- World %>%
@@ -744,30 +719,30 @@ sdg_indicators_sf <- World %>%
   st_transform(crs = st_crs(3857))
 ```
 
-```{r, echo=T,eval=T,warning = F, fig.height=5,fig.width=12}
+```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=12}
 map_sdg_indicators <- sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   ggplot() +
-  geom_sf(aes(fill = log(sh_sta_mmr)),color="white",size=.2)+
-  scale_fill_viridis_c()+
-  theme_minimal()+
+  geom_sf(aes(fill = log(sh_sta_mmr)), color="white", size=.2)+
+  scale_fill_viridis_c() + 
+  theme_minimal() +
   theme(panel.background = element_rect(fill = "light blue"))
 map_sdg_indicators
 ```
 
-On peut exploiter de la même façon les différentes fonctions vues précédement. Par exemple avec un peu de thème et de facet.
+On peut exploiter de la même façon les différentes fonctions vues précédemment. Par exemple avec un peu de thème et de facettes.
 
-```{r,warning= F,, fig.height=12,fig.width=14}
+```{r, warning=FALSE, fig.height=12, fig.width=14}
 sdg_indicators_sf %>% 
-  filter(timeperiod %in% c("2000","2005","2010","2015")) %>% 
+  filter(timeperiod %in% c("2000", "2005", "2010", "2015")) %>% 
            ggplot() +
-           geom_sf(aes(fill = log(sh_sta_mmr)),color="white",size=.2)+
+           geom_sf(aes(fill = log(sh_sta_mmr)), color="white", size=.2)+
            scale_fill_viridis_c(
              option = "magma",
              direction = 1,
              breaks = c(0, 1, 2, 3, 4, 5, 6, 7))+
            guides(
-             colour = F,
+             colour = FALSE,
              order = 0,
              fill = guide_legend(
                direction = "horizontal",
@@ -781,35 +756,32 @@ sdg_indicators_sf %>%
                label.hjust = 1
              )
            ) +
-           theme_minimal()+
+           theme_minimal() +
            theme(legend.position = "bottom",
-                 panel.background = element_rect(fill = "light blue"))+
+                 panel.background = element_rect(fill = "light blue")) +
            labs(fill = "Taux de mortalité infantile (échelle logarithmique)") +
-           facet_wrap(~timeperiod, drop = T)
+           facet_wrap(~timeperiod, drop = TRUE)
 
 ```
 
 
 ### Les cartes à ronds proportionnels
 
-ggplot ne peut attribuer par défaut un rond proportionnel à un polygone.
+## Les cartes à ronds proportionnels
 
-Pour travailler sur des ronds proportionnels, il faut d'abord créer le centroid de nos zones et ensuite tracer un rond proportionnel avec `geom_sf()`.
+La fonction ***stat_sf_coordinates()*** permet d'extraire les coordonnées d'un objet 'sf'.
+Ainsi un rond proportionnel peut être attribué à un polygone.
 
-```{r, echo=T,eval=T,warning= F, fig.height=5,fig.width=12}
-World_centroid <- st_centroid(World, of_largest_polygon = T)
-sdg_indicators_sf_centroid <- World_centroid %>%
-  left_join(sdg_indicators)
+```{r cart_3, echo=T, eval=T, fig.height=5, fig.width=12, cache=TRUE}
 
-map_sdg_indicators_centroid <- sdg_indicators_sf_centroid %>% 
-  filter(timeperiod == "2015",!is.na(sh_sta_mmr)) %>% 
-  ggplot() +
-  geom_sf(data = World, fill = "white") +
-  geom_sf(aes(color = sh_sta_mmr, size = sh_sta_mmr))+
-  theme_minimal()+
-  theme(panel.background = element_rect(fill = "light blue"))
+sdg_indicators_sf %>% 
+  filter(timeperiod == "2015", !is.na(sh_sta_mmr)) %>% 
+    ggplot() + 
+    geom_sf(fill = "white") +
+    stat_sf_coordinates(aes(color = sh_sta_mmr, size = sh_sta_mmr)) +
+    theme_gouv_map() +
+    theme(panel.background = element_rect(fill = "light blue"))
 
-map_sdg_indicators_centroid
 ```
 
 ### Ajouter une barre d'échelle et la flèche du nord
@@ -820,7 +792,7 @@ Les deux fonctions qui permettent cela sont `annotation_scale()` et `annotation_
 
 L'utilisation de ces fonctions nécessitent un système de coordonnées géographiques.
 
-```{r,message =F,warning=F, fig.height=5,fig.width=12}
+```{r, message=FALSE, warning=FALSE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   st_transform(crs = 4326) %>%
@@ -839,15 +811,15 @@ sdg_indicators_sf %>%
 On peut a partir d'une même carte vouloir réaliser un zoom sur une sous partie de celle-ci.
 `coord_sf()` va nous permettre de *zoomer* sur une carte, et `cow_plot()` va nous permettre d'afficher nos deux cartes côte à côte.
 
-Pour zoomer sur une carte,`coord_sf()` va avoir besoin des coordonnées *x* et *y* du cadre sur lequel on veut zoomer.
-Le plus simple pour cela est de filtrer préalablement 
-notre spatial dataframe et de récupérer la bbox de celle-ci.
+Pour zoomer sur une carte, `coord_sf()` va avoir besoin des coordonnées *x* et *y* du cadre sur lequel on veut zoomer. 
+Le plus simple pour cela est de filtrer préalablement notre spatial dataframe et de récupérer la bbox de celle-ci. 
 
 Filtrons par exemple sur le continent africain.
 
 ```{r}
 bbox_africa <- World %>% 
-  filter(continent=="Africa") %>% 
+  filter(continent == "Africa") %>%
+  st_transform(crs = st_crs(3857)) %>% 
   st_bbox()
 ```
 
@@ -858,20 +830,26 @@ map_sdg_indicators_africa <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
   ggplot() +
   geom_sf(aes(fill = log(sh_sta_mmr)), color = "white", size = .2) +
-  coord_sf(xlim = c(bbox_africa[1],bbox_africa[3]),
-           ylim = c(bbox_africa[2],bbox_africa[4])
+  coord_sf(xlim = c(bbox_africa[1], bbox_africa[3]),
+           ylim = c(bbox_africa[2], bbox_africa[4])
            ) +
   scale_fill_viridis_c() +
-  theme_minimal() +
+  theme_void() +
   theme(legend.position = "right", panel.background = element_rect(fill = "light blue"))
 ```
 
-On peut utiliser ensuite `plot_grid()` pour afficher nos cartes côte à côte. Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
+On peut utiliser ensuite le package `{cowplot}` et sa fonction `plot_grid()` pour afficher nos cartes côte à côte. 
+
+La fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** colonnes et ***j*** lignes. 
+
+Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
 
 ```{r, fig.height=6,fig.width=12}
 map_sdg_indicators_compo <- map_sdg_indicators +
   theme_void()+
-  theme(panel.background = element_rect(fill = "light blue"),legend.position = "none")
-plot_grid(map_sdg_indicators_compo,map_sdg_indicators_africa,rel_widths = c(1.7, 1))
+  theme(panel.background = element_rect(fill = "light blue"), legend.position = "none")
+
+plot_grid(map_sdg_indicators_compo, map_sdg_indicators_africa, rel_widths = c(1.7, 1))
 ```
 
+<!-- ## Mapfactory : TODO -->

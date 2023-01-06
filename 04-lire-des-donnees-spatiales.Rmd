@@ -1,10 +1,10 @@
 # (PART) Lire et écrire des données spatiales {-}
 
-# Lire et écrire des données spatiales avec R
+# Lire et écrire des données spatiales avec R {#lire-des-donnees-spatiales}
 
 Dans ce chapitre, nous allons utiliser les packages suivants : 
 
-```{r}
+```{r pkg_chap_4_lecture}
 library(sf)
 library(DT)
 library(tidyverse)
@@ -45,7 +45,7 @@ DT::datatable(st_drivers() %>% arrange(name))
 
 Exemple de lecture d'une donnée au format `GeoPackage`: les données sur la Leucémie à New York disponibles dans le package `spData`^[Issues de Waller and Gotway (2004) Applied Spatial Statistics for Public Health Data.].
 
-```{r,eval=F}
+```{r, eval=FALSE}
 geo_fichier <- system.file("shapes/NY8_bna_utm18.gpkg", package = "spData")
 NY_leukemia <- st_read(dsn = geo_fichier)
 ```
@@ -54,7 +54,7 @@ NY_leukemia <- st_read(dsn = geo_fichier)
 
 Ecrire des fichiers plats va se faire avec la fonction `st_write()`.
 
-```{r,message = T,eval=F}
+```{r, message=TRUE, eval=FALSE}
 st_write(obj = NY_leukemia, dsn = "extdata/NY_leukemia.gpkg")
 ```
 
@@ -64,7 +64,7 @@ Pour pouvoir écraser ce fichier, vous avez deux options :
 
 - Utiliser le paramètre `layer_option` qui vous permet d'inclure des options propres au driver utilisé.
 
-```{r,eval=F}
+```{r, eval=FALSE}
 st_write(
   obj = NY_leukemia,
   dsn = "extdata/NY_leukemia.gpkg",
@@ -73,9 +73,9 @@ st_write(
 ```
 
 
-- Utiliser le paramètre `delete_layer = T` de `st_write()` qui vous permet d'écraser les layer avant sauvegarde (paramètre qui ne dépend pas du driver utilisé).
+- Utiliser le paramètre `delete_layer = TRUE` de `st_write()` qui vous permet d'écraser les layers avant sauvegarde (paramètre qui ne dépend pas du driver utilisé).
 
-```{r, eval=F}
+```{r, eval=FALSE}
 st_write(
   obj = NY_leukemia,
   dsn = "extdata/NY_leukemia.gpkg",
@@ -109,7 +109,7 @@ con <- dbConnect(drv,
 
 Pour lire des données sur le serveur, on va utiliser encore la fonction `st_read()` en lui définissant 2 paramètres : le connecteur et la requête que l'on veut réaliser.
 
-```{r,eval = F}
+```{r, eval=FALSE}
 ma_table <- st_read(con, query = "SELECT * FROM le_schema.ma_table")
 ```
 
@@ -119,7 +119,7 @@ Vous pouvez très bien dans cette requête sql réaliser quelques filtres, séle
 
 Vous pouvez écrire vos données ensuite de la même façon avec `st_write()`
 
-```{r,eval = F}
+```{r, eval=FALSE}
 st_write(ma_table,
   dsn = con,
   layer = ID(schema = "schema", table = "ma_table")
@@ -136,7 +136,7 @@ La fonction `st_set_crs()` permet de définir le crs de notre objet.
 
 Exemple, nous allons lire les coordonnées géographiques des préfectures de région.
 
-```{r,message = F}
+```{r, message=FALSE}
 prefectures <- read_csv2("extdata/prefecture.csv")
 prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y")) %>%
   st_set_crs(2154)
