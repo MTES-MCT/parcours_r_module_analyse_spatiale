@@ -15,4 +15,6 @@ propre.rpls::creer_pdf_book(nom_pdf = "Parcours_R_support_m7_Analyses_spatiales.
 
 # Des pages blanches ajoutées inutilement
 # Pour imprimer, garder les pages
-# "1-25;28-39;51-60;72-136;138-146"
+# "1-30;33-48;60-69;81-91;99-153"
+# supprimer : 
+# 31-32;49-59;70-80;92-98

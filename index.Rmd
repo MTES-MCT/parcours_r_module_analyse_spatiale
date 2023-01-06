@@ -46,6 +46,7 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, comment = "",
 
 library(ggplot2)
 library(tmap)
+library(savoirfR)
 
 theme_set(theme_gray())
 tmap_mode("plot")

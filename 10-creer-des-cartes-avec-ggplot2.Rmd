@@ -69,7 +69,7 @@ Le [package `{mapsf}`](https://riatelab.github.io/mapsf/){target="_blank"} a ét
 Ses fonctionnalités sont assez complètes et la prise en main est plutôt simple, pour des rendus graphiques très aboutis. 
 De plus, le package est relativement léger. 
 Un [support de cours](https://rcarto.github.io/cartographie_avec_r/mapsf.html#ref-R-mapsf){target="_blank"} et une [feuille de triche](https://raw.githubusercontent.com/riatelab/mapsf/master/vignettes/web_only/img/mapsf_cheatsheet.pdf){target="_blank"} facilitent son appropriation. 
-Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle minitériel, ce package ne sera pas présenté lors de la formation.
+Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle ministériel, ce package ne sera pas présenté lors de la formation.
 
 
 ## Quelques rappels sur `{ggplot2}`
