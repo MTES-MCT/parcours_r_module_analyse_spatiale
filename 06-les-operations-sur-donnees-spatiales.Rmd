@@ -235,6 +235,20 @@ Il existent encore d'autres prédicats qu'on ne détaillera pas ici :
 ```{r mod7_exo1, child=charge_exo("m7", "exo1.rmd"), echo=FALSE}
 ```
 
+Visualisation graphique :
+```{r, message=FALSE, warning=FALSE, echo = FALSE}
+res <- st_sf(p)[a, , op = st_intersects]
+library(ggplot2)
+
+# graphique
+ggplot() + 
+  geom_sf(data = a, color = "orange") + 
+  geom_sf(data = p) + 
+  geom_sf(data = l, color = "blue") +
+  geom_sf(data = res, color = "cyan") +
+  theme_minimal()
+```
+
 
 ## Les jointures spatiales
 

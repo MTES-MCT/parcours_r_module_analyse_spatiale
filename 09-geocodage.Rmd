@@ -22,7 +22,7 @@ Le package `{banR}` de Gombin et Chevalier, exploite l'API de la Base Adresse Na
 Il s'intalle depuis github. 
 Il est particulièrement approprié pour géocoder des adresses en France.
 
-```{r}
+```{r, error=TRUE}
 mes_adresses <- data.frame(
   services = c("DDTM76", "CVRH Nantes", "DREAL Pays de la Loire"),
   adresses = c("Cité Administrative, 2 rue Saint Sever, 76000 ROUEN",
@@ -36,7 +36,7 @@ mes_adresses_geoc
 
 Le résultat est un df enrichi de 15 nouveaux attributs dont le nom commence par `result_` + les champs longitude et latitude. 
 
-```{r}
+```{r, error=TRUE}
 mes_adresses_geoc %>% 
   select(starts_with("result_")) %>% 
   names()
@@ -46,7 +46,7 @@ Le champ `result_score` fournit un indicateur de la qualité de la géolocalisat
 
 Il reste alors à transformer le résultat en df spatial, grâce à la fonction `st_as_sf()` vue au chapitre [lire-des-donnees-spatiales].
 
-```{r}
+```{r, error=TRUE}
 mes_adresses_sf <- st_as_sf(mes_adresses_geoc, coords = c("longitude", "latitude"), crs = 4326)
 mapview(mes_adresses_sf)
 ```
