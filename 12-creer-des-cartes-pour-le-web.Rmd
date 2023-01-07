@@ -1,0 +1,258 @@
+# Créer des cartes pour le web {#creer-des-cartes-pour-le-web}
+
+## Les cartes Leaflet
+
+[`{leaflet}`](https://leafletjs.com/) est une bibliothèque javascript de cartographie en ligne. 
+R permet de produire des cartes en exploitant cette bibliothèque.
+
+La limitation de `{leaflet}` est qu'il ne permet de visualiser que des données en projection WGS84.
+
+Dans ce chapitre, nous utiliserons les packages suivants
+```{r pkg_chap_15_carto_web, message=FALSE, warning=FALSE}
+# CRAN
+library(htmltools)
+library(htmlwidgets)
+library(leaflet)
+library(sf)
+library(tidyverse)
+# Github 
+library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
+library(ggiraph)
+# Gitlab-forge
+library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
+```
+
+Les données utilisées sont issues de `{COGiter}`.
+
+### Carte choroplète
+
+Ci-dessous un exemple avancé de carte choroplète avec `{leaflet}`.
+
+- Définition des données de départ :  
+
+```{r}
+pop2015_dep_geo <- pop2015 %>% 
+  # mise à jour du COG et agrégation à l'échelle départementale
+  cogifier(code_commune = DEPCOM, communes = FALSE, epci = FALSE, departements = TRUE, regions = FALSE, metro = FALSE) %>% 
+  inner_join(COGiter::departements_geo, ., by = c("DEP" = "CodeZone")) %>% 
+  mutate(densite = pop2015 / as.numeric(AREA) * 1000000) %>% 
+  filter(substr(DEP, 1, 2) != "97")
+
+glimpse(pop2015_dep_geo)
+```
+
+- Transformation de la projection car `leaflet` ne connait que le WGS 84 :  
+
+```{r}
+pop2015_dep_geo <- st_transform(pop2015_dep_geo, crs=("+proj=longlat +datum=WGS84 +no_defs"))
+```
+
+- Discrétisation de la variable d'intérêt : 
+
+```{r}
+bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
+```
+
+- Création d'une palette de couleurs associée : 
+
+`{leaflet}` intègre une fonction `colorBin()` qui permet d'associer à un vecteur de valeurs numériques un vecteur de couleurs en fonction d'une palette et d'un vecteur de bornes.
+
+```{r}
+pal <- colorBin("YlOrRd", domain = pop2015_dep_geo$densite, bins = bornes)
+```
+
+- Création d'étiquettes popover, à afficher en surbrillance au passage de la souris sur la carte :  
+
+```{r}
+popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en 2015", 
+                   pop2015_dep_geo$Zone, pop2015_dep_geo$densite) %>% 
+  lapply(htmltools::HTML)
+```
+
+- Réalisation de la carte :  
+
+La fonction `addPolygons()` permet de créer la carte choroplète.
+
+La fonction `addProviderTiles()` permet de rajouter un fond cartographique parmis les couches fournies par `leaflet`.
+
+```{r, fig.width=7, fig.height=4}
+leaflet(pop2015_dep_geo) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addPolygons(data = pop2015_dep_geo,
+              fillColor = ~pal(densite),
+              weight = 2,
+              opacity = 1,
+              color = "white",
+              dashArray = "3",
+              fillOpacity = 0.7,
+              highlight = highlightOptions(
+                weight = 5,
+                color = "#666",
+                dashArray = "",
+                fillOpacity = 0.7,
+                bringToFront = TRUE),
+              label = popover,
+              labelOptions = labelOptions(
+                style = list("font-weight" = "normal", padding = "3px 8px"),
+                textsize = "15px",
+                direction = "auto"))
+```
+
+### Carte à ronds proportionnels
+
+Pour réaliser des ronds proportionnels, il va faut partir des centroïdes de nos polygones. 
+On cherche cette fois à représenter les populations 2015. 
+
+- Création de la table en entrée :  
+
+```{r}
+dep_centr <- st_centroid(pop2015_dep_geo)
+```
+- Discrétisation de la variable d'intérêt :  
+
+```{r}
+bornes <- quantile(dep_centr$pop2015 / 1000, na.rm = TRUE)
+```
+
+- Création d'une palette de couleurs associée : 
+
+```{r}
+pal <- colorBin("YlOrRd", domain = dep_centr$pop2015 / 1000, bins = bornes)
+```
+
+- Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte : 
+
+```{r}
+popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015", 
+                  dep_centr$Zone, dep_centr$pop2015 / 1000) %>% 
+  lapply(htmltools::HTML)
+```
+
+- Création de la carte : 
+
+```{r, fig.width=7, fig.height=4}
+carte_rond_proportionnel <- leaflet(dep_centr) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircles(data = dep_centr,
+             fillColor = ~pal(pop2015 / 1000),
+             radius = ~2500*log(pop2015),
+             weight = 2,
+             opacity = 1,
+             color = "gray",
+             dashArray = "3",
+             fillOpacity = 0.6,
+             highlight = highlightOptions(
+               weight = 5,
+               color = "#666",
+               dashArray = "",
+               fillOpacity = 0.98,
+               bringToFront = TRUE),
+             label = popover,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 8px"),
+               textsize = "15px",
+               direction = "auto")) %>% 
+  addLegend("bottomright", pal = pal, values = ~pop2015,
+            title = "Nombre d'habitants en 2015 - INSEE - RP",
+            opacity = 1)
+
+carte_rond_proportionnel
+```
+
+
+## Les cartes ggplot
+
+Les cartes créées par {ggplot2}, comme tous les autres graphiques produits avec ggplot d'ailleurs, peuvent être rendues dynamiques [grâce à {ggiraph}](https://davidgohel.github.io/ggiraph) développé par David Gohel.
+ 
+<img src="https://davidgohel.github.io/ggiraph/reference/figures/logo.png" align="right" width="180"/>   
+
+Ce package permet l'ajout d'info-bulles, des effets de survol et d'ajouter des actions JavaScript aux graphiques. 
+L'interactivité est s'applique aux géométries ggplot, aux légendes et aux éléments de thème, grâce aux paramètres esthétiques suivants : 
+
+
+* `tooltip`: info-bulles à afficher lorsque la souris se trouve sur les éléments ;  
+* `onclick`: fonction JavaScript à exécuter lorsque les éléments sont cliqués ;  
+* `data_id`: id à associer aux éléments (utilisé pour les actions de survol et de clic).  
+
+Les choses que vous devez savoir pour créer un graphique interactif :
+
+* Au lieu d'utiliser `geom_sf()`, utilisez `geom_sf_interactive()`, au lieu d'utiliser `geom_sf_label()`, utilisez `geom_sf_label_interactive()`... Fournissez au moins une des esthétiques `tooltip`, `data_id` and `onclick` pour créer des éléments interactifs.  
+* Appelez la fonction girafe avec l'objet ggplot afin que le graphique soit traduit en un graphique web interactif.  
+
+
+```{r, include=FALSE}
+pop2015_preparee <- pop2015 %>% 
+  # mise à jour du COG et agrégation aux différentes échelles adm
+  cogifier(code_commune = DEPCOM, communes = TRUE, epci = TRUE, departements = TRUE, regions = TRUE, metro = FALSE) %>% 
+  # on filtre le jeu de données pour ne garder que les territoires de Normandie et toutes les régions
+  filtrer_cog(reg = "28", garder_supra = ">=") 
+
+# Aperçu du jeu de données
+glimpse(pop2015_preparee)
+
+# Préparation des fonds carto
+fonds_carto_normands <- filtrer_cog_geo(reg = "28")
+
+#jointure du fond carto EPCI aux données EPCI de Normandie
+pop2015_epci_normands_geo <- fonds_carto_normands$epci %>% 
+  left_join(pop2015_preparee, by = c("EPCI" = "CodeZone")) %>% 
+  # calcul des indicateurs a représenter
+  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100,
+         densite_pop = as.numeric(pop2015 / AREA * 1000000))
+```
+
+On reprend notre carte ggplot normande en ronds proportionnels : 
+
+```{r}
+carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
+    geom_sf_interactive(aes(tooltip = Zone)) +
+    geom_sf_interactive(data = st_point_on_surface(pop2015_epci_normands_geo), 
+                        mapping = aes(size = pop2015_totale, color = poids_pop_a_part, 
+                                      tooltip = paste0(Zone, "\n", format_fr_nb(pop2015_totale, dec = 0, big_mark = " "), " hab.\ndont ", 
+                                                       format_fr_nb(poids_pop_a_part, dec = 1, big_mark = " "), " % comptés à part"))) +
+    labs(
+        title = "Population par EPCI en Normandie",
+        subtitle = "En 2015", x = "", y = "",
+        size = "Nombre d'habitants",
+        color = "Poids population\ncomptée à part (%)",
+        caption = "Source : INSEE - RP"
+    )  +
+    theme_gouv_map(plot_title_size = 20, subtitle_size = 12) +
+    scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = TRUE) +
+    scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))  +
+    annotation_north_arrow(location = "bl", height = unit(0.7, "cm"), width = unit(0.7, "cm"))
+
+girafe(ggobj = carte_ronds_prop_dyn)
+```
+
+## Les cartes {mapfactory}
+
+{mapfactory} s'appuie sur {ggiraph} pour rendre ses cartes dynamiques. 
+Les arguments de la fonction `creer_carte()` en rapport avec l'interactivité sont 
+
+`interactive`	
+TRUE si on veut une carte html interactive.   
+
+`popover`	 
+Chaîné de texte désignant le contenu de l'info-bulles. Par défaut, L'étiquette qui s'affiche au survol contient "nom du territoire : valeur de l'indicateur et suffixe", obtenu a partir de ".data$nom_ter : .data$valeur".   
+
+`indicateur_popover`	
+Un nom d'indicateur présent dans data (sans quote) a mobiliser pour le popover. Utiliser `.data$valeur_popover` au niveau du parametre popover pour afficher les valeurs de cet indicateur, par exemple `.data$nom_ter : .data$valeur_popover unites`.
+
+```{r}
+creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015, espace = " ",
+            interactive = TRUE, type_viz = "proportionnel", maillage = "Départements")
+```
+
+
+## Exporter une sortie html
+
+La fonction `saveWidget()` permet d'exporter une sortie d'un `HTML Widget` en fichier HTML.
+
+```{r, eval=FALSE}
+saveWidget(widget = girafe(ggobj = carte_ronds_prop_dyn), file = "part_pop_a_part_epci_normandie.html")
+```
+## Exercice 5 : cartes DVF pour le web
+
+```{r mod7_exo5, child=charge_exo("m7", "exo5.rmd"), echo=FALSE}
+```

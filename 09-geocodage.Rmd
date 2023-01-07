@@ -1,0 +1,62 @@
+# Géocodage {#geocodage}
+
+```{r pkg_geocod}
+# CRAN
+library(sf)
+library(tidyverse)
+library(mapview)
+library(mapedit)
+
+# Github
+# remotes::install_github("joelgombin/banR")
+library(banR)
+```
+
+
+## Géolocalisation à l'adresse
+
+Plusieurs packages permettent de géocoder des adresses. 
+Le package `{tidygeocoder}` utilise un grand nombre de services de géocodage en ligne et est international. 
+
+Le package `{banR}` de Gombin et Chevalier, exploite l'API de la Base Adresse Nationale. 
+Il s'intalle depuis github. 
+Il est particulièrement approprié pour géocoder des adresses en France.
+
+```{r, error=TRUE}
+mes_adresses <- data.frame(
+  services = c("DDTM76", "CVRH Nantes", "DREAL Pays de la Loire"),
+  adresses = c("Cité Administrative, 2 rue Saint Sever, 76000 ROUEN",
+                "25 Rue du Douet Garnier, 44000 Nantes",
+                "5 Rue Françoise Giroud, 44200 Nantes")
+)
+
+mes_adresses_geoc <- geocode_tbl(tbl = mes_adresses, adresse = adresses)
+mes_adresses_geoc
+```
+
+Le résultat est un df enrichi de 15 nouveaux attributs dont le nom commence par `result_` + les champs longitude et latitude. 
+
+```{r, error=TRUE}
+mes_adresses_geoc %>% 
+  select(starts_with("result_")) %>% 
+  names()
+```
+
+Le champ `result_score` fournit un indicateur de la qualité de la géolocalisation.
+
+Il reste alors à transformer le résultat en df spatial, grâce à la fonction `st_as_sf()` vue au chapitre [lire-des-donnees-spatiales].
+
+```{r, error=TRUE}
+mes_adresses_sf <- st_as_sf(mes_adresses_geoc, coords = c("longitude", "latitude"), crs = 4326)
+mapview(mes_adresses_sf)
+```
+
+Pour en savoir plus : site web de `{banR}`,  http://joelgombin.github.io/banR/.
+
+## Digitalisation
+
+Le package `{mapedit}` permet de digitaliser des fonds de carte directement dans R. 
+
+![](https://r-spatial.org/images/mapedit-leafpm-1.gif)
+
+Bien que pouvant se révéler pratique dans certains cas, ce package ne saurait se substituer aux fonctionnalités d'un SIG pour les tâches de numérisation importantes.

@@ -1,6 +1,6 @@
 # Les Systèmes de Coordonnées de Référence {#crs}
 
-Les données spatiales vises à modéliser la terre. 
+Les données spatiales visent à modéliser la terre. 
 La terre est un objet dont la mesure a une longue histoire, qu'on a pensé plate, cylindrique, ronde,  ellipsoïde. Maintenant, on sait que la terre a cette forme là : 
 
 <iframe src="https://player.vimeo.com/video/213210796" width="640" height="640" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -20,13 +20,13 @@ On va donc pouvoir approximer ce géoïde par un ellipsoïde.
 
 Un point quelconque est repéré par rapport à l’ellipsoïde en utilisant un système de coordonnées sphériques : longitude, latitude, altitude.
 
-Le *datum* ou *système géodésique* va correspondre aux paramètre de forme de l'ellipsoïde et de positionnement sur celle ci.
+Le *datum* ou *système géodésique* va correspondre aux paramètres de forme de l'ellipsoïde et de positionnement sur celle-ci.
 
 On va distinguer deux types de datum : les datum *locaux* et les datum *globaux*.
 
 Historiquement n'existait que des datum locaux, c'est à dire qui définissait une ellipse optimale pour correspondre à une partie déterminée de la surface de la terre. Cette contrainte était liée à la façon de définir le géoïde : avant les techniques spatiales, on utilisait des mesures de triangulation à partir d'un point défini par mesure astronomique.
 
-Depuis l'avènement des techniques spatiales, on est capable de définir un *datum global* grâce aux mesures satellitaires. Le système mondial de référence est aujourd'hui le WGS 84, associé au GPS.
+Depuis l'avènement des techniques spatiales, on est capable de définir un *datum global* grâce aux mesures satellitaires. Le système mondial de référence est aujourd'hui le WGS 84, associé au GPS (code EPSG 4326).
 
 Il y a donc aujourd'hui beaucoup de *datum*, un pour la plupart des pays, qui maximise la modélisation de l'ellipsoïde sur leur territoire, et des datums globaux.
 
@@ -82,8 +82,19 @@ Equal Earth est une projection pseudo-cylindrique ressemblant à celle de Robins
  
 - http://cartonumerique.blogspot.com/2018/11/la-projection-equal-earth.html
 
+#### Lambert 93
+
+Depuis décembre 2000, le système de projection officiel de la France métropolitaine est le Lambert 93 (code EPSG 2154). 
+Il s'agit d'une projection conique conforme, référencée à travers le RGF93.   
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Lambert_conformal_conic.svg/290px-Lambert_conformal_conic.svg.png) 
+
+Ce système a en commun avec le WGS84 - utilisé notamment par le système GPS de positionnement par satellite - l'ellipsoïde de référence IAG GRS80. 
+
 ## Code EPSG
 
 L'EPSG (European Petroleum Survey Group), un groupe créé en 1985, a défini une liste des systèmes de coordonnées géoréférencées et leur a associé des codes pour les identifier. Le groupe est devenu en 2005 le "Comité de topographie et de positionnement" de l'Association internationale des producteurs de pétrole et de gaz (OGP). La liste peut être trouvée sur [ce site](http://www.epsg.org/).
 
-Un système géodésique peut recevoir plusieurs codes EPSG selon son utilisation : 2D ou 3D par exemple.
+Un système même géodésique peut recevoir plusieurs codes EPSG selon son utilisation : 2D ou 3D par exemple. 
+C'est le cas du WGS84, dont le code EPSG est 4326 en 2D mais 4979 en 3D.
+
