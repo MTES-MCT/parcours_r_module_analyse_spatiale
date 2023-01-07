@@ -50,7 +50,7 @@ Le buffer est pixelisé en longitude / latitude.
 
 
 Tentons une reprojection. La fonction permettant une reprojection est `st_transform()`.
-On va ici passer en lambert 93 nos données.
+On va ici passer en Lambert 93 nos données.
 
 ```{r}
 nantes_proj <- st_transform(nantes, 2154)
@@ -64,7 +64,6 @@ st_is_longlat(nantes_proj)
 
 ```{r, warning=TRUE}
 nantes_proj_buffer <- st_buffer(nantes_proj, dist = 1000)
-
 mapview(list(nantes_proj, nantes_proj_buffer))
 ```
 
@@ -75,7 +74,6 @@ st_area(nantes_buffer)
 st_area(nantes_proj_buffer)
 pi*1000^2
 ```
-
 
 
 
