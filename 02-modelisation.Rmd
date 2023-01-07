@@ -6,47 +6,71 @@ Dans ce chapitre, nous allons développer une brève introduction à la modélis
 
 ## Les données vecteur
 
-Les données vecteur sont une modélisation du monde utilisant des points, des lignes et des polygones.
+Les données vecteur modélisent le monde utilisant des points, des lignes et des polygones.
 Les données "vecteur" sont en général plus utilisées en sciences sociales, les territoires créés par l'homme ayant la plupart du temps des frontières discrètes.
 
 Derrière les données vecteur, se trouvent des points. Les points peuvent représenter des caractéristiques autonomes (comme l'emplacement de l'établissement d'une entreprise), ou peuvent être reliés entre eux pour former des géométries plus complexes telles que des lignes (comme des cours d'eau) et des polygones (les frontières d'un pays). 
 
-Ces points sont localisés à travers un système de référence de coordonnées (CRS). La plupart des géométries ponctuelles ne contiennent que deux dimensions (les CRS à trois dimensions contiennent une valeur supplémentaire z pour la hauteur du point en référence au niveau de la mer).
+Ces points sont localisés à travers un système de coordonnées de référence (CRS). La plupart des géométries ponctuelles ne contiennent que deux dimensions (les CRS à trois dimensions contiennent une valeur supplémentaire, z, pour la hauteur du point en référence au niveau de la mer).
 
 
 ## Les données raster
 
-Les données raster modélisent la surface du globe à l'aide de celulles de taille identique.
+Les données raster modélisent la surface du globe à l'aide de cellules de taille identique.
 Les données "raster" sont en générale plus utilisées dans les science environnementales, du fait de la fiabilité des données de télédétections disponibles.
 
 ## La structuration des données géographiques avec R
 
-### sf pour les données vecteur
+### `{sf}` pour les données vecteur
 
-Le packages `sf` permet de gérer les données vecteur.
+Le packages `{sf}` permet de gérer les données vecteur dans R.
 
-Avant `sf` existait le package `sp` que vous pourrez rencontrer suivant les packages plus spécifiques que vous utiliserez ou en cherchant de l'aide.
+Avant `{sf}` existait le package `{sp}`, que vous pourrez rencontrer suivant les packages plus spécifiques que vous utiliserez ou en cherchant de l'aide.
 
-Les avantages de `sf` sont multiples : 
+Les avantages de `{sf}` sont multiples : 
 
-- **Standardisation** : sf utilise le modèle de données simple feature^[https://en.wikipedia.org/wiki/Simple_Features] qui est un standard largement utilisé dans le domaine de la géomatique.
+- **Standardisation** : `{sf}` utilise le modèle de données simple feature^[https://en.wikipedia.org/wiki/Simple_Features] qui est un standard largement utilisé dans le domaine de la géomatique.
 
-- **Simplification** du modèle de données. Les données spatiales sont un *dataframe* avec une variable spécifique renseignant la géométrie en créant un type ad hoc en plus des types standard (numériques, entiers, booléens, caractères, facteur...). Ce dataframe aura une classe spécifique qui lui sera associée (classe `sf`).
+- **Simplification** du modèle de données. Les données spatiales sont un *dataframe* avec une variable spécifique renseignant la géométrie.
+Un type ad hoc (sfc) a été créé en plus des types standard (numériques, entiers, booléens, caractères, facteurs...). Ce dataframe aura une classe spécifique qui lui sera associée (classe `sf`).
 
 - La syntaxe des fonctions est **unifiée** et **simplifiée** selon le manifeste du tidyverse^[https://tidyverse.tidyverse.org/articles/manifesto.html]. 
 
 - **Intégration**. Les verbes du tidyverse sont compatibles avec les données spatiales de classe `sf` et vont parfois agir avec des propriétés spécifiques sur les données géométriques. On peut également utiliser le *pipe* dans le processus de travail.
 
-- **Perfomance** : meilleure performance dans la lecture et l'écrite des données. Voir un benchmark sur la [page du package sf](https://r-spatial.github.io/sf/articles/sf1.html#benchmarks)
+- **Perfomance** : meilleure performance dans la lecture et l'écriture des données. Voir un benchmark sur la [page du package sf](https://r-spatial.github.io/sf/articles/sf1.html#benchmarks)
 
-### raster et stars pour les données raster
 
-Les packages `raster` et `stars` permettent de gérer les données raster. 
+### {terra}, {raster} et {stars} pour les données raster
 
-`raster` est aussi un package historique amené à être supplanté par `stars`.
+Les packages `{raster}`, `{terra}` et `{stars}` permettent de gérer les données raster dans R. 
 
-`stars` est d'une part plus vaste que `raster`, car il vise à gérer les données spatio-temporelle plus largement.
+`{raster}` est, comme `{sp}`, un package historique amené à être supplanté par `{stars}` et `{terra}`. 
 
-`stars` est intégré à `sf` et au `tidyverse`
+`{stars}` est d'une part plus vaste que `raster`, car il vise à gérer les données spatio-temporelle plus largement.
 
-On se limitera pour la suite du cours aux données vecteur et donc à `sf`.
+`{stars}` est intégré à `{sf}` et au `{tidyverse}`.
+
+Le [package `{terra}` a été publié début 2020](https://rspatial.org/terra/), il propose des méthodes de traitement et d'analyse de données raster. 
+
+On se limitera pour la suite du cours aux données vecteur et donc à `{sf}`.
+
+
+## Format des objets spatiaux `sf`
+
+Les objets `sf` sont des `data.frame` dont l'une des colonnes contient des géométries. 
+
+
+![](https://github.com/r-spatial/sf/raw/main/vignettes/sf_xfig.png)
+
+Cette colonne est de la classe sfc (*simple feature column*) et chaque individu de la colonne est une sfg (*simple feature geometry)*.   
+
+Les fonctions `st_point()`, `st_multipoint()`, `st_linestring()`, `st_polygon()`... créent des objets géométriques de type sfg à partir de coordonnées structurées sous forme d'une matrice. 
+Pour passer une liste d'objets géométriques sfg au format `sf`, il faut lui donner les propriétés de colonne géométrique avec `st_sfc()` puis les propriétés de dataframe géographique avec `st_sf()`.
+
+A l'inverse, la fonction `st_geometry()` appliquée à un objet `sf` renvoie la colonne géométrique seule, au format sfc.
+
+Le format sf est très pratique dans la mesure où les données et les géométries sont intrinsèquement liées dans un même objet. 
+
+Pour en savoir plus : voir la vignette décrivant le format simple feature : [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+

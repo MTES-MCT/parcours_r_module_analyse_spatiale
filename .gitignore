@@ -9,7 +9,8 @@ bac_sable.R
 _book/
 _bookdown_files/
 *.html
-NY_leukemia.gpkg
+NY_leukemia.*
 support_m7_files
 support_m7.Rmd
 support_m7.knit.md
+*cache
