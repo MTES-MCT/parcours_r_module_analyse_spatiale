@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapitre 11 Créer des cartogrammes | Analyses spatiales avec R</title>
+  <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapitre 11 Créer des cartogrammes | Analyses spatiales avec R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapitre 11 Créer des cartogrammes | Analyses spatiales avec R" />
+  
+  <meta name="twitter:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
+  
+
+<meta name="author" content="Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="creer-des-cartes-avec-ggplot2.html"/>
+<link rel="next" href="creer-des-cartes-pour-le-web.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.26/datatables.js"></script>
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.1.1/leaflet-providers-plugin.js"></script>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
+<script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
+<script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
+<script src="libs/flatbush-4.0.0/flatbush.min.js"></script>
+<link href="libs/ggiraphjs-0.4.6/ggiraphjs.min.css" rel="stylesheet" />
+<script src="libs/ggiraphjs-0.4.6/ggiraphjs.min.js"></script>
+<script src="libs/girafe-binding-0.8.5/girafe.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><p style="text-align:center;"><img src="https://mtes-mct.github.io/parcours-r/assets/images/logo_marianne_fond_blanc.png" style="width:100px;"/></p></li>
+<li><a href="./index.html">Les données spatiales avec R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#le-parcours-de-formation"><i class="fa fa-check"></i>Le parcours de formation</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#le-groupe-de-référents-r-du-pôle-ministériel"><i class="fa fa-check"></i>Le groupe de référents R du pôle ministériel</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#objectifs-de-ce-module"><i class="fa fa-check"></i>Objectifs de ce module</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i><b>1</b> Bien commencer</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="get-started.html"><a href="get-started.html#créer-un-projet-sous-rstudio-pour-vous-permettre-de-recenser-vos-travaux."><i class="fa fa-check"></i><b>1.1</b> Créer un projet sous Rstudio pour vous permettre de recenser vos travaux.</a></li>
+<li class="chapter" data-level="1.2" data-path="get-started.html"><a href="get-started.html#utilisation-du-package-savoirfr"><i class="fa fa-check"></i><b>1.2</b> Utilisation du package <code>{savoirfR}</code></a></li>
+<li class="chapter" data-level="1.3" data-path="get-started.html"><a href="get-started.html#créer-votre-arborescence-de-projet"><i class="fa fa-check"></i><b>1.3</b> Créer votre arborescence de projet</a></li>
+<li class="chapter" data-level="1.4" data-path="get-started.html"><a href="get-started.html#activer-les-packages-nécessaires"><i class="fa fa-check"></i><b>1.4</b> Activer les packages nécessaires</a></li>
+<li class="chapter" data-level="1.5" data-path="get-started.html"><a href="get-started.html#bien-structurer-ses-projets-data"><i class="fa fa-check"></i><b>1.5</b> Bien structurer ses projets data</a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction aux données spatiales</b></span></li>
+<li class="chapter" data-level="2" data-path="modelisation.html"><a href="modelisation.html"><i class="fa fa-check"></i><b>2</b> La modélisation des données spatiales</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="modelisation.html"><a href="modelisation.html#les-données-vecteur"><i class="fa fa-check"></i><b>2.1</b> Les données vecteur</a></li>
+<li class="chapter" data-level="2.2" data-path="modelisation.html"><a href="modelisation.html#les-données-raster"><i class="fa fa-check"></i><b>2.2</b> Les données raster</a></li>
+<li class="chapter" data-level="2.3" data-path="modelisation.html"><a href="modelisation.html#la-structuration-des-données-géographiques-avec-r"><i class="fa fa-check"></i><b>2.3</b> La structuration des données géographiques avec R</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="modelisation.html"><a href="modelisation.html#sf-pour-les-données-vecteur"><i class="fa fa-check"></i><b>2.3.1</b> <code>{sf}</code> pour les données vecteur</a></li>
+<li class="chapter" data-level="2.3.2" data-path="modelisation.html"><a href="modelisation.html#terra-raster-et-stars-pour-les-données-raster"><i class="fa fa-check"></i><b>2.3.2</b> {terra}, {raster} et {stars} pour les données raster</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="modelisation.html"><a href="modelisation.html#format-des-objets-spatiaux-sf"><i class="fa fa-check"></i><b>2.4</b> Format des objets spatiaux <code>sf</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="crs.html"><a href="crs.html"><i class="fa fa-check"></i><b>3</b> Les Systèmes de Coordonnées de Référence</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="crs.html"><a href="crs.html#le-système-géodésique-ou-datum"><i class="fa fa-check"></i><b>3.1</b> Le système géodésique ou datum</a></li>
+<li class="chapter" data-level="3.2" data-path="crs.html"><a href="crs.html#les-coordonnées"><i class="fa fa-check"></i><b>3.2</b> Les coordonnées</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="crs.html"><a href="crs.html#coordonnées-géographiques"><i class="fa fa-check"></i><b>3.2.1</b> Coordonnées géographiques</a></li>
+<li class="chapter" data-level="3.2.2" data-path="crs.html"><a href="crs.html#coordonnées-en-projection"><i class="fa fa-check"></i><b>3.2.2</b> Coordonnées en projection</a></li>
+<li class="chapter" data-level="3.2.3" data-path="crs.html"><a href="crs.html#exemple-de-projections"><i class="fa fa-check"></i><b>3.2.3</b> Exemple de projections</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="crs.html"><a href="crs.html#code-epsg"><i class="fa fa-check"></i><b>3.3</b> Code EPSG</a></li>
+</ul></li>
+<li class="part"><span><b>II Lire et écrire des données spatiales</b></span></li>
+<li class="chapter" data-level="4" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html"><i class="fa fa-check"></i><b>4</b> Lire et écrire des données spatiales avec R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-fichiers-plats"><i class="fa fa-check"></i><b>4.1</b> Lire des fichiers plats</a></li>
+<li class="chapter" data-level="4.2" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#ecrire-des-fichiers-plats"><i class="fa fa-check"></i><b>4.2</b> Ecrire des fichiers plats</a></li>
+<li class="chapter" data-level="4.3" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-données-spatiales-du-web"><i class="fa fa-check"></i><b>4.3</b> Lire des données spatiales du web</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-données-geojson"><i class="fa fa-check"></i><b>4.3.1</b> Lire des données geojson</a></li>
+<li class="chapter" data-level="4.3.2" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#exemple-3-geojson-compressé"><i class="fa fa-check"></i><b>4.3.2</b> Exemple 3 (geojson compressé)</a></li>
+<li class="chapter" data-level="4.3.3" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-données-wfs"><i class="fa fa-check"></i><b>4.3.3</b> Lire des données WFS</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lireécrire-des-données-spatiales-sur-postgis"><i class="fa fa-check"></i><b>4.4</b> Lire/écrire des données spatiales sur PostGIS</a></li>
+<li class="chapter" data-level="4.5" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#convertir-un-dataframe"><i class="fa fa-check"></i><b>4.5</b> Convertir un dataframe</a></li>
+<li class="chapter" data-level="4.6" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#données-contenues-dans-des-packages"><i class="fa fa-check"></i><b>4.6</b> Données contenues dans des packages</a></li>
+</ul></li>
+<li class="part"><span><b>III Manipuler des données spatiales</b></span></li>
+<li class="chapter" data-level="5" data-path="operation-sur-donnees-attributaires.html"><a href="operation-sur-donnees-attributaires.html"><i class="fa fa-check"></i><b>5</b> Les opérations sur données attributaires</a></li>
+<li class="chapter" data-level="6" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html"><i class="fa fa-check"></i><b>6</b> Les opérations spatiales sur les données</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#filtrer"><i class="fa fa-check"></i><b>6.1</b> Filtrer</a></li>
+<li class="chapter" data-level="6.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#prédicats-spatiaux"><i class="fa fa-check"></i><b>6.2</b> Prédicats spatiaux</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#exercice-1---manipuler-des-objets-sf"><i class="fa fa-check"></i><b>6.2.1</b> Exercice 1 - manipuler des objets sf</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#les-jointures-spatiales"><i class="fa fa-check"></i><b>6.3</b> Les jointures spatiales</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#jointure-de-points-avec-des-polygones"><i class="fa fa-check"></i><b>6.3.1</b> Jointure de points avec des polygones</a></li>
+<li class="chapter" data-level="6.3.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#jointure-de-polygones-avec-des-polygones"><i class="fa fa-check"></i><b>6.3.2</b> Jointure de polygones avec des polygones</a></li>
+<li class="chapter" data-level="6.3.3" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#exercice-2-exploitation-des-données-dvf-en-api"><i class="fa fa-check"></i><b>6.3.3</b> Exercice 2 : exploitation des données DVF en API</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#les-mesures"><i class="fa fa-check"></i><b>6.4</b> Les mesures</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#calcul-de-surface"><i class="fa fa-check"></i><b>6.4.1</b> Calcul de surface</a></li>
+<li class="chapter" data-level="6.4.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#matrice-de-distances"><i class="fa fa-check"></i><b>6.4.2</b> Matrice de distances</a></li>
+<li class="chapter" data-level="6.4.3" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#identification-du-plus-proche-voisin"><i class="fa fa-check"></i><b>6.4.3</b> Identification du plus proche voisin</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#carroyage"><i class="fa fa-check"></i><b>6.5</b> Carroyage</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#créer-une-grille-régulière"><i class="fa fa-check"></i><b>6.5.1</b> Créer une grille régulière</a></li>
+<li class="chapter" data-level="6.5.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#compter-des-points-dans-un-polygone"><i class="fa fa-check"></i><b>6.5.2</b> Compter des points dans un polygone</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="operations-geometriques.html"><a href="operations-geometriques.html"><i class="fa fa-check"></i><b>7</b> Les opérations géométriques</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#opérations-unaires"><i class="fa fa-check"></i><b>7.1</b> Opérations unaires</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#simplification"><i class="fa fa-check"></i><b>7.1.1</b> Simplification</a></li>
+<li class="chapter" data-level="7.1.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#centroïde"><i class="fa fa-check"></i><b>7.1.2</b> Centroïde</a></li>
+<li class="chapter" data-level="7.1.3" data-path="operations-geometriques.html"><a href="operations-geometriques.html#buffer"><i class="fa fa-check"></i><b>7.1.3</b> Buffer</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#opérations-binaires"><i class="fa fa-check"></i><b>7.2</b> Opérations binaires</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#transformation-affine"><i class="fa fa-check"></i><b>7.2.1</b> Transformation affine</a></li>
+<li class="chapter" data-level="7.2.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#découpage"><i class="fa fa-check"></i><b>7.2.2</b> Découpage</a></li>
+<li class="chapter" data-level="7.2.3" data-path="operations-geometriques.html"><a href="operations-geometriques.html#union"><i class="fa fa-check"></i><b>7.2.3</b> Union</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="les-reprojections.html"><a href="les-reprojections.html"><i class="fa fa-check"></i><b>8</b> Les reprojections</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="les-reprojections.html"><a href="les-reprojections.html#un-premier-exemple-de-reprojection"><i class="fa fa-check"></i><b>8.1</b> Un premier exemple de reprojection</a></li>
+<li class="chapter" data-level="8.2" data-path="les-reprojections.html"><a href="les-reprojections.html#quand-reprojeter"><i class="fa fa-check"></i><b>8.2</b> Quand reprojeter ?</a></li>
+<li class="chapter" data-level="8.3" data-path="les-reprojections.html"><a href="les-reprojections.html#quel-crs-utiliser"><i class="fa fa-check"></i><b>8.3</b> Quel CRS utiliser ?</a></li>
+<li class="chapter" data-level="8.4" data-path="les-reprojections.html"><a href="les-reprojections.html#comment-projeter"><i class="fa fa-check"></i><b>8.4</b> Comment projeter ?</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="les-reprojections.html"><a href="les-reprojections.html#projeter-des-vecteurs"><i class="fa fa-check"></i><b>8.4.1</b> Projeter des vecteurs</a></li>
+<li class="chapter" data-level="8.4.2" data-path="les-reprojections.html"><a href="les-reprojections.html#modifier-la-projection-dune-carte."><i class="fa fa-check"></i><b>8.4.2</b> Modifier la projection d’une carte.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="geocodage.html"><a href="geocodage.html"><i class="fa fa-check"></i><b>9</b> Géocodage</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="geocodage.html"><a href="geocodage.html#géolocalisation-à-ladresse"><i class="fa fa-check"></i><b>9.1</b> Géolocalisation à l’adresse</a></li>
+<li class="chapter" data-level="9.2" data-path="geocodage.html"><a href="geocodage.html#digitalisation"><i class="fa fa-check"></i><b>9.2</b> Digitalisation</a></li>
+</ul></li>
+<li class="part"><span><b>IV Créer des cartes sous R</b></span></li>
+<li class="chapter" data-level="10" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html"><i class="fa fa-check"></i><b>10</b> Créer des cartes statiques avec {ggplot2}</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#librairies"><i class="fa fa-check"></i><b>10.1</b> Librairies</a></li>
+<li class="chapter" data-level="10.2" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#introduction-les-cartes-statiques-en-r"><i class="fa fa-check"></i><b>10.2</b> Introduction : les cartes statiques en R</a></li>
+<li class="chapter" data-level="10.3" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#quelques-rappels-sur-ggplot2"><i class="fa fa-check"></i><b>10.3</b> Quelques rappels sur <code>{ggplot2}</code></a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#ggplot2-les-concepts-clefs"><i class="fa fa-check"></i><b>10.3.1</b> <code>{ggplot2}</code> : les concepts clefs</a></li>
+<li class="chapter" data-level="10.3.2" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#ggplot2-pour-les-cartes"><i class="fa fa-check"></i><b>10.3.2</b> {ggplot2} pour les cartes</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#faire-des-cartes-avec-ggplot2"><i class="fa fa-check"></i><b>10.4</b> Faire des cartes avec {ggplot2}</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#préparation-des-données"><i class="fa fa-check"></i><b>10.4.1</b> Préparation des données</a></li>
+<li class="chapter" data-level="10.4.2" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-cartes-choroplèthe"><i class="fa fa-check"></i><b>10.4.2</b> Les cartes choroplèthe</a></li>
+<li class="chapter" data-level="10.4.3" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-cartes-à-ronds-proportionnels"><i class="fa fa-check"></i><b>10.4.3</b> Les cartes à ronds proportionnels</a></li>
+<li class="chapter" data-level="10.4.4" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#lhabillage-simple"><i class="fa fa-check"></i><b>10.4.4</b> L’habillage simple</a></li>
+<li class="chapter" data-level="10.4.5" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-thèmes"><i class="fa fa-check"></i><b>10.4.5</b> Les thèmes</a></li>
+<li class="chapter" data-level="10.4.6" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-scales"><i class="fa fa-check"></i><b>10.4.6</b> Les scales</a></li>
+<li class="chapter" data-level="10.4.7" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exercice-3---carte-des-données-dvf-par-quartie-de-nantes"><i class="fa fa-check"></i><b>10.4.7</b> Exercice 3 - Carte des données dvf par quartie de Nantes</a></li>
+<li class="chapter" data-level="10.4.8" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-facettes"><i class="fa fa-check"></i><b>10.4.8</b> Les facettes</a></li>
+<li class="chapter" data-level="10.4.9" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#ajouter-une-barre-déchelle-et-la-flèche-du-nord"><i class="fa fa-check"></i><b>10.4.9</b> Ajouter une barre d’échelle et la flèche du nord</a></li>
+<li class="chapter" data-level="10.4.10" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#mettre-plusieurs-cartes-côte-à-côte"><i class="fa fa-check"></i><b>10.4.10</b> Mettre plusieurs cartes côte à côte</a></li>
+<li class="chapter" data-level="10.4.11" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exporter-sa-carte"><i class="fa fa-check"></i><b>10.4.11</b> Exporter sa carte</a></li>
+<li class="chapter" data-level="10.4.12" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exercice-4-assemblage-de-cartes-sur-dvf"><i class="fa fa-check"></i><b>10.4.12</b> Exercice 4 : Assemblage de cartes sur dvf</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#faire-des-cartes-avec-mapfactory"><i class="fa fa-check"></i><b>10.5</b> Faire des cartes avec {mapfactory}</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="cartogramm.html"><a href="cartogramm.html"><i class="fa fa-check"></i><b>11</b> Créer des cartogrammes</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="cartogramm.html"><a href="cartogramm.html#cartogramme-daires-contigues"><i class="fa fa-check"></i><b>11.1</b> Cartogramme d’aires contigues</a></li>
+<li class="chapter" data-level="11.2" data-path="cartogramm.html"><a href="cartogramm.html#cartogramme-daire-non-contigue"><i class="fa fa-check"></i><b>11.2</b> Cartogramme d’aire non contigue</a></li>
+<li class="chapter" data-level="11.3" data-path="cartogramm.html"><a href="cartogramm.html#cartogramme-de-dorling"><i class="fa fa-check"></i><b>11.3</b> Cartogramme de Dorling</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html"><i class="fa fa-check"></i><b>12</b> Créer des cartes pour le web</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-leaflet"><i class="fa fa-check"></i><b>12.1</b> Les cartes Leaflet</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#carte-choroplète"><i class="fa fa-check"></i><b>12.1.1</b> Carte choroplète</a></li>
+<li class="chapter" data-level="12.1.2" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#carte-à-ronds-proportionnels"><i class="fa fa-check"></i><b>12.1.2</b> Carte à ronds proportionnels</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-ggplot"><i class="fa fa-check"></i><b>12.2</b> Les cartes ggplot</a></li>
+<li class="chapter" data-level="12.3" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-mapfactory"><i class="fa fa-check"></i><b>12.3</b> Les cartes {mapfactory}</a></li>
+<li class="chapter" data-level="12.4" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#exporter-une-sortie-html"><i class="fa fa-check"></i><b>12.4</b> Exporter une sortie html</a></li>
+<li class="chapter" data-level="12.5" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#exercice-5-cartes-dvf-pour-le-web"><i class="fa fa-check"></i><b>12.5</b> Exercice 5 : cartes DVF pour le web</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="osm.html"><a href="osm.html"><i class="fa fa-check"></i><b>13</b> Focus sur OpenStreetMap</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="osm.html"><a href="osm.html#afficher-une-carte-interactive"><i class="fa fa-check"></i><b>13.1</b> Afficher une carte interactive</a></li>
+<li class="chapter" data-level="13.2" data-path="osm.html"><a href="osm.html#importer-les-fonds-de-carte-pour-ggplot"><i class="fa fa-check"></i><b>13.2</b> Importer les fonds de carte pour ggplot</a></li>
+<li class="chapter" data-level="13.3" data-path="osm.html"><a href="osm.html#importer-des-données-osm"><i class="fa fa-check"></i><b>13.3</b> Importer des données OSM</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="osm.html"><a href="osm.html#osmdata"><i class="fa fa-check"></i><b>13.3.1</b> <code>{osmdata}</code></a></li>
+<li class="chapter" data-level="13.3.2" data-path="osm.html"><a href="osm.html#osmextract"><i class="fa fa-check"></i><b>13.3.2</b> <code>osmextract</code></a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="osm.html"><a href="osm.html#calculer-des-itinéraires"><i class="fa fa-check"></i><b>13.4</b> Calculer des itinéraires</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="osm.html"><a href="osm.html#calcul-dun-itinéraire"><i class="fa fa-check"></i><b>13.4.1</b> Calcul d’un itinéraire</a></li>
+<li class="chapter" data-level="13.4.2" data-path="osm.html"><a href="osm.html#calcul-dune-matrice-de-temps"><i class="fa fa-check"></i><b>13.4.2</b> Calcul d’une matrice de temps</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V A propos</b></span></li>
+<li class="chapter" data-level="14" data-path="a-propos.html"><a href="a-propos.html"><i class="fa fa-check"></i><b>14</b> A propos de ce document</a>
+<ul>
+<li class="chapter" data-level="" data-path="a-propos.html"><a href="a-propos.html#code-source"><i class="fa fa-check"></i>Code source</a></li>
+<li class="chapter" data-level="" data-path="a-propos.html"><a href="a-propos.html#inspiration"><i class="fa fa-check"></i>Inspiration</a></li>
+<li class="chapter" data-level="" data-path="a-propos.html"><a href="a-propos.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+<li class="chapter" data-level="" data-path="a-propos.html"><a href="a-propos.html#session-info"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html"><i class="fa fa-check"></i><b>15</b> Annexe : créer des cartes avec tmap</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#fonction-tm_shape"><i class="fa fa-check"></i><b>15.1</b> Fonction <code>tm_shape()</code></a></li>
+<li class="chapter" data-level="15.2" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemple-de-carte-choroplèthe"><i class="fa fa-check"></i><b>15.2</b> Exemple de carte choroplèthe</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#préparation-des-données-1"><i class="fa fa-check"></i><b>15.2.1</b> Préparation des données</a></li>
+<li class="chapter" data-level="15.2.2" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#cartographie"><i class="fa fa-check"></i><b>15.2.2</b> Cartographie</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemple-de-carte-à-ronds-proportionnels"><i class="fa fa-check"></i><b>15.3</b> Exemple de carte à ronds proportionnels</a></li>
+<li class="chapter" data-level="15.4" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#discretisation"><i class="fa fa-check"></i><b>15.4</b> Discretisation</a></li>
+<li class="chapter" data-level="15.5" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemples-de-cartes-avec-facet"><i class="fa fa-check"></i><b>15.5</b> Exemples de cartes avec facet</a></li>
+<li class="chapter" data-level="15.6" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#gestion-des-palettes"><i class="fa fa-check"></i><b>15.6</b> Gestion des palettes</a></li>
+<li class="chapter" data-level="15.7" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#la-mise-en-page"><i class="fa fa-check"></i><b>15.7</b> La mise en page</a></li>
+<li class="chapter" data-level="15.8" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#assembler-plusieurs-cartes"><i class="fa fa-check"></i><b>15.8</b> Assembler plusieurs cartes</a></li>
+<li class="chapter" data-level="15.9" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#tmap-pour-le-web"><i class="fa fa-check"></i><b>15.9</b> tmap pour le web</a></li>
+<li class="chapter" data-level="15.10" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#export-dune-carte"><i class="fa fa-check"></i><b>15.10</b> Export d’une carte</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html"><i class="fa fa-check"></i><b>16</b> Exercices corrigés</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-1---manipuler-des-objets-sf-1"><i class="fa fa-check"></i><b>16.1</b> Exercice 1 - manipuler des objets sf</a></li>
+<li class="chapter" data-level="16.2" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-2-exploitation-des-données-dvf-en-api-1"><i class="fa fa-check"></i><b>16.2</b> Exercice 2 : exploitation des données DVF en API</a></li>
+<li class="chapter" data-level="16.3" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-3-ggplot-chap-10-visualisation-des-données-dvf-en-api"><i class="fa fa-check"></i><b>16.3</b> Exercice 3 ggplot chap 10 : Visualisation des données DVF en API</a></li>
+<li class="chapter" data-level="16.4" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-4-assemblage-de-cartes-sur-dvf-1"><i class="fa fa-check"></i><b>16.4</b> Exercice 4 : Assemblage de cartes sur dvf</a></li>
+<li class="chapter" data-level="16.5" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-5-cartes-pour-le-web"><i class="fa fa-check"></i><b>16.5</b> Exercice 5 : cartes pour le web</a></li>
+<li class="chapter" data-level="16.6" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-6-exercices-bonus-odd"><i class="fa fa-check"></i><b>16.6</b> Exercice 6 : exercices bonus (ODD)</a>
+<ul>
+<li class="chapter" data-level="16.6.1" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#chargement-des-données-et-datapréparation"><i class="fa fa-check"></i><b>16.6.1</b> Chargement des données et datapréparation</a></li>
+<li class="chapter" data-level="16.6.2" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#datavisualisation"><i class="fa fa-check"></i><b>16.6.2</b> Datavisualisation</a></li>
+<li class="chapter" data-level="16.6.3" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#carte-monde"><i class="fa fa-check"></i><b>16.6.3</b> Carte monde</a></li>
+<li class="chapter" data-level="16.6.4" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#zoom-sur-les-deux-continents"><i class="fa fa-check"></i><b>16.6.4</b> Zoom sur les deux continents</a></li>
+<li class="chapter" data-level="16.6.5" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#assemblage"><i class="fa fa-check"></i><b>16.6.5</b> Assemblage</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://mtes-mct.github.io/parcours-r/">Liste des formations R</a></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analyses spatiales avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cartogramm" class="section level1 hasAnchor" number="11">
+<h1><span class="header-section-number">Chapitre 11</span> Créer des cartogrammes<a href="cartogramm.html#cartogramm" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Un cartogramme est une carte pour laquelle une variable continue définit la surface des territoires représentés.
+La géométrie de l’espace de la carte est donc déformée afin de se conformer aux informations relatives à cette variable.</p>
+<p>Les fonctions du package <code>{cartogramm}</code> permettent de réaliser l’opération de déformation attendue.
+La sortie de ces fonctions est un <em>spatial dataframe</em> avec une nouvelle géométrie.
+On peut ensuite utiliser cette nouvelle géométrie pour la visualiser avec tout package de cartographie.</p>
+<p>Dans ce chapitre nous allons utiliser les packages suivants.</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="cartogramm.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CRAN</span></span>
+<span id="cb212-2"><a href="cartogramm.html#cb212-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cartogram)</span>
+<span id="cb212-3"><a href="cartogramm.html#cb212-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb212-4"><a href="cartogramm.html#cb212-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Github</span></span>
+<span id="cb212-5"><a href="cartogramm.html#cb212-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(COGiter)    <span class="co"># remotes::install_github(&quot;MaelTheuliere/COGiter&quot;)</span></span>
+<span id="cb212-6"><a href="cartogramm.html#cb212-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gouvdown)   <span class="co"># remotes::install_github(&quot;spyrales/gouvdown&quot;)</span></span></code></pre></div>
+<p>Les données utilisées sont issues de {COGiter} :</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="cartogramm.html#cb213-1" aria-hidden="true" tabindex="-1"></a>pop2015_dep_geo <span class="ot">&lt;-</span> pop2015 <span class="sc">%&gt;%</span> </span>
+<span id="cb213-2"><a href="cartogramm.html#cb213-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mise à jour du COG et agrégation aux différentes échelles adm</span></span>
+<span id="cb213-3"><a href="cartogramm.html#cb213-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cogifier</span>(<span class="at">code_commune =</span> DEPCOM, <span class="at">communes =</span> <span class="cn">FALSE</span>, <span class="at">epci =</span> <span class="cn">FALSE</span>, <span class="at">departements =</span> <span class="cn">TRUE</span>, <span class="at">regions =</span> <span class="cn">FALSE</span>, <span class="at">metro =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb213-4"><a href="cartogramm.html#cb213-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(COGiter<span class="sc">::</span>departements_geo, ., <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;DEP&quot;</span> <span class="ot">=</span> <span class="st">&quot;CodeZone&quot;</span>))</span></code></pre></div>
+<div id="cartogramme-daires-contigues" class="section level2 hasAnchor" number="11.1">
+<h2><span class="header-section-number">11.1</span> Cartogramme d’aires contigues<a href="cartogramm.html#cartogramme-daires-contigues" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>On définit la couche à partir de la variable d’une table, ici la population par département.</p>
+<p>La fonction <code>cartogram_cont()</code> permet de produire la déformation attendue.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="cartogramm.html#cb214-1" aria-hidden="true" tabindex="-1"></a>pop2015_dep_cont <span class="ot">&lt;-</span> <span class="fu">cartogram_cont</span>(pop2015_dep_geo, <span class="st">&quot;pop2015&quot;</span>)</span></code></pre></div>
+<p>On peut ensuite utiliser <code>{ggplot2}</code> pour cartographier cette couche.</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="cartogramm.html#cb215-1" aria-hidden="true" tabindex="-1"></a>pop2015_dep_cont <span class="sc">%&gt;%</span> </span>
+<span id="cb215-2"><a href="cartogramm.html#cb215-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb215-3"><a href="cartogramm.html#cb215-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pop2015 <span class="sc">/</span> <span class="dv">1000</span>), <span class="at">color=</span><span class="st">&quot;white&quot;</span>, <span class="at">size=</span>.<span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb215-4"><a href="cartogramm.html#cb215-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb215-5"><a href="cartogramm.html#cb215-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Population par département&quot;</span>,</span>
+<span id="cb215-6"><a href="cartogramm.html#cb215-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;En 2015&quot;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb215-7"><a href="cartogramm.html#cb215-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;Milliers d&#39;habitants&quot;</span>,</span>
+<span id="cb215-8"><a href="cartogramm.html#cb215-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Source : INSEE - RP&quot;</span></span>
+<span id="cb215-9"><a href="cartogramm.html#cb215-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb215-10"><a href="cartogramm.html#cb215-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gouv_continuous</span>(<span class="at">palette =</span> <span class="st">&quot;pal_gouv_o&quot;</span>, <span class="at">reverse =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb215-11"><a href="cartogramm.html#cb215-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">labels =</span> <span class="sc">~</span><span class="fu">format</span>(.x, <span class="at">big.mark =</span> <span class="st">&quot; &quot;</span>, <span class="at">scientific =</span> <span class="cn">FALSE</span>))</span></code></pre></div>
+<p><img src="support_m7_files/figure-html/unnamed-chunk-142-1.png" width="672" /></p>
+</div>
+<div id="cartogramme-daire-non-contigue" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Cartogramme d’aire non contigue<a href="cartogramm.html#cartogramme-daire-non-contigue" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La fonction <code>cartogram_ncont()</code> permet de définir la déformation attendue.</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="cartogramm.html#cb216-1" aria-hidden="true" tabindex="-1"></a>pop2015_dep_ncont <span class="ot">&lt;-</span> <span class="fu">cartogram_ncont</span>(pop2015_dep_geo, <span class="st">&quot;pop2015&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="cartogramm.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(COGiter<span class="sc">::</span>departements_geo) <span class="sc">+</span></span>
+<span id="cb217-2"><a href="cartogramm.html#cb217-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">size=</span>.<span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb217-3"><a href="cartogramm.html#cb217-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> pop2015_dep_ncont, <span class="fu">aes</span>(<span class="at">fill =</span> pop2015 <span class="sc">/</span> <span class="dv">1000</span>), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">size =</span> .<span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb217-4"><a href="cartogramm.html#cb217-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb217-5"><a href="cartogramm.html#cb217-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Population par département&quot;</span>,</span>
+<span id="cb217-6"><a href="cartogramm.html#cb217-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;En 2015&quot;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb217-7"><a href="cartogramm.html#cb217-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;Milliers d&#39;habitants&quot;</span>,</span>
+<span id="cb217-8"><a href="cartogramm.html#cb217-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Source : INSEE - RP&quot;</span></span>
+<span id="cb217-9"><a href="cartogramm.html#cb217-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb217-10"><a href="cartogramm.html#cb217-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gouv_continuous</span>(<span class="at">palette =</span> <span class="st">&quot;pal_gouv_o&quot;</span>, <span class="at">reverse =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb217-11"><a href="cartogramm.html#cb217-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">labels =</span> <span class="sc">~</span><span class="fu">format</span>(.x, <span class="at">big.mark =</span> <span class="st">&quot; &quot;</span>, <span class="at">scientific =</span> <span class="cn">FALSE</span>))</span></code></pre></div>
+<p><img src="support_m7_files/figure-html/unnamed-chunk-144-1.png" width="672" /></p>
+</div>
+<div id="cartogramme-de-dorling" class="section level2 hasAnchor" number="11.3">
+<h2><span class="header-section-number">11.3</span> Cartogramme de Dorling<a href="cartogramm.html#cartogramme-de-dorling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Le cartogramme de Dorling est une représentation spatiale qui vise à remplacer les polygones par des cercles proportionnels à une variable donnée, en respectant au maximum la position spatiale des polygones.</p>
+<p>La fonction <code>cartogram_dorling()</code> permet de définir la géométrie attendue.</p>
+<p>On va ici réaliser un cartogramme de dorling sur la densité de population par département 2015.</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="cartogramm.html#cb218-1" aria-hidden="true" tabindex="-1"></a>gdp_dorling <span class="ot">&lt;-</span> pop2015_dep_geo <span class="sc">%&gt;%</span> </span>
+<span id="cb218-2"><a href="cartogramm.html#cb218-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(AREA)) <span class="sc">%&gt;%</span> </span>
+<span id="cb218-3"><a href="cartogramm.html#cb218-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">densite =</span> pop2015 <span class="sc">/</span> <span class="fu">as.numeric</span>(AREA) <span class="sc">*</span> <span class="dv">1000000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb218-4"><a href="cartogramm.html#cb218-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(departements, <span class="at">by =</span> <span class="st">&quot;DEP&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb218-5"><a href="cartogramm.html#cb218-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cartogram_dorling</span>(<span class="st">&quot;densite&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="cartogramm.html#cb219-1" aria-hidden="true" tabindex="-1"></a>gdp_dorling <span class="sc">%&gt;%</span> </span>
+<span id="cb219-2"><a href="cartogramm.html#cb219-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb219-3"><a href="cartogramm.html#cb219-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> REG)) <span class="sc">+</span> </span>
+<span id="cb219-4"><a href="cartogramm.html#cb219-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb219-5"><a href="cartogramm.html#cb219-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Population par département&quot;</span>,</span>
+<span id="cb219-6"><a href="cartogramm.html#cb219-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;En 2015&quot;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb219-7"><a href="cartogramm.html#cb219-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Source : INSEE - RP&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb219-8"><a href="cartogramm.html#cb219-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gouv_discrete</span>(<span class="at">palette =</span> <span class="st">&quot;pal_gouv_qual1&quot;</span>, <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="support_m7_files/figure-html/unnamed-chunk-146-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="creer-des-cartes-avec-ggplot2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creer-des-cartes-pour-le-web.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+},
+"pandoc_args": ["-M", "toc-title=Table des matières"]
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
