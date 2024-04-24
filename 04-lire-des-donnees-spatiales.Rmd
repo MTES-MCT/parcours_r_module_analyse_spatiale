@@ -123,8 +123,10 @@ st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>%
 ```
 
 #### Exemple 2 (api)
+
 L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administratif/) permet de charger des contours administratifs.
 Dans l'exemple suivant, nous chargeons les contours des epci du département 44.
+
 ```{r eval = FALSE, message = TRUE, warning = FALSE}
 url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
 st_read(url) %>%
@@ -134,11 +136,11 @@ st_read(url) %>%
 
 ### Exemple 3 (geojson compressé)
 
-`sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les batiments de la communes de Nantes provenant du PCI redistribué par Etalab.
+`sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les bâtiments de la commune de Nantes provenant du PCI redistribué par Etalab.
 
 ```{r eval = FALSE, message = TRUE, warning = FALSE}
-dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
-batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
+vfs <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
+batiment_nantes <- st_read(dsn = vfs) 
 ```
 
 Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/virtual_file_systems.html](https://gdal.org/user/virtual_file_systems.html)
