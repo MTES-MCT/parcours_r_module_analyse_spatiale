@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapitre 14 A propos de ce document | Analyses spatiales avec R</title>
   <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapitre 14 A propos de ce document | Analyses spatiales avec R" />
   <meta property="og:type" content="book" />
@@ -51,23 +51,24 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script src="libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.26/datatables.js"></script>
-<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
 <script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script>
-<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
-<script src="libs/leaflet-providers-plugin-2.1.1/leaflet-providers-plugin.js"></script>
+<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
 <link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
 <script src="libs/HomeButton-0.0.1/home-button.js"></script>
 <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
@@ -77,10 +78,10 @@
 <script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
 <script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
 <script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
-<script src="libs/flatbush-4.0.0/flatbush.min.js"></script>
-<link href="libs/ggiraphjs-0.4.6/ggiraphjs.min.css" rel="stylesheet" />
-<script src="libs/ggiraphjs-0.4.6/ggiraphjs.min.js"></script>
-<script src="libs/girafe-binding-0.8.5/girafe.js"></script>
+<script src="libs/flatbush-4.4.0/flatbush.min.js"></script>
+<link href="libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet" />
+<script src="libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
+<script src="libs/girafe-binding-0.8.10/girafe.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 </head>
 
@@ -433,7 +438,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  collate  en_US.UTF-8
  ctype    en_US.UTF-8
  tz       Etc/UTC
- date     2023-01-12
+ date     2024-08-26
  pandoc   2.19.2 @ /usr/local/bin/ (via rmarkdown)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -466,10 +471,10 @@ Github (<a href="mailto:joelgombin/banR@2234b55419b6e93760aa50c97efaa2350e9720d6
 CARTElette
 </td>
 <td style="text-align:left;">
-1.0.2
+1.0.3
 </td>
 <td style="text-align:left;">
-Github (<a href="mailto:antuki/CARTElette@8eed97cf55a71b3907528c214ffbab54a99babdd" class="email">antuki/CARTElette@8eed97cf55a71b3907528c214ffbab54a99babdd</a>)
+Github (<a href="mailto:antuki/CARTElette@aab78ee9874362d1af7c3b1ea17e9632e982d0ae" class="email">antuki/CARTElette@aab78ee9874362d1af7c3b1ea17e9632e982d0ae</a>)
 </td>
 </tr>
 <tr>
@@ -477,7 +482,7 @@ Github (<a href="mailto:antuki/CARTElette@8eed97cf55a71b3907528c214ffbab54a99bab
 cartogram
 </td>
 <td style="text-align:left;">
-0.2.2
+0.3.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -488,7 +493,7 @@ RSPM (R 4.2.0)
 cowplot
 </td>
 <td style="text-align:left;">
-1.1.1
+1.1.3
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -499,10 +504,10 @@ RSPM (R 4.2.0)
 datalibaba
 </td>
 <td style="text-align:left;">
-0.0.0.9003
+0.0.0.9007
 </td>
 <td style="text-align:left;">
-xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@a95cbc90c6a05317182d9ea4061888bf1e166473" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@a95cbc90c6a05317182d9ea4061888bf1e166473</a>)
+xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@77b33a609c2b36d22e43615345ce60bf86eaa902" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@77b33a609c2b36d22e43615345ce60bf86eaa902</a>)
 </td>
 </tr>
 <tr>
@@ -510,7 +515,7 @@ xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/
 dplyr
 </td>
 <td style="text-align:left;">
-1.0.10
+1.1.4
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -521,7 +526,7 @@ RSPM (R 4.2.0)
 DT
 </td>
 <td style="text-align:left;">
-0.26
+0.33
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -532,7 +537,7 @@ RSPM (R 4.2.0)
 forcats
 </td>
 <td style="text-align:left;">
-0.5.2
+1.0.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -543,7 +548,7 @@ RSPM (R 4.2.0)
 ggiraph
 </td>
 <td style="text-align:left;">
-0.8.5
+0.8.10
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -554,7 +559,7 @@ RSPM (R 4.2.0)
 ggplot2
 </td>
 <td style="text-align:left;">
-3.4.0
+3.5.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -565,7 +570,7 @@ RSPM (R 4.2.0)
 ggspatial
 </td>
 <td style="text-align:left;">
-1.1.7
+1.1.9
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -576,7 +581,7 @@ RSPM (R 4.2.0)
 glue
 </td>
 <td style="text-align:left;">
-1.6.2
+1.7.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -587,10 +592,10 @@ RSPM (R 4.2.0)
 gouvdown
 </td>
 <td style="text-align:left;">
-0.0.0.9000
+0.0.0.9001
 </td>
 <td style="text-align:left;">
-Github (<a href="mailto:spyrales/gouvdown@d43ff2b54483500fbd6276adfaa099fed3a6fa4d" class="email">spyrales/gouvdown@d43ff2b54483500fbd6276adfaa099fed3a6fa4d</a>)
+Github (<a href="mailto:spyrales/gouvdown@1eeefa34734f599f36b713c81e523d88aa2ecafe" class="email">spyrales/gouvdown@1eeefa34734f599f36b713c81e523d88aa2ecafe</a>)
 </td>
 </tr>
 <tr>
@@ -609,7 +614,7 @@ Github (<a href="mailto:spyrales/gouvdown.fonts@d40dfe7cd22fbe9f476b7f480b6cc2a2
 htmltools
 </td>
 <td style="text-align:left;">
-0.5.4
+0.5.8.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -620,7 +625,7 @@ RSPM (R 4.2.0)
 htmlwidgets
 </td>
 <td style="text-align:left;">
-1.6.1
+1.6.4
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -631,7 +636,7 @@ RSPM (R 4.2.0)
 httr
 </td>
 <td style="text-align:left;">
-1.4.4
+1.4.7
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -642,7 +647,7 @@ RSPM (R 4.2.0)
 jsonlite
 </td>
 <td style="text-align:left;">
-1.8.4
+1.8.8
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -653,7 +658,7 @@ RSPM (R 4.2.0)
 kableExtra
 </td>
 <td style="text-align:left;">
-1.3.4
+1.4.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -664,7 +669,7 @@ RSPM (R 4.2.0)
 knitr
 </td>
 <td style="text-align:left;">
-1.41
+1.48
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -675,7 +680,7 @@ RSPM (R 4.2.0)
 leaflet
 </td>
 <td style="text-align:left;">
-2.1.1
+2.2.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -686,7 +691,7 @@ RSPM (R 4.2.0)
 lubridate
 </td>
 <td style="text-align:left;">
-1.9.0
+1.9.3
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -708,10 +713,10 @@ RSPM (R 4.2.0)
 mapfactory
 </td>
 <td style="text-align:left;">
-0.0.0.9004
+0.0.0.9005
 </td>
 <td style="text-align:left;">
-xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@1475447f7c258d5af7c9d6c7b03c3c4a6f71738f" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@1475447f7c258d5af7c9d6c7b03c3c4a6f71738f</a>)
+xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@64a685fa704e6ad60eb0ee6e18a20ae247ce9c24" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@64a685fa704e6ad60eb0ee6e18a20ae247ce9c24</a>)
 </td>
 </tr>
 <tr>
@@ -719,7 +724,7 @@ xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/
 mapview
 </td>
 <td style="text-align:left;">
-2.11.0
+2.11.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -730,7 +735,7 @@ RSPM (R 4.2.0)
 osmdata
 </td>
 <td style="text-align:left;">
-0.1.10
+0.2.5
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -741,7 +746,7 @@ RSPM (R 4.2.0)
 osmextract
 </td>
 <td style="text-align:left;">
-0.4.1
+0.5.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -752,7 +757,7 @@ RSPM (R 4.2.0)
 osrm
 </td>
 <td style="text-align:left;">
-4.0.0
+4.2.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -763,7 +768,7 @@ RSPM (R 4.2.0)
 purrr
 </td>
 <td style="text-align:left;">
-1.0.1
+1.0.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -774,7 +779,7 @@ RSPM (R 4.2.0)
 readr
 </td>
 <td style="text-align:left;">
-2.1.3
+2.1.5
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -785,7 +790,7 @@ RSPM (R 4.2.0)
 remotes
 </td>
 <td style="text-align:left;">
-2.4.2
+2.5.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -796,7 +801,7 @@ RSPM (R 4.2.0)
 rmapshaper
 </td>
 <td style="text-align:left;">
-0.4.6
+0.5.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -807,7 +812,7 @@ RSPM (R 4.2.0)
 RPostgres
 </td>
 <td style="text-align:left;">
-1.4.4
+1.4.7
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -818,10 +823,10 @@ RSPM (R 4.2.0)
 savoirfR
 </td>
 <td style="text-align:left;">
-0.0.0.9007
+0.0.0.9009
 </td>
 <td style="text-align:left;">
-Github (<a href="mailto:MTES-MCT/savoirfR@e6b081af692c83da699918e236581ebf8f258740" class="email">MTES-MCT/savoirfR@e6b081af692c83da699918e236581ebf8f258740</a>)
+Github (<a href="mailto:MTES-MCT/savoirfR@8c09f173d09b5428647a6fe6af84516f3057450e" class="email">MTES-MCT/savoirfR@8c09f173d09b5428647a6fe6af84516f3057450e</a>)
 </td>
 </tr>
 <tr>
@@ -829,7 +834,7 @@ Github (<a href="mailto:MTES-MCT/savoirfR@e6b081af692c83da699918e236581ebf8f2587
 scales
 </td>
 <td style="text-align:left;">
-1.2.1
+1.3.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -840,7 +845,7 @@ RSPM (R 4.2.0)
 sf
 </td>
 <td style="text-align:left;">
-1.0.9
+1.0.16
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -851,7 +856,7 @@ RSPM (R 4.2.0)
 spData
 </td>
 <td style="text-align:left;">
-2.2.1
+2.3.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -862,7 +867,7 @@ RSPM (R 4.2.0)
 stringr
 </td>
 <td style="text-align:left;">
-1.5.0
+1.5.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -873,7 +878,7 @@ RSPM (R 4.2.0)
 tibble
 </td>
 <td style="text-align:left;">
-3.1.8
+3.2.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -884,7 +889,7 @@ RSPM (R 4.2.0)
 tidyr
 </td>
 <td style="text-align:left;">
-1.2.1
+1.3.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -895,18 +900,7 @@ RSPM (R 4.2.0)
 tidyverse
 </td>
 <td style="text-align:left;">
-1.3.2
-</td>
-<td style="text-align:left;">
-RSPM (R 4.2.0)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-timechange
-</td>
-<td style="text-align:left;">
-0.2.0
+2.0.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -917,10 +911,10 @@ RSPM (R 4.2.0)
 tmap
 </td>
 <td style="text-align:left;">
-3.3.3
+3.3.4
 </td>
 <td style="text-align:left;">
-RSPM (R 4.2.1)
+RSPM (R 4.2.0)
 </td>
 </tr>
 <tr>
@@ -950,7 +944,7 @@ Github (<a href="mailto:MaelTheuliere/variousdata@532e601d8ca63581a5c89e3c736523
 viridis
 </td>
 <td style="text-align:left;">
-0.6.2
+0.6.5
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)
@@ -961,7 +955,7 @@ RSPM (R 4.2.0)
 viridisLite
 </td>
 <td style="text-align:left;">
-0.4.1
+0.4.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.2.0)

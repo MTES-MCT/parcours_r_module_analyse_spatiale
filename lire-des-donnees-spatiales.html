@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapitre 4 Lire et écrire des données spatiales avec R | Analyses spatiales avec R</title>
   <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapitre 4 Lire et écrire des données spatiales avec R | Analyses spatiales avec R" />
   <meta property="og:type" content="book" />
@@ -51,23 +51,24 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script src="libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.26/datatables.js"></script>
-<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
 <script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script>
-<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
-<script src="libs/leaflet-providers-plugin-2.1.1/leaflet-providers-plugin.js"></script>
+<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
 <link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
 <script src="libs/HomeButton-0.0.1/home-button.js"></script>
 <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
@@ -77,10 +78,10 @@
 <script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
 <script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
 <script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
-<script src="libs/flatbush-4.0.0/flatbush.min.js"></script>
-<link href="libs/ggiraphjs-0.4.6/ggiraphjs.min.css" rel="stylesheet" />
-<script src="libs/ggiraphjs-0.4.6/ggiraphjs.min.js"></script>
-<script src="libs/girafe-binding-0.8.5/girafe.js"></script>
+<script src="libs/flatbush-4.4.0/flatbush.min.js"></script>
+<link href="libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet" />
+<script src="libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
+<script src="libs/girafe-binding-0.8.10/girafe.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 </head>
 
@@ -435,8 +440,8 @@ Par exemple, sur des données en <code>csv</code>, il faut pouvoir spécifier la
 <p>Mais la liste des formats lisibles par <code>{sf}</code> est bien plus vaste.</p>
 <p>Pour l’obtenir, on peut utiliser <code>st_drivers()</code>, qui liste les drivers utilisables par <code>{sf}</code> :</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="lire-des-donnees-spatiales.html#cb4-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="fu">st_drivers</span>() <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(name))</span></code></pre></div>
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-100b47682c8f8243c497" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-100b47682c8f8243c497">{"x":{"filter":"none","vertical":false,"data":[["AeronavFAA","AmigoCloud","ARCGEN","AVCBin","AVCE00","BNA","CAD","Carto","Cloudant","CouchDB","CSV","CSW","DGN","DXF","EDIGEO","EEDA","ElasticSearch","ESRI Shapefile","ESRIJSON","Geoconcept","GeoJSON","GeoJSONSeq","Geomedia","GeoRSS","GFT","GML","GMLAS","GPKG","GPSBabel","GPSTrackMaker","GPX","HTF","HTTP","Idrisi","Interlis 1","Interlis 2","JML","JP2OpenJPEG","KML","LIBKML","MapInfo File","MBTiles","Memory","MSSQLSpatial","MVT","MySQL","NAS","netCDF","NGW","ODBC","ODS","OGR_DODS","OGR_GMT","OGR_OGDI","OGR_PDS","OGR_SDTS","OGR_VRT","OpenAir","OpenFileGDB","OSM","PCIDSK","PDF","PDS4","PGDUMP","PGeo","PLSCENES","PostgreSQL","REC","S57","SEGUKOOA","SEGY","Selafin","SOSI","SQLite","SUA","SVG","SXF","TIGER","TopoJSON","UK .NTF","VDV","VFK","Walk","WAsP","WFS","WFS3","XLS","XLSX","XPlane"],["AeronavFAA","AmigoCloud","ARCGEN","AVCBin","AVCE00","BNA","CAD","Carto","Cloudant","CouchDB","CSV","CSW","DGN","DXF","EDIGEO","EEDA","ElasticSearch","ESRI Shapefile","ESRIJSON","Geoconcept","GeoJSON","GeoJSONSeq","Geomedia","GeoRSS","GFT","GML","GMLAS","GPKG","GPSBabel","GPSTrackMaker","GPX","HTF","HTTP","Idrisi","Interlis 1","Interlis 2","JML","JP2OpenJPEG","KML","LIBKML","MapInfo File","MBTiles","Memory","MSSQLSpatial","MVT","MySQL","NAS","netCDF","NGW","ODBC","ODS","OGR_DODS","OGR_GMT","OGR_OGDI","OGR_PDS","OGR_SDTS","OGR_VRT","OpenAir","OpenFileGDB","OSM","PCIDSK","PDF","PDS4","PGDUMP","PGeo","PLSCENES","PostgreSQL","REC","S57","SEGUKOOA","SEGY","Selafin","SOSI","SQLite","SUA","SVG","SXF","TIGER","TopoJSON","UK .NTF","VDV","VFK","Walk","WAsP","WFS","WFS3","XLS","XLSX","XPlane"],["Aeronav FAA","AmigoCloud","Arc/Info Generate","Arc/Info Binary Coverage","Arc/Info E00 (ASCII) Coverage","Atlas BNA","AutoCAD Driver","Carto","Cloudant / CouchDB","CouchDB / GeoCouch","Comma Separated Value (.csv)","OGC CSW (Catalog  Service for the Web)","Microstation DGN","AutoCAD DXF","French EDIGEO exchange format","Earth Engine Data API","Elastic Search","ESRI Shapefile","ESRIJSON","Geoconcept","GeoJSON","GeoJSON Sequence","Geomedia .mdb","GeoRSS","Google Fusion Tables","Geography Markup Language (GML)","Geography Markup Language (GML) driven by application schemas","GeoPackage","GPSBabel","GPSTrackMaker","GPX","Hydrographic Transfer Vector","HTTP Fetching Wrapper","Idrisi Vector (.vct)","Interlis 1","Interlis 2","OpenJUMP JML","JPEG-2000 driver based on OpenJPEG library","Keyhole Markup Language (KML)","Keyhole Markup Language (LIBKML)","MapInfo File","MBTiles","Memory","Microsoft SQL Server Spatial Database","Mapbox Vector Tiles","MySQL","NAS - ALKIS","Network Common Data Format","NextGIS Web","ODBC","Open Document/ LibreOffice / OpenOffice Spreadsheet ","OGR_DODS","GMT ASCII Vectors (.gmt)","OGDI Vectors (VPF, VMAP, DCW)","Planetary Data Systems TABLE","SDTS","VRT - Virtual Datasource","OpenAir","ESRI FileGDB","OpenStreetMap XML and PBF","PCIDSK Database File","Geospatial PDF","NASA Planetary Data System 4","PostgreSQL SQL dump","ESRI Personal GeoDatabase","Planet Labs Scenes API","PostgreSQL/PostGIS","EPIInfo .REC ","IHO S-57 (ENC)","SEG-P1 / UKOOA P1/90","SEG-Y","Selafin","Norwegian SOSI Standard","SQLite / Spatialite","Tim Newport-Peace's Special Use Airspace Format","Scalable Vector Graphics","Storage and eXchange Format","U.S. Census TIGER/Line","TopoJSON","UK .NTF","VDV-451/VDV-452/INTREST Data Format","Czech Cadastral Exchange Data Format","Walk","WAsP .map format","OGC WFS (Web Feature Service)","OGC WFS 3 client (Web Feature Service)","MS Excel format","MS Office Open XML spreadsheet","X-Plane/Flightgear aeronautical data"],[false,true,false,false,false,true,false,true,true,true,true,false,true,true,false,false,true,true,false,true,true,true,false,true,true,true,false,true,true,true,true,false,false,false,true,true,true,false,true,true,true,true,true,true,true,true,false,true,true,true,true,false,true,false,false,false,false,false,false,false,true,true,true,true,false,false,true,false,true,false,false,true,false,true,false,false,false,true,false,false,true,false,false,true,false,false,false,true,false],[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],[false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false,true,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,true,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],[true,false,true,true,true,true,true,false,false,false,true,false,true,true,true,false,false,true,true,true,true,true,false,true,false,true,true,true,false,true,true,true,false,true,true,true,true,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,false,true,true,true,true,true,true,true,true,true,true,false,false,false,false,true,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,true,false,false,true,true]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>name<\/th>\n      <th>long_name<\/th>\n      <th>write<\/th>\n      <th>copy<\/th>\n      <th>is_raster<\/th>\n      <th>is_vector<\/th>\n      <th>vsi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-100b47682c8f8243c497" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-100b47682c8f8243c497">{"x":{"filter":"none","vertical":false,"data":[["ARCGEN","AVCBin","AVCE00","AeronavFAA","AmigoCloud","BNA","CAD","CSV","CSW","Carto","Cloudant","CouchDB","DGN","DXF","EDIGEO","EEDA","ESRI Shapefile","ESRIJSON","ElasticSearch","GFT","GML","GMLAS","GPKG","GPSBabel","GPSTrackMaker","GPX","GeoJSON","GeoJSONSeq","GeoRSS","Geoconcept","Geomedia","HTF","HTTP","Idrisi","Interlis 1","Interlis 2","JML","JP2OpenJPEG","KML","LIBKML","MBTiles","MSSQLSpatial","MVT","MapInfo File","Memory","MySQL","NAS","NGW","ODBC","ODS","OGR_DODS","OGR_GMT","OGR_OGDI","OGR_PDS","OGR_SDTS","OGR_VRT","OSM","OpenAir","OpenFileGDB","PCIDSK","PDF","PDS4","PGDUMP","PGeo","PLSCENES","PostgreSQL","REC","S57","SEGUKOOA","SEGY","SOSI","SQLite","SUA","SVG","SXF","Selafin","TIGER","TopoJSON","UK .NTF","VDV","VFK","WAsP","WFS","WFS3","Walk","XLS","XLSX","XPlane","netCDF"],["ARCGEN","AVCBin","AVCE00","AeronavFAA","AmigoCloud","BNA","CAD","CSV","CSW","Carto","Cloudant","CouchDB","DGN","DXF","EDIGEO","EEDA","ESRI Shapefile","ESRIJSON","ElasticSearch","GFT","GML","GMLAS","GPKG","GPSBabel","GPSTrackMaker","GPX","GeoJSON","GeoJSONSeq","GeoRSS","Geoconcept","Geomedia","HTF","HTTP","Idrisi","Interlis 1","Interlis 2","JML","JP2OpenJPEG","KML","LIBKML","MBTiles","MSSQLSpatial","MVT","MapInfo File","Memory","MySQL","NAS","NGW","ODBC","ODS","OGR_DODS","OGR_GMT","OGR_OGDI","OGR_PDS","OGR_SDTS","OGR_VRT","OSM","OpenAir","OpenFileGDB","PCIDSK","PDF","PDS4","PGDUMP","PGeo","PLSCENES","PostgreSQL","REC","S57","SEGUKOOA","SEGY","SOSI","SQLite","SUA","SVG","SXF","Selafin","TIGER","TopoJSON","UK .NTF","VDV","VFK","WAsP","WFS","WFS3","Walk","XLS","XLSX","XPlane","netCDF"],["Arc/Info Generate","Arc/Info Binary Coverage","Arc/Info E00 (ASCII) Coverage","Aeronav FAA","AmigoCloud","Atlas BNA","AutoCAD Driver","Comma Separated Value (.csv)","OGC CSW (Catalog  Service for the Web)","Carto","Cloudant / CouchDB","CouchDB / GeoCouch","Microstation DGN","AutoCAD DXF","French EDIGEO exchange format","Earth Engine Data API","ESRI Shapefile","ESRIJSON","Elastic Search","Google Fusion Tables","Geography Markup Language (GML)","Geography Markup Language (GML) driven by application schemas","GeoPackage","GPSBabel","GPSTrackMaker","GPX","GeoJSON","GeoJSON Sequence","GeoRSS","Geoconcept","Geomedia .mdb","Hydrographic Transfer Vector","HTTP Fetching Wrapper","Idrisi Vector (.vct)","Interlis 1","Interlis 2","OpenJUMP JML","JPEG-2000 driver based on OpenJPEG library","Keyhole Markup Language (KML)","Keyhole Markup Language (LIBKML)","MBTiles","Microsoft SQL Server Spatial Database","Mapbox Vector Tiles","MapInfo File","Memory","MySQL","NAS - ALKIS","NextGIS Web","ODBC","Open Document/ LibreOffice / OpenOffice Spreadsheet ","OGR_DODS","GMT ASCII Vectors (.gmt)","OGDI Vectors (VPF, VMAP, DCW)","Planetary Data Systems TABLE","SDTS","VRT - Virtual Datasource","OpenStreetMap XML and PBF","OpenAir","ESRI FileGDB","PCIDSK Database File","Geospatial PDF","NASA Planetary Data System 4","PostgreSQL SQL dump","ESRI Personal GeoDatabase","Planet Labs Scenes API","PostgreSQL/PostGIS","EPIInfo .REC ","IHO S-57 (ENC)","SEG-P1 / UKOOA P1/90","SEG-Y","Norwegian SOSI Standard","SQLite / Spatialite","Tim Newport-Peace's Special Use Airspace Format","Scalable Vector Graphics","Storage and eXchange Format","Selafin","U.S. Census TIGER/Line","TopoJSON","UK .NTF","VDV-451/VDV-452/INTREST Data Format","Czech Cadastral Exchange Data Format","WAsP .map format","OGC WFS (Web Feature Service)","OGC WFS 3 client (Web Feature Service)","Walk","MS Excel format","MS Office Open XML spreadsheet","X-Plane/Flightgear aeronautical data","Network Common Data Format"],[false,false,false,false,true,true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,false,false,true,true,true,false,true,true,true,true,true,true,true,true,false,true,true,true,false,true,false,false,false,false,false,false,false,true,true,true,true,false,false,true,false,true,false,false,false,true,false,false,false,true,true,false,false,true,false,true,false,false,false,false,true,false,true],[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true],[false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,true,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],[true,true,true,true,false,true,true,true,false,false,false,false,true,true,true,false,true,true,false,false,true,true,true,false,true,true,true,true,true,true,false,true,false,true,true,true,true,true,true,true,true,false,true,true,false,false,true,false,false,true,false,true,false,true,true,true,true,true,true,true,true,true,true,false,false,false,false,true,true,true,false,true,true,true,true,true,true,true,true,true,false,true,true,false,false,false,true,true,true]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>name<\/th>\n      <th>long_name<\/th>\n      <th>write<\/th>\n      <th>copy<\/th>\n      <th>is_raster<\/th>\n      <th>is_vector<\/th>\n      <th>vsi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"name","targets":1},{"name":"long_name","targets":2},{"name":"write","targets":3},{"name":"copy","targets":4},{"name":"is_raster","targets":5},{"name":"is_vector","targets":6},{"name":"vsi","targets":7}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
 <p>Exemple de lecture d’une donnée au format <code>GeoPackage</code>: les données sur la Leucémie à New York disponibles dans le package <code>spData</code><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="lire-des-donnees-spatiales.html#cb5-1" aria-hidden="true" tabindex="-1"></a>geo_fichier <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;shapes/NY8_bna_utm18.gpkg&quot;</span>, <span class="at">package =</span> <span class="st">&quot;spData&quot;</span>)</span>
 <span id="cb5-2"><a href="lire-des-donnees-spatiales.html#cb5-2" aria-hidden="true" tabindex="-1"></a>NY_leukemia <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> geo_fichier)</span></code></pre></div>
@@ -497,9 +502,9 @@ Dans l’exemple suivant, nous chargeons les contours des epci du département 4
 </div>
 <div id="exemple-3-geojson-compressé" class="section level3 hasAnchor" number="4.3.2">
 <h3><span class="header-section-number">4.3.2</span> Exemple 3 (geojson compressé)<a href="lire-des-donnees-spatiales.html#exemple-3-geojson-compressé" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><code>sf</code> repose sur <code>GDAL</code> et permet également de lire des geojsons compressés. On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les batiments de la communes de Nantes provenant du PCI redistribué par Etalab.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="lire-des-donnees-spatiales.html#cb12-1" aria-hidden="true" tabindex="-1"></a>dsn <span class="ot">&lt;-</span> <span class="st">&#39;/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz&#39;</span></span>
-<span id="cb12-2"><a href="lire-des-donnees-spatiales.html#cb12-2" aria-hidden="true" tabindex="-1"></a>batiment_nantes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> dsn, <span class="at">layer =</span> <span class="st">&quot;cadastre-44109-batiments.json&quot;</span>) </span></code></pre></div>
+<p><code>sf</code> repose sur <code>GDAL</code> et permet également de lire des geojsons compressés. On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les bâtiments de la commune de Nantes provenant du PCI redistribué par Etalab.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="lire-des-donnees-spatiales.html#cb12-1" aria-hidden="true" tabindex="-1"></a>vfs <span class="ot">&lt;-</span> <span class="st">&#39;/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz&#39;</span></span>
+<span id="cb12-2"><a href="lire-des-donnees-spatiales.html#cb12-2" aria-hidden="true" tabindex="-1"></a>batiment_nantes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> vfs) </span></code></pre></div>
 <p>Pour aller plus loin sur les <code>Virtual File Systems</code> : <a href="https://gdal.org/user/virtual_file_systems.html">https://gdal.org/user/virtual_file_systems.html</a></p>
 </div>
 <div id="lire-des-données-wfs" class="section level3 hasAnchor" number="4.3.3">
@@ -570,7 +575,7 @@ Celles-ci seront alors réalisées par le serveur posgreSQL et non par votre ses
 <span id="cb20-2"><a href="lire-des-donnees-spatiales.html#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_geometry</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb20-3"><a href="lire-des-donnees-spatiales.html#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code></pre></div>
 <pre><code>Reading layer `REG_2021_CARTElette&#39; from data source 
-  `/tmp/RtmpR0OZo7/REG_2021_CARTElette.shp&#39; using driver `ESRI Shapefile&#39;
+  `/tmp/RtmpwytDxM/REG_2021_CARTElette.shp&#39; using driver `ESRI Shapefile&#39;
 Simple feature collection with 18 features and 2 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
@@ -596,17 +601,17 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="lire-des-donnees-spatiales.html#cb24-1" aria-hidden="true" tabindex="-1"></a>normandie <span class="ot">&lt;-</span> <span class="fu">filtrer_cog_geo</span>(<span class="at">reg =</span> <span class="st">&quot;28&quot;</span>)</span>
 <span id="cb24-2"><a href="lire-des-donnees-spatiales.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(normandie)</span></code></pre></div>
 <pre><code>List of 4
- $ communes    : sf [2,652 × 3] (S3: sf/tbl_df/tbl/data.frame)
-  ..$ DEPCOM  : chr [1:2652] &quot;27058&quot; &quot;27248&quot; &quot;76011&quot; &quot;14061&quot; ...
-  ..$ AREA    : num [1:2652] 3.65e+07 6.16e+06 3.15e+06 1.87e+08 1.66e+08 ...
-  ..$ geometry:sfc_MULTIPOLYGON of length 2652; first list element: List of 1
+ $ communes    : sf [2,651 × 3] (S3: sf/tbl_df/tbl/data.frame)
+  ..$ DEPCOM  : chr [1:2651] &quot;50272&quot; &quot;76515&quot; &quot;14293&quot; &quot;27021&quot; ...
+  ..$ AREA    : num [1:2651] 17596289 3390000 6701110 8186754 5573846 ...
+  ..$ geometry:sfc_MULTIPOLYGON of length 2651; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;MULTIPOLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
   ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;DEPCOM&quot; &quot;AREA&quot;
  $ epci        : sf [71 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ EPCI    : Factor w/ 1256 levels &quot;200000172&quot;,&quot;200000438&quot;,..: 18 38 95 96 113 118 157 226 231 244 ...
-  ..$ AREA    : Units: [m^2] num [1:71] 5.74e+08 6.66e+08 2.79e+08 3.65e+08 5.68e+08 ...
+  ..$ AREA    : Units: [m^2] num [1:71] 5.76e+08 6.64e+08 2.82e+08 3.66e+08 5.73e+08 ...
   ..$ geometry:sfc_POLYGON of length 71; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
@@ -614,7 +619,7 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;EPCI&quot; &quot;AREA&quot;
  $ departements: sf [5 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ DEP     : Factor w/ 101 levels &quot;01&quot;,&quot;02&quot;,&quot;03&quot;,..: 14 26 51 62 77
-  ..$ AREA    : Units: [m^2] num [1:5] 5.53e+09 6.04e+09 5.95e+09 6.10e+09 6.27e+09
+  ..$ AREA    : Units: [m^2] num [1:5] 5.59e+09 6.04e+09 6.02e+09 6.14e+09 6.32e+09
   ..$ geometry:sfc_POLYGON of length 5; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
@@ -622,7 +627,7 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;DEP&quot; &quot;AREA&quot;
  $ regions     : sf [1 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ REG     : Factor w/ 18 levels &quot;01&quot;,&quot;02&quot;,&quot;03&quot;,..: 9
-  ..$ AREA    : Units: [m^2] num 2.99e+10
+  ..$ AREA    : Units: [m^2] num 3.01e+10
   ..$ geometry:sfc_POLYGON of length 1; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
