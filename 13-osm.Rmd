@@ -171,9 +171,11 @@ Préparons nos données :
 ```{r osrmtable}
 load("extdata/sirene.RData")
 emprise_nantes <- COGiter::communes_geo %>% 
-  filter(DEPCOM == "44109")
+  filter(DEPCOM == "44109") %>% 
+  st_transform(2154)
 
-restaurants_nantes <- filter(sirene44, APET700 == "5610A")%>% 
+restaurants_nantes <- filter(sirene44, APET700 == "5610A") %>% 
+  st_transform(2154) %>% 
   st_filter(emprise_nantes) %>% 
   st_transform(4326)
 ```
