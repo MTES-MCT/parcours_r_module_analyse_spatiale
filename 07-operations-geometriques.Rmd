@@ -307,7 +307,7 @@ regions <- departements_geo %>%
 mapview(regions, legend = FALSE)
 ```
 
-Derrière cette opération, `summarise()` utilise `st_union()` du package `sf` pour dissourdre les polygones des départements en un seul polygone régional.
+Derrière cette opération, `summarise()` utilise `st_union()` du package `sf` pour dissoudre les polygones des départements en un seul polygone régional.
 
 ```{r}
 regions_52 <- departements_geo %>%

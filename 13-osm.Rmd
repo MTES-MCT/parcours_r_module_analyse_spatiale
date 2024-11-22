@@ -70,10 +70,10 @@ Le package `{ggspatial}` permet de télécharger et d'afficher des fonds de cart
 boul_44 <- filter(sirene44, APET700 == "1071C") %>% 
   select(SIREN, NOMEN_LONG)
 
-ggplot(boul_44) +
+ggplot(data = boul_44) +
   annotation_map_tile(type = "osm") +
   geom_sf() +
-  theme_gouv_map()
+  theme_void()
 
 ```
 
@@ -171,9 +171,10 @@ Préparons nos données :
 ```{r osrmtable}
 load("extdata/sirene.RData")
 emprise_nantes <- COGiter::communes_geo %>% 
-  filter(DEPCOM == "44109")
+  filter(DEPCOM == "44109") 
 
-restaurants_nantes <- filter(sirene44, APET700 == "5610A")%>% 
+restaurants_nantes <- filter(sirene44, APET700 == "5610A") %>% 
+  st_transform(2154) %>% 
   st_filter(emprise_nantes) %>% 
   st_transform(4326)
 ```
