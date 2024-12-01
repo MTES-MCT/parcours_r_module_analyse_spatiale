@@ -72,7 +72,7 @@ Notez que si vous cherchez à exporter une nouvelle fois ce fichier, vous aurez 
 
 Pour pouvoir écraser ce fichier, vous avez deux options : 
 
-- Utiliser le paramètre `layer_option` qui vous permet d'inclure des options propres au driver utilisé.
+- Utiliser le paramètre `append` qui sert à d'ajouter des données à la couche existante quand il est à `TRUE`, et la remplace sinon.
 
 ```{r, eval=FALSE}
 st_write(
@@ -107,11 +107,13 @@ st_write(
 Il faut juste lui préciser comment on souhaite écrire la géométrie dans la table exportée, avec 
 `layer_options = "GEOMETRY=AS_WKT"` ou `layer_options = "GEOMETRY=AS_XY"`.
 
+Le paramètre `layer_option` qui permet d'inclure des options propres à chaque driver utilisé.
+
 ## Lire des données spatiales du web
 
 ### Lire des données geojson
 
-`sf` peut lire un geojson qu'il soit hébergé sur un serveur compréssé ou non ou encore disponible par api.
+`sf` peut lire un geojson qu'il soit hébergé sur un serveur, compressé ou non, ou encore disponible par api.
 
 #### Exemple 1 (geojson classique):
 
@@ -127,7 +129,7 @@ L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administra
 Dans l'exemple suivant, nous chargeons les contours des epci du département 44.
 ```{r eval = FALSE, message = TRUE, warning = FALSE}
 url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
-st_read(url) %>%
+st_read(url) %>% 
   select(code) %>% 
   plot()
 ```

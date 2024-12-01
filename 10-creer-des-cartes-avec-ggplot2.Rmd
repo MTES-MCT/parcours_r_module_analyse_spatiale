@@ -72,7 +72,7 @@ Un [support de cours](https://rcarto.github.io/cartographie_avec_r/mapsf.html#re
 Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle ministériel, ce package ne sera pas présenté lors de la formation.
 
 
-## Quelques rappels sur `{ggplot2}`
+## Quelques rappels sur `{ggplot2}` issus du [module 5 sur la datavisualisation](https://mtes-mct.github.io/parcours_r_module_datavisualisation/){target="_blank"}
 
 `{ggplot2}` est un package de visualisation de données qui dispose de templates (thèmes, palettes) à la Marque Etat grâce au package `{gouvdown}`, créé par la communauté d'agents de l'Etat [Spyrales](https://www.spyrales.fr/){target="_blank"}.
 
@@ -87,8 +87,6 @@ Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle ministé
 
 ![le tidyverse](pic/tidyverse.png "le tidyverse"){#id .class width=800}  
 
-
-Se référer à [la feuille de triche {ggplot2}](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf) permet de se lancer rapidement.
 
 
 ### `{ggplot2}` : les concepts clefs
@@ -167,7 +165,7 @@ Par exemple : distribution des communes selon leur population à partir du jeu d
 glimpse(pop2015)
 ggplot(pop2015, aes(x = pop2015_totale)) +
   geom_histogram(fill = "lightblue") + 
-  scale_x_log10(labels = ~format(.x, big.mark = " ", scientific = FALSE), name = "nombre d'hab.")
+  scale_x_log10(labels = ~format(.x, big.mark = " ", scientific = FALSE), name = "nombre d'hab.", n.breaks = 15)
 ```
 
 Pour en savoir plus sur ggplot2 :   
@@ -222,6 +220,9 @@ Les fonctions `geom_sf_text()` et `geom_sf_label()` sont associées à la foncti
 
 Pour le système de coordonnées, la fonction `coord_sf()` va silencieusement chercher celui de nos données spatiales pour l'appliquer au graphique. Elle peut servir à définir celui qu'on l'on souhaite utiliser pour la visualisation, en spécifiant le datum (les axes représentés).  
 `coord_sf()` permet également de *zoomer* sur la carte en spécifiant les bornes x et y de la carte, ou également de définir le titre des axes.
+
+
+Se référer à [la feuille de triche {ggplot2}](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf) permet de se lancer rapidement.
 
 
 ## Faire des cartes avec {ggplot2}
@@ -369,7 +370,7 @@ carte_ronds_prop2 +
 ```
 
 
-La fonction `theme_set()` vous permet de définir un thème par défaut pour l'ensemble de vos graphiques.
+La fonction `theme_set()` vous permet de définir un thème par défaut pour l'ensemble des graphiques générés pendant votre session R.
 
 ```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=10}
 
@@ -490,12 +491,14 @@ Il faut au préalable préparer notre jeu de données en [le passant au format l
 
 indic_epci_normands_geo_long <- pop2015_epci_normands_geo %>% 
   pivot_longer(cols = c(starts_with("pop2015"), densite_pop, poids_pop_a_part), names_to = "indicateurs", values_to = "valeurs") %>% 
-  filter(!str_detect(indicateurs, "pop2015"))
+  filter(str_detect(indicateurs, "pop2015_"))
   
 ggplot(data = indic_epci_normands_geo_long) +
   geom_sf(aes(fill = valeurs), color = "white") + 
   facet_wrap(~indicateurs) +
-  scale_fill_gouv_continuous("pal_gouv_b")
+  scale_fill_gouv_continuous(trans = "log", breaks = c(100, 1000, 20000, 400000), 
+                        label = ~format(.x, big.mark = " ", scientific = FALSE), reverse = TRUE) +
+  labs(fill = "Nb habitants")
 ```
 
 Un deuxième exemple de facette sur la maille géo.
@@ -505,7 +508,7 @@ fonds_carto_empiles <- bind_rows(
   COGiter::epci_geo %>% mutate(TypeZone = "Epci") %>% rename(CodeZone = EPCI),
   COGiter::departements_geo %>% mutate(TypeZone = "Départements") %>% rename(CodeZone = DEP)
   ) %>% 
-  inner_join(pop2015_preparee) %>% 
+  inner_join(pop2015_preparee, by = c("CodeZone", "TypeZone")) %>% 
   mutate(densite = round(pop2015 / as.numeric(AREA) * 1000000, 0),
          TypeZone = fct_inorder(TypeZone))
 
@@ -539,7 +542,7 @@ carte_ronds_prop2 +
 
 ### Mettre plusieurs cartes côte à côte
 
-On peut a partir d'une même carte vouloir réaliser un zoom sur une sous partie de celle-ci.
+On peut à partir d'une même carte vouloir réaliser un zoom sur une sous partie de celle-ci.
 `coord_sf()` va nous permettre de *zoomer* sur une carte, et `cow_plot()` va nous permettre d'afficher nos deux cartes côte à côte.
 
 Pour zoomer sur une carte, `coord_sf()` va avoir besoin des coordonnées *x* et *y* du cadre sur lequel on veut zoomer. 
@@ -549,7 +552,7 @@ Filtrons par exemple sur le Département de l'Orne.
 
 ```{r}
 bbox_dep <- fonds_carto_normands$departements %>% 
-  filter(DEP == "14") %>%
+  filter(DEP == "61") %>%
   st_bbox()
 ```
 
@@ -560,7 +563,7 @@ normandie <- carte_ronds_prop +
   geom_sf(data = fonds_carto_normands$departements, size = 1, color = "gray10", fill = NA) +
   guides(color = "none", size = 'none')
 
-calvados <- normandie + 
+orne <- normandie + 
   coord_sf(xlim = c(bbox_dep[1], bbox_dep[3]), ylim = c(bbox_dep[2], bbox_dep[4])) +
   theme(panel.background = element_rect(fill = "light blue")) +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
@@ -571,7 +574,7 @@ calvados <- normandie +
        color = "Poids population\ncomptée à part (%)",
        caption = "Source : INSEE - RP")
 
-calvados
+orne
 ```
 
 On peut utiliser ensuite le package `{cowplot}` et sa fonction `plot_grid()` pour afficher nos cartes côte à côte. 
@@ -581,7 +584,7 @@ La fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** col
 Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
 
 ```{r, fig.height=6,fig.width=12}
-plot_grid(calvados, normandie, rel_widths = c(1, 2))
+plot_grid(orne, normandie, rel_widths = c(1, 2))
 ```
 
 
@@ -626,7 +629,7 @@ pop2015_prepa_nat <- pop2015 %>%
   mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
 
 creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
-                          carto = fond_carto("Martinique", ombre = 0), espace = "\u202f",
+                          carto = fond_carto("Martinique", ombre = 0), espace = " ",
                           palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
                           bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 

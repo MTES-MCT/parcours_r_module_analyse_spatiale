@@ -314,5 +314,6 @@ regions_52 <- departements_geo %>%
   filter(INSEE_REG == "52")
 
 regions_52 <- st_union(regions_52)
+mapview(regions_52, legend = FALSE)
 ```
 
