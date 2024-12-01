@@ -72,7 +72,7 @@ digitalisation
 creer-des-cartes-avec-ggplot2
 librairies
 introduction-les-cartes-statiques-en-r
-quelques-rappels-sur-ggplot2
+quelques-rappels-sur-ggplot2-issus-du-module-5-sur-la-datavisualisation
 ggplot2-les-concepts-clefs
 ggplot2-pour-les-cartes
 faire-des-cartes-avec-ggplot2
