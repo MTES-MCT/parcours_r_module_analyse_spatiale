@@ -203,9 +203,17 @@ pop2015_epci_normands_geo <- fonds_carto_normands$epci %>%
 
 On reprend notre carte ggplot normande en ronds proportionnels : 
 
-```{r}
-systemfonts::register_font(name = "Marianne light",  system.file("resources/fonts/marianne/truetype/Marianne-Light.ttf", package = "gouvdown.fonts")) 
-
+```{r ggiraph with Marianne}
+# On vérifie que la police Marianne est correctement installée.
+verif_marianne_ok <- gouvdown::check_fonts_in_r(fonts = "Marianne")
+if(!verif_marianne_ok) {
+  systemfonts::register_font(name = "Marianne light", 
+                             system.file("resources/fonts/marianne/truetype/Marianne-Light.ttf", 
+                                         package = "gouvdown.fonts")) 
+  systemfonts::register_font(name = "Marianne", 
+                             system.file("resources/fonts/marianne/truetype/Marianne-Regular.ttf", 
+                                         package = "gouvdown.fonts")) 
+}
 carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
     geom_sf_interactive(aes(tooltip = Zone)) +
     geom_sf_interactive(data = st_point_on_surface(pop2015_epci_normands_geo), 
