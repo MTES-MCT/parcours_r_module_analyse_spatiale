@@ -72,7 +72,7 @@ Notez que si vous cherchez à exporter une nouvelle fois ce fichier, vous aurez 
 
 Pour pouvoir écraser ce fichier, vous avez deux options : 
 
-- Utiliser le paramètre `layer_option` qui vous permet d'inclure des options propres au driver utilisé.
+- Utiliser le paramètre `append` qui sert à d'ajouter des données à la couche existante quand il est à `TRUE`, et la remplace sinon.
 
 ```{r, eval=FALSE}
 st_write(
@@ -107,11 +107,14 @@ st_write(
 Il faut juste lui préciser comment on souhaite écrire la géométrie dans la table exportée, avec 
 `layer_options = "GEOMETRY=AS_WKT"` ou `layer_options = "GEOMETRY=AS_XY"`.
 
+Le paramètre `layer_option` permet d'inclure des options propres à chaque driver utilisé.
+
+
 ## Lire des données spatiales du web
 
 ### Lire des données geojson
 
-`sf` peut lire un geojson qu'il soit hébergé sur un serveur compréssé ou non ou encore disponible par api.
+`sf` peut lire un geojson qu'il soit hébergé sur un serveur, compressé ou non, ou encore disponible par api.
 
 #### Exemple 1 (geojson classique):
 
@@ -139,8 +142,8 @@ st_read(url) %>%
 `sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les bâtiments de la commune de Nantes provenant du PCI redistribué par Etalab.
 
 ```{r eval = FALSE, message = TRUE, warning = FALSE}
-vfs <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
-batiment_nantes <- st_read(dsn = vfs) 
+dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
+batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
 ```
 
 Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/virtual_file_systems.html](https://gdal.org/user/virtual_file_systems.html)

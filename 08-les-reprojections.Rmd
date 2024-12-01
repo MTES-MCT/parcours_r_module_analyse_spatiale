@@ -125,7 +125,7 @@ st_distance(rennes %>% st_transform(2154), nantes_proj)
 
 A cette question, il y a rarement une seule bonne réponse.  
 
-En ce qui concerne les CRS géométriques, le plus simple est d'utiliser le WGS 84 (EPSG 4326), qui est de loin le plus populaire, avec lequel beaucoup de données sont fournies. 
+En ce qui concerne les CRS géographiques, le plus simple est d'utiliser le WGS 84 (EPSG 4326), qui est de loin le plus populaire, avec lequel beaucoup de données sont fournies. 
 
 En ce qui concerne les CRS projetés, il existe des CRS officiels à utiliser préférentiellement pour les données françaises. 
 En métropole, on utilise le Lambert 93 (EPSG 2154).
@@ -163,6 +163,7 @@ Qu'est ce qui a changé entre nos deux cartes ?
 
 ```{r}
 st_crs(World)
+
 st_crs(World_pekin)
 ```
 
