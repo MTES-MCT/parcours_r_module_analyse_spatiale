@@ -464,6 +464,7 @@ Le 44 comprend `r nrow(boul_44)` boulangeries.
 intersection <- st_intersects(grille_ajustee, boul_44, sparse = TRUE)
 
 intersection[1:10]
+
 ```
 
 L'objet **intersection** est une liste de la longueur de l'objet **grille_ajustee** et chaque élément de la liste contient le ou les index des éléments de l'objet **boul_44** qu'il intersecte.

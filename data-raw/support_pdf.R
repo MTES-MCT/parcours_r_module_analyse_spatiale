@@ -76,3 +76,4 @@ creer_pdf_book_ssp <- function (chemin_book = "_book/", nom_pdf = "Parcours_R_su
 }
 
 creer_pdf_book_ssp()
+
