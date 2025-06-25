@@ -45,6 +45,7 @@ plot(COGiter::regions_geo)
 Le package `{mapview}` permet également d'afficher un aperçu de couche très rapidement, posé sur un fond de carte Open street map.
 ```{r}
 library(mapview) 
+regions_COGiter <- COGiter::regions_geo
 mapview(x = COGiter::regions_geo)
 ```
 
@@ -74,7 +75,6 @@ Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle ministé
 
 ## Quelques rappels sur `{ggplot2}` issus du [module 5 sur la datavisualisation](https://mtes-mct.github.io/parcours_r_module_datavisualisation/){target="_blank"}
 
-
 `{ggplot2}` est un package de visualisation de données qui dispose de templates (thèmes, palettes) à la Marque Etat grâce au package `{gouvdown}`, créé par la communauté d'agents de l'Etat [Spyrales](https://www.spyrales.fr/){target="_blank"}.
 
 ![](pic/spyrales.PNG){#id .class width=500}
@@ -87,6 +87,7 @@ Comme l'utilisation de `{ggplot2}` est à privilégier au sein du pôle ministé
 - Ce package aujourd'hui s'inscrit dans R dans le **framework Tidyverse** qui propose une approche cohérente sur l'ensemble de la chaîne de vie de la donnée : importation, préparation des données, analyse et valorisation.
 
 ![le tidyverse](pic/tidyverse.png "le tidyverse"){#id .class width=800}  
+
 
 
 ### `{ggplot2}` : les concepts clefs
@@ -492,7 +493,6 @@ Il faut au préalable préparer notre jeu de données en [le passant au format l
 indic_epci_normands_geo_long <- pop2015_epci_normands_geo %>% 
   pivot_longer(cols = c(starts_with("pop2015"), densite_pop, poids_pop_a_part), names_to = "indicateurs", values_to = "valeurs") %>% 
   filter(str_detect(indicateurs, "pop2015_"))
-
   
 ggplot(data = indic_epci_normands_geo_long) +
   geom_sf(aes(fill = valeurs), color = "white") + 
@@ -500,7 +500,6 @@ ggplot(data = indic_epci_normands_geo_long) +
   scale_fill_gouv_continuous(trans = "log", breaks = c(100, 1000, 20000, 400000), 
                         label = ~format(.x, big.mark = " ", scientific = FALSE), reverse = TRUE) +
   labs(fill = "Nb habitants")
-  
 ```
 
 Un deuxième exemple de facette sur la maille géo.
@@ -544,8 +543,7 @@ carte_ronds_prop2 +
 
 ### Mettre plusieurs cartes côte à côte
 
-On peut à partir d'une même carte vouloir réaliser un zoom sur une sous partie de celle-ci. 
-
+On peut à partir d'une même carte vouloir réaliser un zoom sur une sous partie de celle-ci.
 `coord_sf()` va nous permettre de *zoomer* sur une carte, et `cow_plot()` va nous permettre d'afficher nos deux cartes côte à côte.
 
 Pour zoomer sur une carte, `coord_sf()` va avoir besoin des coordonnées *x* et *y* du cadre sur lequel on veut zoomer. 
@@ -576,8 +574,8 @@ orne <- normandie +
        size = "Nombre d'habitants",
        color = "Poids population\ncomptée à part (%)",
        caption = "Source : INSEE - RP")
-orne
 
+orne
 ```
 
 On peut utiliser ensuite le package `{cowplot}` et sa fonction `plot_grid()` pour afficher nos cartes côte à côte. 
@@ -632,7 +630,7 @@ pop2015_prepa_nat <- pop2015 %>%
   mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
 
 creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
-                          carto = fond_carto("Martinique", ombre = 0), espace = "\u202f",
+                          carto = fond_carto("Martinique", ombre = 0), espace = " ",
                           palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
                           bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 
