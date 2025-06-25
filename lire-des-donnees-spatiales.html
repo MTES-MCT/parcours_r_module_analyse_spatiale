@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapitre 4 Lire et écrire des données spatiales avec R | Analyses spatiales avec R</title>
   <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapitre 4 Lire et écrire des données spatiales avec R | Analyses spatiales avec R" />
   <meta property="og:type" content="book" />
@@ -69,19 +69,47 @@
 <script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
 <script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
 <script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
-<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
 <script src="libs/HomeButton-0.0.1/home-button.js"></script>
 <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<link href="libs/departements_geo - NOM_DEP-CSS-0.0.1/departements_geo - NOM_DEP_home-button.css" rel="stylesheet" />
 <script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
 <link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
 <link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<link href="libs/regions - INSEE_REG-CSS-0.0.1/regions - INSEE_REG_home-button.css" rel="stylesheet" />
+<link href="libs/regions - NOM_REG-CSS-0.0.1/regions - NOM_REG_home-button.css" rel="stylesheet" />
+<link href="libs/departement_44-CSS-0.0.1/departement_44_home-button.css" rel="stylesheet" />
+<link href="libs/epci_d44-CSS-0.0.1/epci_d44_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantiqueavecunbufferde5km-CSS-0.0.1/Loire-Atlantiqueavecunbufferde5km_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantique-CSS-0.0.1/Loire-Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/departement_44_buffer-CSS-0.0.1/departement_44_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/epci_d44_buffer-CSS-0.0.1/epci_d44_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/sirene44_sel-CSS-0.0.1/sirene44_sel_home-button.css" rel="stylesheet" />
+<link href="libs/sirene44_sel_avec_code_epci-CSS-0.0.1/sirene44_sel_avec_code_epci_home-button.css" rel="stylesheet" />
+<link href="libs/grille-CSS-0.0.1/grille_home-button.css" rel="stylesheet" />
+<link href="libs/grille_ajustee-CSS-0.0.1/grille_ajustee_home-button.css" rel="stylesheet" />
+<link href="libs/boul_44-CSS-0.0.1/boul_44_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud-CSS-0.0.1/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire-Atlantique-CSS-0.0.1/EpcideLoire-Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire-Atlantiqueavecsurfacediviséespardeux-CSS-0.0.1/EpcideLoire-Atlantiqueavecsurfacediviséespardeux_home-button.css" rel="stylesheet" />
+<link href="libs/regions-CSS-0.0.1/regions_home-button.css" rel="stylesheet" />
+<link href="libs/regions_52-CSS-0.0.1/regions_52_home-button.css" rel="stylesheet" />
+<link href="libs/nantes-CSS-0.0.1/nantes_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_buffer-CSS-0.0.1/nantes_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_proj-CSS-0.0.1/nantes_proj_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_proj_buffer-CSS-0.0.1/nantes_proj_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/rennes-CSS-0.0.1/rennes_home-button.css" rel="stylesheet" />
+<link href="libs/mes_adresses_sf-CSS-0.0.1/mes_adresses_sf_home-button.css" rel="stylesheet" />
+<link href="libs/COGiter::regions_geo-CSS-0.0.1/COGiter::regions_geo_home-button.css" rel="stylesheet" />
 <script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
 <script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
 <script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
 <script src="libs/flatbush-4.4.0/flatbush.min.js"></script>
 <link href="libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet" />
 <script src="libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
-<script src="libs/girafe-binding-0.8.11/girafe.js"></script>
+<script src="libs/girafe-binding-0.8.13/girafe.js"></script>
+<link href="libs/res-CSS-0.0.1/res_home-button.css" rel="stylesheet" />
+<link href="libs/mes_adresses-CSS-0.0.1/mes_adresses_home-button.css" rel="stylesheet" />
+<link href="libs/trajet-CSS-0.0.1/trajet_home-button.css" rel="stylesheet" />
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -576,7 +604,7 @@ Celles-ci seront alors réalisées par le serveur posgreSQL et non par votre ses
 <span id="cb20-2"><a href="lire-des-donnees-spatiales.html#cb20-2" tabindex="-1"></a>  <span class="fu">st_geometry</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb20-3"><a href="lire-des-donnees-spatiales.html#cb20-3" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code></pre></div>
 <pre><code>Reading layer `REG_2021_CARTElette&#39; from data source 
-  `/tmp/RtmpX31aPz/REG_2021_CARTElette.shp&#39; using driver `ESRI Shapefile&#39;
+  `/tmp/RtmpCAQQGP/REG_2021_CARTElette.shp&#39; using driver `ESRI Shapefile&#39;
 Simple feature collection with 18 features and 2 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
@@ -602,17 +630,17 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="lire-des-donnees-spatiales.html#cb24-1" tabindex="-1"></a>normandie <span class="ot">&lt;-</span> <span class="fu">filtrer_cog_geo</span>(<span class="at">reg =</span> <span class="st">&quot;28&quot;</span>)</span>
 <span id="cb24-2"><a href="lire-des-donnees-spatiales.html#cb24-2" tabindex="-1"></a><span class="fu">glimpse</span>(normandie)</span></code></pre></div>
 <pre><code>List of 4
- $ communes    : sf [2,651 × 3] (S3: sf/tbl_df/tbl/data.frame)
-  ..$ DEPCOM  : chr [1:2651] &quot;50272&quot; &quot;76515&quot; &quot;14293&quot; &quot;27021&quot; ...
-  ..$ AREA    : num [1:2651] 17596289 3390000 6701110 8186754 5573846 ...
-  ..$ geometry:sfc_MULTIPOLYGON of length 2651; first list element: List of 1
-  .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;MULTIPOLYGON&quot; &quot;sfg&quot;
+ $ communes    : sf [2,644 × 3] (S3: sf/tbl_df/tbl/data.frame)
+  ..$ DEPCOM  : chr [1:2644] &quot;14478&quot; &quot;27219&quot; &quot;27396&quot; &quot;61427&quot; ...
+  ..$ AREA    : Units: [m^2] num [1:2644] 10140000 4410000 4170000 14610000 3470000 ...
+  ..$ geometry:sfc_GEOMETRY of length 2644; first list element: List of 1
+  .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
   ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;DEPCOM&quot; &quot;AREA&quot;
  $ epci        : sf [71 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ EPCI    : Factor w/ 1256 levels &quot;200000172&quot;,&quot;200000438&quot;,..: 18 38 95 96 113 118 157 226 231 244 ...
-  ..$ AREA    : Units: [m^2] num [1:71] 5.76e+08 6.64e+08 2.82e+08 3.66e+08 5.73e+08 ...
+  ..$ AREA    : Units: [m^2] num [1:71] 5.74e+08 6.64e+08 2.79e+08 3.65e+08 5.68e+08 ...
   ..$ geometry:sfc_POLYGON of length 71; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
@@ -620,7 +648,7 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;EPCI&quot; &quot;AREA&quot;
  $ departements: sf [5 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ DEP     : Factor w/ 101 levels &quot;01&quot;,&quot;02&quot;,&quot;03&quot;,..: 14 26 51 62 77
-  ..$ AREA    : Units: [m^2] num [1:5] 5.59e+09 6.04e+09 6.02e+09 6.14e+09 6.32e+09
+  ..$ AREA    : Units: [m^2] num [1:5] 5.53e+09 6.01e+09 5.95e+09 6.10e+09 6.28e+09
   ..$ geometry:sfc_POLYGON of length 5; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
@@ -628,7 +656,7 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;DEP&quot; &quot;AREA&quot;
  $ regions     : sf [1 × 3] (S3: sf/tbl_df/tbl/data.frame)
   ..$ REG     : Factor w/ 18 levels &quot;01&quot;,&quot;02&quot;,&quot;03&quot;,..: 9
-  ..$ AREA    : Units: [m^2] num 3.01e+10
+  ..$ AREA    : Units: [m^2] num 2.99e+10
   ..$ geometry:sfc_POLYGON of length 1; first list element: List of 1
   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;XY&quot; &quot;POLYGON&quot; &quot;sfg&quot;
   ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
@@ -681,43 +709,43 @@ Ces couches sont obtenues par simplification des couches admin-express COG de l�
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "section"
-},
-"pandoc_args": ["-M", "toc-title=Table des matières"]
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  },
+  "pandoc_args": ["-M", "toc-title=Table des matières"]
 });
 });
 </script>

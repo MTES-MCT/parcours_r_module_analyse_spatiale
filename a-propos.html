@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapitre 14 A propos de ce document | Analyses spatiales avec R</title>
   <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapitre 14 A propos de ce document | Analyses spatiales avec R" />
   <meta property="og:type" content="book" />
@@ -69,19 +69,47 @@
 <script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
 <script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
 <script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
-<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
 <script src="libs/HomeButton-0.0.1/home-button.js"></script>
 <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<link href="libs/departements_geo - NOM_DEP-CSS-0.0.1/departements_geo - NOM_DEP_home-button.css" rel="stylesheet" />
 <script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
 <link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
 <link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<link href="libs/regions - INSEE_REG-CSS-0.0.1/regions - INSEE_REG_home-button.css" rel="stylesheet" />
+<link href="libs/regions - NOM_REG-CSS-0.0.1/regions - NOM_REG_home-button.css" rel="stylesheet" />
+<link href="libs/departement_44-CSS-0.0.1/departement_44_home-button.css" rel="stylesheet" />
+<link href="libs/epci_d44-CSS-0.0.1/epci_d44_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantiqueavecunbufferde5km-CSS-0.0.1/Loire-Atlantiqueavecunbufferde5km_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantique-CSS-0.0.1/Loire-Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/departement_44_buffer-CSS-0.0.1/departement_44_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/epci_d44_buffer-CSS-0.0.1/epci_d44_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/sirene44_sel-CSS-0.0.1/sirene44_sel_home-button.css" rel="stylesheet" />
+<link href="libs/sirene44_sel_avec_code_epci-CSS-0.0.1/sirene44_sel_avec_code_epci_home-button.css" rel="stylesheet" />
+<link href="libs/grille-CSS-0.0.1/grille_home-button.css" rel="stylesheet" />
+<link href="libs/grille_ajustee-CSS-0.0.1/grille_ajustee_home-button.css" rel="stylesheet" />
+<link href="libs/boul_44-CSS-0.0.1/boul_44_home-button.css" rel="stylesheet" />
+<link href="libs/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud-CSS-0.0.1/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire-Atlantique-CSS-0.0.1/EpcideLoire-Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire-Atlantiqueavecsurfacediviséespardeux-CSS-0.0.1/EpcideLoire-Atlantiqueavecsurfacediviséespardeux_home-button.css" rel="stylesheet" />
+<link href="libs/regions-CSS-0.0.1/regions_home-button.css" rel="stylesheet" />
+<link href="libs/regions_52-CSS-0.0.1/regions_52_home-button.css" rel="stylesheet" />
+<link href="libs/nantes-CSS-0.0.1/nantes_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_buffer-CSS-0.0.1/nantes_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_proj-CSS-0.0.1/nantes_proj_home-button.css" rel="stylesheet" />
+<link href="libs/nantes_proj_buffer-CSS-0.0.1/nantes_proj_buffer_home-button.css" rel="stylesheet" />
+<link href="libs/rennes-CSS-0.0.1/rennes_home-button.css" rel="stylesheet" />
+<link href="libs/mes_adresses_sf-CSS-0.0.1/mes_adresses_sf_home-button.css" rel="stylesheet" />
+<link href="libs/COGiter::regions_geo-CSS-0.0.1/COGiter::regions_geo_home-button.css" rel="stylesheet" />
 <script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
 <script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
 <script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
 <script src="libs/flatbush-4.4.0/flatbush.min.js"></script>
 <link href="libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet" />
 <script src="libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
-<script src="libs/girafe-binding-0.8.11/girafe.js"></script>
+<script src="libs/girafe-binding-0.8.13/girafe.js"></script>
+<link href="libs/res-CSS-0.0.1/res_home-button.css" rel="stylesheet" />
+<link href="libs/mes_adresses-CSS-0.0.1/mes_adresses_home-button.css" rel="stylesheet" />
+<link href="libs/trajet-CSS-0.0.1/trajet_home-button.css" rel="stylesheet" />
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -438,8 +466,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  collate  en_US.UTF-8
  ctype    en_US.UTF-8
  tz       Etc/UTC
- date     2024-12-01
- pandoc   3.5 @ /usr/bin/ (via rmarkdown)</code></pre>
+ date     2025-06-25
+ pandoc   3.5 @ /usr/bin/ (via rmarkdown)
+ quarto   1.5.57 @ /usr/local/bin/quarto</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -504,10 +533,10 @@ RSPM (R 4.4.0)
 datalibaba
 </td>
 <td style="text-align:left;">
-0.0.0.9007
+0.0.9011
 </td>
 <td style="text-align:left;">
-xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@4b25f87e8921bd59fc359905ff1cd8ac31674d5f" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@4b25f87e8921bd59fc359905ff1cd8ac31674d5f</a>)
+xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@e795b0b461efa04ec60fc1bd8a547e104b62c9a1" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/datalibaba.git@e795b0b461efa04ec60fc1bd8a547e104b62c9a1</a>)
 </td>
 </tr>
 <tr>
@@ -548,7 +577,7 @@ RSPM (R 4.4.0)
 ggiraph
 </td>
 <td style="text-align:left;">
-0.8.11
+0.8.13
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -559,7 +588,7 @@ RSPM (R 4.4.0)
 ggplot2
 </td>
 <td style="text-align:left;">
-3.5.1
+3.5.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -647,7 +676,7 @@ RSPM (R 4.4.0)
 jsonlite
 </td>
 <td style="text-align:left;">
-1.8.9
+2.0.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -669,7 +698,7 @@ RSPM (R 4.4.0)
 knitr
 </td>
 <td style="text-align:left;">
-1.49
+1.50
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -691,7 +720,7 @@ RSPM (R 4.4.0)
 lubridate
 </td>
 <td style="text-align:left;">
-1.9.3
+1.9.4
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -702,7 +731,7 @@ RSPM (R 4.4.0)
 mapedit
 </td>
 <td style="text-align:left;">
-0.6.0
+0.7.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -713,10 +742,10 @@ RSPM (R 4.4.0)
 mapfactory
 </td>
 <td style="text-align:left;">
-0.0.0.9005
+0.0.0.9006
 </td>
 <td style="text-align:left;">
-xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@64a685fa704e6ad60eb0ee6e18a20ae247ce9c24" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@64a685fa704e6ad60eb0ee6e18a20ae247ce9c24</a>)
+xgit (<a href="https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@cc2fe3b50276b92a04685e0ec3a532e04ac4525d" class="uri">https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/mapfactory.git@cc2fe3b50276b92a04685e0ec3a532e04ac4525d</a>)
 </td>
 </tr>
 <tr>
@@ -746,7 +775,7 @@ RSPM (R 4.4.0)
 osmextract
 </td>
 <td style="text-align:left;">
-0.5.2
+0.5.3
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -768,7 +797,7 @@ RSPM (R 4.4.0)
 purrr
 </td>
 <td style="text-align:left;">
-1.0.2
+1.0.4
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -812,7 +841,7 @@ RSPM (R 4.4.0)
 RPostgres
 </td>
 <td style="text-align:left;">
-1.4.7
+1.4.8
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -834,7 +863,7 @@ Github (<a href="mailto:MTES-MCT/savoirfR@239bf78387fdd7ecbe99cf32c30aad795f3455
 scales
 </td>
 <td style="text-align:left;">
-1.3.0
+1.4.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -845,7 +874,7 @@ RSPM (R 4.4.0)
 sf
 </td>
 <td style="text-align:left;">
-1.0.19
+1.0.21
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -856,7 +885,7 @@ RSPM (R 4.4.0)
 spData
 </td>
 <td style="text-align:left;">
-2.3.3
+2.3.4
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -878,7 +907,7 @@ RSPM (R 4.4.0)
 tibble
 </td>
 <td style="text-align:left;">
-3.2.1
+3.3.0
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -911,7 +940,7 @@ RSPM (R 4.4.0)
 tmap
 </td>
 <td style="text-align:left;">
-3.3.4
+4.1
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -922,7 +951,7 @@ RSPM (R 4.4.0)
 tmaptools
 </td>
 <td style="text-align:left;">
-3.1.1
+3.2
 </td>
 <td style="text-align:left;">
 RSPM (R 4.4.0)
@@ -986,43 +1015,43 @@ RSPM (R 4.4.0)
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "section"
-},
-"pandoc_args": ["-M", "toc-title=Table des matières"]
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  },
+  "pandoc_args": ["-M", "toc-title=Table des matières"]
 });
 });
 </script>
