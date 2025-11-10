@@ -39,14 +39,14 @@ library(sf)
 
 En utilisant la fonction `plot()` basique de R sur un objet sf, R nous propose un rapide aperçu de la couche et de ses attributs :
 ```{r}
-plot(COGiter::regions_geo)
+regions_COGiter <- COGiter::regions_geo
+plot(regions_COGiter)
 ```
 
 Le package `{mapview}` permet également d'afficher un aperçu de couche très rapidement, posé sur un fond de carte Open street map.
 ```{r}
 library(mapview) 
-regions_COGiter <- COGiter::regions_geo
-mapview(x = COGiter::regions_geo)
+mapview(regions_COGiter)
 ```
 
 Le résultat est un widget html, explorable, zoomable, cliquable. 
@@ -263,7 +263,8 @@ Le premier exemple que nous allons pouvoir voir, c'est une carte choroplèthe, c
 
 ```{r cart_choro, fig.height=5, fig.width=12, cache=TRUE}
 ggplot(data = pop2015_epci_normands_geo) +
-  geom_sf(mapping = aes(fill = densite_pop), color = "white")
+  geom_sf(mapping = aes(fill = densite_pop), color = "white") + 
+  theme_map()
 ```
 
 
@@ -277,7 +278,7 @@ On ajoute le calque des ronds proportionnels au dessus de celui des polygones en
 
 carte_ronds_prop <- ggplot(data = pop2015_epci_normands_geo) +
   geom_sf() +
-  stat_sf_coordinates(mapping = aes(size = pop2015_totale, color = poids_pop_a_part))
+  stat_sf_coordinates(mapping = aes(size = pop2015_totale, color = poids_pop_a_part)) 
 
 carte_ronds_prop
 
@@ -499,7 +500,8 @@ ggplot(data = indic_epci_normands_geo_long) +
   facet_wrap(~indicateurs) +
   scale_fill_gouv_continuous(trans = "log", breaks = c(100, 1000, 20000, 400000), 
                         label = ~format(.x, big.mark = " ", scientific = FALSE), reverse = TRUE) +
-  labs(fill = "Nb habitants")
+  labs(fill = "Nb habitants") +
+  theme_gouv_map()
 ```
 
 Un deuxième exemple de facette sur la maille géo.
@@ -553,7 +555,7 @@ Filtrons par exemple sur le Département de l'Orne.
 
 ```{r}
 bbox_dep <- fonds_carto_normands$departements %>% 
-  filter(DEP == "61") %>%
+  filter(DEP == "14") %>%
   st_bbox()
 ```
 
@@ -564,18 +566,18 @@ normandie <- carte_ronds_prop +
   geom_sf(data = fonds_carto_normands$departements, size = 1, color = "gray10", fill = NA) +
   guides(color = "none", size = 'none')
 
-orne <- normandie + 
+calvados <- normandie + 
   coord_sf(xlim = c(bbox_dep[1], bbox_dep[3]), ylim = c(bbox_dep[2], bbox_dep[4])) +
   theme(panel.background = element_rect(fill = "light blue")) +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE)) +
-  labs(title = "Population par EPCI en Normandie",
+  labs(title = "Population par EPCI du Calvados",
        subtitle = "En 2015", x = "", y = "",
        size = "Nombre d'habitants",
        color = "Poids population\ncomptée à part (%)",
        caption = "Source : INSEE - RP")
 
-orne
+calvados
 ```
 
 On peut utiliser ensuite le package `{cowplot}` et sa fonction `plot_grid()` pour afficher nos cartes côte à côte. 
@@ -585,7 +587,7 @@ La fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** col
 Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
 
 ```{r, fig.height=6,fig.width=12}
-plot_grid(orne, normandie, rel_widths = c(1, 2))
+plot_grid(calvados, normandie, rel_widths = c(1, 2))
 ```
 
 

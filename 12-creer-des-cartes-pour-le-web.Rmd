@@ -251,7 +251,7 @@ Un nom d'indicateur présent dans data (sans quote) a mobiliser pour le popover.
 
 ```{r}
 creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015, espace = " ",
-            interactive = TRUE, type_viz = "proportionnel", maillage = "Départements")
+            interactive = TRUE, type_viz = "proportionnel", maillage = "Epci")
 ```
 
 

@@ -29,6 +29,7 @@ library(mapview)
 library(osmdata)
 library(osmextract)
 library(osrm)
+library(prettymapr)
 library(sf)
 library(tidyverse)
 # packages Github
@@ -110,7 +111,7 @@ res <- osmdata_sf(req)
 res <- unique_osmdata(res)$osm_lines
 mapview(res)
 ```
-L'API comprend des limites : l'emprise de la surface d'interrogation et le nombre de requêtes envoyées par jour ne sont pas infinis.
+L'API comprend des limites : l'emprise de la surface d'interrogation et le nombre de requêtes envoyées par jour sont limités.
 
 Site web d'`{osmdata}` : [`osmdata`](https://docs.ropensci.org/osmdata/){target="_blank"} 
 
@@ -188,7 +189,7 @@ Calculons la matrice de distance entre les 2 adresses et les restaurants de Nant
 
 ```{r osrmtable2, eval=FALSE}
 mat <- osrmTable(src = mes_adresses,
-                 dst = restaurants_nantes,
+                 dst = restaurants_nantes[1:494, ],
                  osrm.profile = "foot")
 mat$durations[,1:5]
 ```

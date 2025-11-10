@@ -25,7 +25,7 @@ Les données "raster" sont en générale plus utilisées dans les science enviro
 
 Le packages `{sf}` permet de gérer les données vecteur dans R.
 
-Avant `{sf}` existait le package `{sp}`, que vous pourrez rencontrer suivant les packages plus spécifiques que vous utiliserez ou en cherchant de l'aide.
+Avant `{sf}` existait le package `{sp}`, que vous pourrez encore rencontrer suivant les packages plus spécifiques que vous utiliserez ou en cherchant de l'aide.
 
 Les avantages de `{sf}` sont multiples : 
 

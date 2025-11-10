@@ -19,7 +19,7 @@ Plusieurs packages permettent de géocoder des adresses.
 Le package `{tidygeocoder}` utilise un grand nombre de services de géocodage en ligne et est international. 
 
 Le package `{banR}` de Gombin et Chevalier, exploite l'API de la Base Adresse Nationale. 
-Il s'intalle depuis github. 
+Il s'installe depuis github. 
 Il est particulièrement approprié pour géocoder des adresses en France.
 
 ```{r, error=TRUE}
