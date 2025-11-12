@@ -1,9 +1,5 @@
 # Annexe : créer des cartes avec tmap {#creer-des-cartes-avec-tmap}
 
-```{r tmap, echo=FALSE, eval=TRUE}
-tmap_mode("plot")
-```
-
 `tmap` est un package dédié à la réalisation de cartes sous R.
 
 La syntaxe est très proche de `ggplot`, avec l'opérateur `+` pour enchaîner les options. 
@@ -39,19 +35,26 @@ library(viridis)
 library(variousdata)   # remotes::install_github("MaelTheuliere/variousdata")
 ```
 
+
+```{r tmap, echo=FALSE, eval=TRUE, message=FALSE}
+tmap_mode("plot")
+```
+
+
 ## Fonction `tm_shape()`
 
 Pour charger une donnée géométrique à visualiser avec {tmap}, il faut utiliser la fonction `tm_shape()`. `tm_shape()` initie la création de la carte, en fixant plusieurs options de base de notre carte : la projection, la bbox, un facteur de simplification...
 
 ```{r, eval=TRUE, echo=TRUE}
 data("World")
-wgs_84 <- tm_shape(World, projection = st_crs(4326)) + 
+wgs_84 <- tm_shape(World, crs = st_crs(4326)) + 
   tm_polygons() + 
-  tm_layout("Le monde en projection WGS84", inner.margins=c(0,0,.1,0), title.size=.8)
+  tm_title("Le monde en projection WGS84") + 
+  tm_layout(inner.margins=c(0, 0, .1, 0), title.size=.8)
 
-robin <- tm_shape(World, projection = st_crs("+proj=wintri")) + 
-  tm_polygons() +
-  tm_layout("Le monde en projection Winkel-Tripel", inner.margins=c(0,0,.1,0), title.size=.8)
+robin <- tm_shape(World, crs = st_crs("+proj=wintri")) + 
+  tm_polygons() + tm_title("Le monde en projection Winkel-Tripel") +
+  tm_layout(inner.margins=c(0, 0, .1, 0), title.size=.8)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
@@ -69,8 +72,11 @@ Nous partons ici des banque d'indicateurs internationaux tenue par l'ONU sur les
 On prépare les données en associant les indicateurs à leur géographie.
 
 ```{r}
+data(sdg_indicators) # chargement des données dans l'environnement
+World <- World %>% 
+  filter(name != "Somaliland") # elimination d'un doublon pour le code iso_a3 "SOM"
 sdg_indicators_sf <- World %>%
-  left_join(sdg_indicators, by = c("iso_a3", "continent")) %>%
+  left_join(sdg_indicators, by = c("iso_a3", "continent"), relationship = "one-to-many") %>%
   st_transform(crs = st_crs(3857)) 
 ```
 
@@ -81,8 +87,8 @@ On réalise une analyse thématique de la variable `sh_sta_mmr` qui représente 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape() +
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante") +
+  tm_shape() + tm_options(label.na = "Valeur manquante") +
+  tm_polygons(fill = "sh_sta_mmr") +
   tm_borders("white", lwd = .5)
 ```
 
@@ -95,18 +101,19 @@ L'utilisation de `tm_polygons()` permet sans lui spécifier de paramètre d'affi
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape() +
+  tm_shape() + 
+  tm_options(label.na = "Valeur manquante") +
   tm_polygons() +
-  tm_bubbles(size = "sh_sta_mmr", col = "sh_sta_mmr", textNA = "Valeur manquante")
+  tm_bubbles(size = "sh_sta_mmr", fill = "sh_sta_mmr")
 ```
 
 ## Discretisation
 
 Pour définir comment notre variable continue va être discrétisée, deux méthodes : 
 
-- discrétiser à la main et indiquer les valeurs limites dans l'option `breaks` de notre `tm_xx`
+- discrétiser à la main et indiquer les valeurs limites via le parametre `fill.scale = tm_scale_intervals(breaks = c(...))` de notre `tm_xx`
 
-- utiliser l'option `style` des `tm_xx` qui permettent de choisir un algorithme de discrétisation.
+- utiliser l'option `style` de `tm_scale_intervals()` qui permet de choisir un algorithme de discrétisation.
 
 La méthode de jenks par exemple permet de maximiser la variance interclasse.
 
@@ -114,16 +121,18 @@ La méthode de jenks par exemple permet de maximiser la variance interclasse.
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
   tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style="jenks")
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(style="jenks")) + 
+  tm_options(label.na = "Valeur manquante") 
 ```
 
-L'option `n =` permet d'imposer un nombre de classes à la méthode utilisée.
+L'option `n =` de `tm_scale_intervals()` permet d'imposer un nombre de classes à la méthode utilisée.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape() +
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks", n = 3)
+  tm_shape()+
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(style="jenks", n = 3)) + 
+  tm_options(label.na = "Valeur manquante") 
 ```
 
 ## Exemples de cartes avec facet
@@ -134,32 +143,40 @@ sdg_indicators_sf %>%
 sdg_indicators_sf %>%
   filter(timeperiod %in% c("2000", "2005", "2010", "2015")) %>%
   tm_shape() +
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks") +
-  tm_facets("timeperiod")
+  tm_polygons(fill = "sh_sta_mmr", fill.scale = tm_scale_intervals(style="jenks" )) +
+  tm_facets("timeperiod", ncol = 2) + 
+  tm_options(label.na = "Valeur manquante") 
 ```
 
 
 
 ## Gestion des palettes
+`{tmap}` s'appuie sur le package `{cols4all}` pour la gestion des couleurs.
 
-La fonction `tmaptools::palette_explorer()` permet d'accéder à une interface très simple de définition d'une palette de couleur à partir des palette *brewer*.
+La fonction `cols4all::c4a_gui()` permet d'accéder à une interface de sélection d'une palette de couleurs pour `{tmap}` à partir de familles de palettes pré-existantes et de critères comme le type de palettes (progressive, catégorielle...) ou l'accessibilité visuelle.
+
+![](https://cols4all.github.io/cols4all-R/reference/figures/cols4all2.jpg)
+
+Une fois le choix opéré, il faut noter le nom ('name') de la palette pour l'utiliser au niveau de la fonction d'étalonnage des couleurs `fill.scale()` à l'aide du paramètre `values` : 
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
-sdg_indicators_sf %>% 
-  filter(timeperiod == "2015") %>% 
-  tm_shape() +
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks", 
-              palette = get_brewer_pal("OrRd", n = 5, contrast = c(0.2, 1), plot = FALSE))
+sdg_indicators_sf %>%
+  filter(timeperiod == "2015") %>%
+  tm_shape() + 
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "brewer.or_rd", 
+                                                            values.range = c(0.2, 1), label.na = "Valeur manquante"))
 ```
 
-On peut également utiliser n'importe qu'elle palette, par exemple la palette viridis, mais sans l'interface proposée par `palette_explorer()` : 
+Autre exemple avec la palette viridis : 
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
-sdg_indicators_sf %>% 
-  filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons("sh_sta_mmr", textNA = "Valeur manquante", style = "jenks",
-              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))
+sdg_indicators_sf %>%
+  filter(timeperiod == "2015") %>%
+  tm_shape() + 
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis", 
+                                                            values.range = c(0.3, 1), label.na = "Valeur manquante"))
+
+
 ```
 
 ## La mise en page
@@ -168,51 +185,50 @@ sdg_indicators_sf %>%
 L'option `design.mode = TRUE` permet de voir visuellement les marges, la position de la légende.
 Le titre de la légende ne se définit pas dans `tm_layout()` mais dans `tm_polygons()`. 
 
-L'option `title` de ces fonctions est l'équivalent d'un libellé de la variable mise dans l'aesthetic.
+L'option `title` de ces fonctions est l'équivalent d'un libellé de la variable mise dans l'aesthetic de ggplot.
 
 On peut rajouter une barre d'échelle et la flèche du nord avec `tm_scale_bar()` et `tm_compass()`.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons("sh_sta_mmr",textNA = "Valeur manquante", style = "jenks",
-              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"),
-              title = "Taux de mortalité de la mère \n(pour 100 000 naissances)")+
-  tm_layout(main.title = "Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde",
-            main.title.size = 1.2,
-            bg.color = "skyblue",
+  tm_shape() +
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis", 
+                                                            values.range = c(0.3, 1), label.na = "Valeur manquante"), 
+              fill.legend = tm_legend("Taux de mortalité de la mère \n(pour 100 000 naissances)")) +
+  tm_title("Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde", size = 1.2) + 
+  tm_layout(bg.color = "skyblue",
             legend.position = c("left","bottom"),
             legend.bg.color = "white",
             legend.bg.alpha = .4,
             legend.outside = FALSE,
             main.title.position = "center",
-            frame = FALSE)+
-  tm_scale_bar(position = c("center","bottom"))+
+            frame = FALSE) +
+  tm_scalebar(position = c("center","bottom")) +
   tm_compass(position = c("right","top"))
 ```
 
 Avec les cartes en ronds proportionnels, on peut spécifier un titre pour la couleur et la taille du rond.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=8}
+
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons()+
-  tm_bubbles(size="sh_sta_mmr",col="sh_sta_mmr",style="jenks",
-             palette=viridis(5, alpha = 1, begin = 0, end = 1, direction = 1, option = "D"),
-              title.col="",
-              title.size="Taux de mortalité de la mère \n(pour 100 000 naissances)")+
-  tm_layout(main.title="Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde",
-            main.title.size=1.2,
-            outer.margins=c(0,0,0,0),
-            legend.position=c("left","bottom"),
-            legend.outside = FALSE,
-            main.title.position = "center",
-            inner.margins = c(0, 0, 0, 0),
-            frame = FALSE)+
-    tm_scale_bar(position = c("center","bottom"))+
-    tm_compass(position = c("right","top"))
+  tm_shape() + 
+  tm_options(label.na = "Valeur manquante") +
+  tm_polygons() +
+  tm_bubbles(size = "sh_sta_mmr", fill = "sh_sta_mmr", 
+             fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis"),
+             fill.legend = tm_legend(""),
+             size.legend = tm_legend("Taux de mortalité de la mère \n(pour 100 000 naissances)"))  +
+  tm_title("Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde", size = 1.2) + 
+  tm_layout(outer.margins = c(0, 0, 0, 0), inner.margins = c(0, 0, 0, 0),
+            legend.position = c("left","bottom"),
+            legend.outside = FALSE, main.title.position = "center",
+            frame = FALSE) +
+  tm_scalebar(position = c("center","bottom")) +
+  tm_compass(position = c("right","top"))
+
 ```
 
 ## Assembler plusieurs cartes
@@ -227,15 +243,15 @@ bbox_africa <- World %>%
 
 tmap_sdg_indicators <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
-  tm_shape()+
-  tm_polygons("sh_sta_mmr", style = "jenks",palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))+
-  tm_layout()
+  tm_shape() + 
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis", 
+                                                            values.range = c(0.3, 1), label.na = "Valeur manquante"))
 
 tmap_sdg_indicators_africa <- sdg_indicators_sf %>%
   filter(timeperiod == "2015") %>%
-  tm_shape(bbox = bbox_africa)+
-  tm_polygons("sh_sta_mmr", style = "jenks",
-              palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"))+
+  tm_shape(bbox = bbox_africa) +
+  tm_polygons("sh_sta_mmr", fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis", 
+                                                            values.range = c(0.3, 1), label.na = "Valeur manquante")) +
   tm_layout(legend.show	= FALSE)
 
 tmap_arrange(tmap_sdg_indicators, tmap_sdg_indicators_africa, nrow = 1)
@@ -251,8 +267,8 @@ tmap_mode("view")
 
 sdg_indicators_sf %>% 
   filter(timeperiod == "2015") %>% 
-  tm_shape()+
-  tm_polygons("sh_sta_mmr")+
+  tm_shape() + tm_options(label.na = "Valeur manquante") +
+  tm_polygons(fill = "sh_sta_mmr") +
   tm_borders("white", lwd = .5)
 ```
 
@@ -261,25 +277,21 @@ sdg_indicators_sf %>%
 La fonction `tmap_save()`  permet d'exporter une carte `tmap`. Suivant le `tmap_mode()` activé, l'export peut se faire en fichier image ou en fichier html.
 
 ```{r echo=TRUE, eval=FALSE, fig.height=5, fig.width=8}
-carte <- sdg_indicators_sf %>%
-  filter(timeperiod == "2015") %>%
-  tm_shape() +
+carte <- sdg_indicators_sf %>% 
+  filter(timeperiod == "2015") %>% 
+  tm_shape() + 
+  tm_options(label.na = "Valeur manquante") +
   tm_polygons() +
-  tm_bubbles(
-    size = "sh_sta_mmr", col = "sh_sta_mmr",
-    palette = viridis(5, alpha = 1, begin = 0.3, end = 1, direction = 1, option = "D"),
-    title.col = "",
-    title.size = "Taux de mortalité de la mère \n(pour 100 000 naissances)"
-  ) +
-  tm_layout(
-    main.title = "Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde",
-    main.title.size = 1.2,
-    outer.margins = c(0, 0, 0, 0),
-    legend.position = c("left", "bottom"),
-    legend.outside = FALSE,
-    main.title.position = "center",
-    inner.margins = c(0, 0, 0, 0)
-  )
+  tm_bubbles(size = "sh_sta_mmr", fill = "sh_sta_mmr", 
+             fill.scale = tm_scale_intervals(n = 5, style = "jenks", values = "viridis"),
+             fill.legend = tm_legend(""),
+             size.legend = tm_legend("Taux de mortalité de la mère \n(pour 100 000 naissances)"))  +
+  tm_title("Taux de mortalité de la mère \n(pour 100 000 naissances) dans le monde", size = 1.2) + 
+  tm_layout(outer.margins = c(0, 0, 0, 0), inner.margins = c(0, 0, 0, 0),
+            legend.position = c("left", "bottom"), legend.outside = FALSE, 
+            main.title.position = "center", frame = FALSE) +
+  tm_scalebar(position = c("center","bottom")) +
+  tm_compass(position = c("right","top"))
 
 tmap_mode("plot")
 tmap_save(carte, filename = "Taux de mortalité de la mère dans le monde.png")
