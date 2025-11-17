@@ -161,7 +161,7 @@ mapview(list(mes_adresses, trajet))
 osrmRoute(src = mes_adresses[1,], dst = mes_adresses[2,], overview = FALSE, osrm.profile = "bike")
 
 ```
-Le paramètre overview lorsqu'il est mis à FALSE, permet de récupérer la durée et la longueur de l'itinéraire.
+Le paramètre `overview` lorsqu'il est mis à FALSE, permet de récupérer la durée et la longueur de l'itinéraire.
 
 ### Calcul d'une matrice de temps
 La fonction `osrmTable()` permet de calculer des matrices de distances ou de temps par la route. 
@@ -170,7 +170,6 @@ Dans cet exemple nous calculons une matrice de temps entre les 2 adresses et les
 
 Préparons nos données :  
 ```{r osrmtable}
-load("extdata/sirene.RData")
 emprise_nantes <- COGiter::communes_geo %>% 
   filter(DEPCOM == "44109") %>% 
   st_transform(2154)
@@ -181,21 +180,22 @@ restaurants_nantes <- filter(sirene44, APET700 == "5610A") %>%
   st_transform(4326)
 ```
 
-```{r osrmtable triche pour CI, include=FALSE}
-load("extdata/matrice_duree_osm.RData")
-```
-
-Calculons la matrice de distance entre les 2 adresses et les restaurants de Nantes :  
+Calculons la matrice de distance entre les 2 adresses et les restaurants de Nantes.  
+On procède en 2 temps en raison de la limitation d'interrogation :  
 
 ```{r osrmtable2, eval=FALSE}
-mat <- osrmTable(src = mes_adresses,
-                 dst = restaurants_nantes[1:494, ],
+mat1 <- osrmTable(src = mes_adresses,    # dans le resultat, une ligne par point src
+                  dst = restaurants_nantes[1:400, ],                   # dans le resultat, une colonne par point dst
+                  osrm.profile = "foot")
+mat2 <- osrmTable(src = mes_adresses,
+                 dst = restaurants_nantes[401:nrow(restaurants_nantes), ],
                  osrm.profile = "foot")
-mat$durations[,1:5]
-```
 
-```{r osrmtable3, include=FALSE}
-mat$durations[,1:5]
+mat <- list(durations = bind_cols(mat1$durations, mat2$durations, .name_repair = "unique_quiet"),
+            sources = bind_rows(mat1$sources, mat2$sources),
+            destinations = bind_rows(mat1$destinations, mat2$destinations))
+  
+mat1$durations[,1:5]
 ```
 
 Quelle adresse possède une meilleurs accessibilité en temps aux restaurants ?  
