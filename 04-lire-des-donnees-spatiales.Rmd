@@ -323,19 +323,23 @@ library(sf)
 library(dplyr)
 
 # URL du fichier GeoParquet (Natural Earth Countries)
-url <- "https://raw.githubusercontent.com/geoarrow/geoarrow-data/v0.2.0/natural-earth/files/natural-earth_cities.arrows"
-download.file(url, 'extdata/natural-earth_countries-geography.parquet')
+url <- "https://raw.githubusercontent.com/geoarrow/geoarrow-data/v0.2.0/natural-earth/files/natural-earth_countries_geo.parquet"
 
 # Lire directement depuis l'URL (sans téléchargement intermédiaire)
-countries <-  open_dataset('extdata/natural-earth_countries-geography.parquet') %>% 
-  # filter(continent == "Europe") %>% 
-  collect() %>% 
-  st_as_sf()
-  
+countries_sf <- read_parquet(url, as_sf = TRUE)
 
-# Vérifier la structure
-class(countries_sf)  # "sf" "data.frame"
-head(countries_sf)
+# 
+# duckdb::duckdb_register_arrow("extdata/countries.parquet")
+# 
+# dataset <- open_dataset("extdata/countries.parquet")
+# metadata <- dataset$metadata
+# 
+# # Créer un point d'intérêt (ex: Paris)
+# paris <- st_point(c(2.3522, 48.8566)) %>%  st_sfc(crs = 4326)
+# 
+# # Lire les pays autour de Paris (buffer de 500 km)
+# around_paris_sf <- read_geoparquet("countries.parquet", 
+#                                    filter = list(geometry = list(intersects = list(geometry = st_buffer(paris, dist = 500000), crs = 4326))))
 
 ```
 
