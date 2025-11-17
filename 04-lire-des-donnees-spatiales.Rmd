@@ -302,3 +302,42 @@ Le package COGiter propose également :
 
 Son utilisation est désormais [vue lors du module 2](https://mtes-mct.github.io/parcours_r_socle_preparation_des_donnees/nettoyer-des-donn%C3%A9es-territoriales-g%C3%A9rer-les-%C3%A9volutions-du-cog-code-officiel-g%C3%A9ographique.html).  
 
+
+
+## Géoparquet
+Parquet est un format de données compact, puissant et efficace, dont l'usage se développe fortement. Il est particulièrement adapté aux données volumineuses.  
+
+GeoParquet est une norme de format, en développement rapide, de l'Open Geospatial Consortium (OGC) qui ajoute des types géospatiaux interopérables (Point, Ligne, Polygone) à Parquet. 
+
+Un fichier (geo)parquet peut contenir une ou plusieurs tables et inclut des métadonnées.  
+On ne peut lire qu'une partie des données contenues dans le fichier, en formulant des requêtes, et ainsi accélérer les traitements. 
+
+`{sf}` ne dispose pas (encore ?) de driver pour lire ou interroger des fichiers geoparquet. 
+Il faut installer le package `{geoarrow}` pour cela
+
+Voici un exemple de lecture et d'exploitation de données geoparquet :
+```{r geoparquet, eval = FALSE}
+library(arrow)
+library(geoarrow)
+library(sf)
+library(dplyr)
+
+# URL du fichier GeoParquet (Natural Earth Countries)
+url <- "https://raw.githubusercontent.com/geoarrow/geoarrow-data/v0.2.0/natural-earth/files/natural-earth_cities.arrows"
+download.file(url, 'extdata/natural-earth_countries-geography.parquet')
+
+# Lire directement depuis l'URL (sans téléchargement intermédiaire)
+countries <-  open_dataset('extdata/natural-earth_countries-geography.parquet') %>% 
+  # filter(continent == "Europe") %>% 
+  collect() %>% 
+  st_as_sf()
+  
+
+# Vérifier la structure
+class(countries_sf)  # "sf" "data.frame"
+head(countries_sf)
+
+```
+
+
+
