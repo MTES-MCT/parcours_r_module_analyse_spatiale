@@ -256,7 +256,7 @@ prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y"), crs = 2154)
 ```
 
 
-## Données adaministratives contenues dans des packages
+## Données administratives contenues dans des packages
 
 Depuis le développement de `{sf}`, de nombreux packages proposent des données géographiques.
 
