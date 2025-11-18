@@ -193,7 +193,7 @@ st_within(p, a, sparse = FALSE)
 Une variante de `st_within()` permet d'ajouter un critère de distance pour intégrer des points *presque* dans le polygone, `st_is_within_distance()`.
 
 ```{r}
-st_is_within_distance(p, a, dist = 0.8)
+st_is_within_distance(p, a, dist = 0.8, sparse = FALSE)
 ```
 
 `st_touches()` permet de récupérer les points qui *touchent* le polygone sans sans être à l'intérieur du polygone.
