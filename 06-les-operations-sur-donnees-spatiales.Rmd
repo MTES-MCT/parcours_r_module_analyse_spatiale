@@ -352,7 +352,7 @@ st_area(epci_d44)
 
 ### Matrice de distances
 
-Les distances se calculent avec la fonction `st_distance()`.
+Les distances (à vol d'oiseau) se calculent avec la fonction `st_distance()`.
 
 ```{r, warning=FALSE}
 centres_departements_pdl <- st_centroid(departements_geo) %>%
