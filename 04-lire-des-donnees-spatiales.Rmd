@@ -98,7 +98,7 @@ A noter que `st_write()` peut exporter des tables géographiques au format csv :
 
 ```{r, eval=FALSE}
 st_write(
-  obj = NY_leukemia,
+  obj = NY_leukemia %>% st_centroid(),
   dsn = "extdata/NY_leukemia.csv",
   layer_options = "GEOMETRY=AS_XY",
   delete_layer = TRUE
