@@ -5,7 +5,7 @@ date: "`r format(Sys.Date(), '%d-%m-%Y')`"
 site: bookdown::bookdown_site
 documentclass: book
 link-citations: yes
-description: "Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT"
+description: "Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTE-MAT"
 ---
 
 # Introduction {.unnumbered}
@@ -45,11 +45,9 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, comment = "",
                       message = FALSE, warning = FALSE)
 
 library(ggplot2)
-library(tmap)
 library(savoirfR)
 
 theme_set(theme_gray())
-tmap_mode("plot")
 ```
 
 Pour aller plus loin dans l'analyse spatiale des données : https://r-spatial.org/book/.

@@ -29,6 +29,7 @@ library(mapview)
 library(osmdata)
 library(osmextract)
 library(osrm)
+library(prettymapr)
 library(sf)
 library(tidyverse)
 # packages Github
@@ -110,7 +111,7 @@ res <- osmdata_sf(req)
 res <- unique_osmdata(res)$osm_lines
 mapview(res)
 ```
-L'API comprend des limites : l'emprise de la surface d'interrogation et le nombre de requêtes envoyées par jour ne sont pas infinis.
+L'API comprend des limites : l'emprise de la surface d'interrogation et le nombre de requêtes envoyées par jour sont limités.
 
 Site web d'`{osmdata}` : [`osmdata`](https://docs.ropensci.org/osmdata/){target="_blank"} 
 
@@ -121,8 +122,8 @@ Site web d'`{osmdata}` : [`osmdata`](https://docs.ropensci.org/osmdata/){target=
 Le package `{osmextract}` permet d'extraire des données depuis une base de données OSM directement, sans limitation. 
 Ce package permet de travailler sur des volumes de données très importants. 
 
-Voici un exemple d'usage d'`{osmextract}`, toujours sur les pistes cyclables, qui va de la récupération des données au calcul d'indicateurs par commune. 
-https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/sgbd_datamart/-/blob/master/data-raw/chargement_pistes_cyclables_osm.R
+Voici un [exemple d'usage d'`{osmextract}`](https://gitlab-forge.din.developpement-durable.gouv.fr/dreal-pdl/csd/sgbd_datamart/-/blob/master/data-raw/chargement_pistes_cyclables_osm.R), toujours sur les pistes cyclables, qui va de la récupération des données au calcul d'indicateurs par commune. 
+
 
 Site web d'`{osmextract}` : [`osmextract`](https://docs.ropensci.org/osmextract/){target="_blank"} 
 
@@ -160,7 +161,7 @@ mapview(list(mes_adresses, trajet))
 osrmRoute(src = mes_adresses[1,], dst = mes_adresses[2,], overview = FALSE, osrm.profile = "bike")
 
 ```
-Le paramètre overview lorsqu'il est mis à FALSE, permet de récupérer la durée et la longueur de l'itinéraire.
+Le paramètre `overview` lorsqu'il est mis à FALSE, permet de récupérer la durée et la longueur de l'itinéraire.
 
 ### Calcul d'une matrice de temps
 La fonction `osrmTable()` permet de calculer des matrices de distances ou de temps par la route. 
@@ -169,7 +170,6 @@ Dans cet exemple nous calculons une matrice de temps entre les 2 adresses et les
 
 Préparons nos données :  
 ```{r osrmtable}
-load("extdata/sirene.RData")
 emprise_nantes <- COGiter::communes_geo %>% 
   filter(DEPCOM == "44109") %>% 
   st_transform(2154)
@@ -180,26 +180,30 @@ restaurants_nantes <- filter(sirene44, APET700 == "5610A") %>%
   st_transform(4326)
 ```
 
-```{r osrmtable triche pour CI, include=FALSE}
-load("extdata/matrice_duree_osm.RData")
-```
+Calculons la matrice de distance entre les 2 adresses et les restaurants de Nantes.  
 
-Calculons la matrice de distance entre les 2 adresses et les restaurants de Nantes :  
+On procède en 2 temps en raison de la limite d'interrogation :  
 
-```{r osrmtable2, eval=FALSE}
-mat <- osrmTable(src = mes_adresses,
-                 dst = restaurants_nantes,
+```{r osrmtable2, eval=TRUE}
+# distances avec les 400 premiers restaurants
+mat1 <- osrmTable(src = mes_adresses,                  # dans le résultat, on aura une ligne par point src
+                  dst = restaurants_nantes[1:400, ],   # dans le résultat, on aura une colonne par point dst
+                  osrm.profile = "foot")
+# distances avec les restaurants suivants
+mat2 <- osrmTable(src = mes_adresses,
+                 dst = restaurants_nantes[401:nrow(restaurants_nantes), ],
                  osrm.profile = "foot")
-mat$durations[,1:5]
-```
-
-```{r osrmtable3, include=FALSE}
-mat$durations[,1:5]
+# Assemblage
+mat <- list(durations = bind_cols(mat1$durations, mat2$durations, .name_repair = "unique_quiet"),
+            sources = bind_rows(mat1$sources, mat2$sources),
+            destinations = bind_rows(mat1$destinations, mat2$destinations))
+  
+mat1$durations[,1:5]
 ```
 
 Quelle adresse possède une meilleurs accessibilité en temps aux restaurants ?  
 
-```{r osrmtable4, eval=FALSE}
+```{r osrmtable4, eval=TRUE}
 boxplot(t(mat$durations), cex.axis = .7)
 
 ```

@@ -146,6 +146,7 @@ geom_pred <- ggplot() +
   geom_sf(data = l, color = "dodgerblue4", size = 1) + 
   geom_sf_text(data = rowid_to_column(st_sf(p)), mapping = aes(label = rowid), nudge_x = 0.07) +
   theme_minimal() + labs(x = "", y = "")
+geom_pred
 ```
 
 A partir de ces objets, on peut se poser les questions suivantes :
@@ -192,7 +193,7 @@ st_within(p, a, sparse = FALSE)
 Une variante de `st_within()` permet d'ajouter un critère de distance pour intégrer des points *presque* dans le polygone, `st_is_within_distance()`.
 
 ```{r}
-st_is_within_distance(p, a, dist = 0.8)
+st_is_within_distance(p, a, dist = 0.8, sparse = FALSE)
 ```
 
 `st_touches()` permet de récupérer les points qui *touchent* le polygone sans sans être à l'intérieur du polygone.
@@ -352,7 +353,7 @@ st_area(epci_d44)
 
 ### Matrice de distances
 
-Les distances se calculent avec la fonction `st_distance()`.
+Les distances (à vol d'oiseau) se calculent avec la fonction `st_distance()`.
 
 ```{r, warning=FALSE}
 centres_departements_pdl <- st_centroid(departements_geo) %>%

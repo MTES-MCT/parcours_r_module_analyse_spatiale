@@ -104,7 +104,7 @@ mapview(rennes)
 ```
 
 Tentons de calculer la distance de Rennes à Nantes.
-Avec la données en Lambert 93, la fonction `st_distance()` renvoie un message d'erreur.
+Avec un mélange de données entre Lambert 93 et WGS 84, la fonction `st_distance()` renvoie un message d'erreur.
 
 ```{r, error = TRUE}
 st_distance(rennes, nantes_proj)
@@ -112,7 +112,7 @@ st_distance(rennes, nantes_proj)
 
 Avec la données en WGS 84, la fonction `st_distance()` renvoie bien un résultat.
 
-```{r, error = TRUE}
+```{r}
 st_distance(rennes, nantes)
 ```
 

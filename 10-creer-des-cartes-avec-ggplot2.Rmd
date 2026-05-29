@@ -16,6 +16,7 @@ library(tidyverse) #comprend ggplot2
 # Github
 library(COGiter)    # remotes::install_github("MaelTheuliere/COGiter")
 library(gouvdown)   # remotes::install_github("spyrales/gouvdown")
+library(melodi)     # remotes::install_github("InseeFrLab/melodi")
 
 # Gitlab-forge
 library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
@@ -39,14 +40,14 @@ library(sf)
 
 En utilisant la fonction `plot()` basique de R sur un objet sf, R nous propose un rapide aperçu de la couche et de ses attributs :
 ```{r}
-plot(COGiter::regions_geo)
+regions_COGiter <- COGiter::regions_geo
+plot(regions_COGiter)
 ```
 
 Le package `{mapview}` permet également d'afficher un aperçu de couche très rapidement, posé sur un fond de carte Open street map.
 ```{r}
 library(mapview) 
-regions_COGiter <- COGiter::regions_geo
-mapview(x = COGiter::regions_geo)
+mapview(regions_COGiter)
 ```
 
 Le résultat est un widget html, explorable, zoomable, cliquable. 
@@ -229,31 +230,43 @@ Se référer à [la feuille de triche {ggplot2}](https://raw.githubusercontent.c
 ## Faire des cartes avec {ggplot2}
 
 
-### Préparation des données 
+### Préparation des données {#melodi} 
 
 Comme avec d'autres packages, la première étape consiste à préparer le jeu de données à visualiser, c'est à dire d'associer les variables à analyser à leur géographie. 
 
-Ici, nous partons des données de population 2015 et les fonds de carte disponibles dans le package `{COGiter}`, que nous allons préparer avec `{COGiter}` également.
+Ici, nous partons des données de population les plus récentes, diffusées par l'INSEE par API et mobilisable dans R avec le package `{melodi}`, et des fonds de carte disponibles dans le package `{COGiter}`.
 
 ```{r echo=TRUE, eval=TRUE, warning=FALSE}
-pop2015_preparee <- pop2015 %>% 
+# install.packages("remotes")
+# remotes::install_github("InseeFrLab/melodi", build_vignettes = TRUE)
+library(melodi)
+
+# téléchargement API du dernier millésime de la population de référence
+pop_preparee_nat <- get_all_data("DS_POPULATIONS_REFERENCE") %>% 
+  filter(TIME_PERIOD == max(TIME_PERIOD), GEO_OBJECT == "COM") %>% 
+  mutate(TIME_PERIOD = as.character(TIME_PERIOD)) %>% 
+  select(-GEO_OBJECT, -FREQ ) %>% 
   # mise à jour du COG et agrégation aux différentes échelles adm
-  cogifier(code_commune = DEPCOM, communes = TRUE, epci = TRUE, departements = TRUE, regions = TRUE, metro = FALSE) %>% 
-  # on filtre le jeu de données pour ne garder que les territoires de Normandie et toutes les régions
-  filtrer_cog(reg = "28", garder_supra = ">=") 
+  cogifier(code_commune = GEO, communes = TRUE, epci = TRUE, departements = TRUE, regions = TRUE, metro = FALSE)
+
+# on filtre le jeu de données pour ne garder que les territoires de Normandie et toutes les régions
+pop_preparee <- pop_preparee_nat %>% 
+  filtrer_cog(reg = "28", garder_supra = ">=") %>% 
+  # passage au format large
+  pivot_wider(names_from = POPREF_MEASURE, values_from = OBS_VALUE)
 
 # Aperçu du jeu de données
-glimpse(pop2015_preparee)
+glimpse(pop_preparee)
 
 # Préparation des fonds carto
 fonds_carto_normands <- filtrer_cog_geo(reg = "28")
 
 #jointure du fond carto EPCI aux données EPCI de Normandie
-pop2015_epci_normands_geo <- fonds_carto_normands$epci %>% 
-  left_join(pop2015_preparee, by = c("EPCI" = "CodeZone")) %>% 
+pop_epci_normands_geo <- fonds_carto_normands$epci %>% 
+  left_join(pop_preparee, by = c("EPCI" = "CodeZone")) %>% 
   # calcul des indicateurs a représenter
-  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100,
-         densite_pop = as.numeric(pop2015 / AREA * 1000000))
+  mutate(poids_pop_a_part = PCAP / PTOT * 100,
+         densite_pop = as.numeric(PMUN / AREA * 1000000))
 ```
 
 
@@ -262,8 +275,9 @@ pop2015_epci_normands_geo <- fonds_carto_normands$epci %>%
 Le premier exemple que nous allons pouvoir voir, c'est une carte choroplèthe, càd en aplat de couleur, adaptée à la représentation d'indicateurs intensifs (%, densité...), par exemple la densité de population des EPCI normands.
 
 ```{r cart_choro, fig.height=5, fig.width=12, cache=TRUE}
-ggplot(data = pop2015_epci_normands_geo) +
-  geom_sf(mapping = aes(fill = densite_pop), color = "white")
+ggplot(data = pop_epci_normands_geo) +
+  geom_sf(mapping = aes(fill = densite_pop), color = "white") + 
+  theme_map()
 ```
 
 
@@ -275,9 +289,10 @@ On ajoute le calque des ronds proportionnels au dessus de celui des polygones en
 
 ```{r cart_prop, fig.height=5, fig.width=12, cache=TRUE}
 
-carte_ronds_prop <- ggplot(data = pop2015_epci_normands_geo) +
+carte_ronds_prop <- ggplot(data = pop_epci_normands_geo) +
   geom_sf() +
-  stat_sf_coordinates(mapping = aes(size = pop2015_totale, color = poids_pop_a_part))
+  stat_sf_coordinates(mapping = aes(size = PTOT, color = poids_pop_a_part)) +
+  theme_map()
 
 carte_ronds_prop
 
@@ -292,14 +307,21 @@ Chaque nouvel élément graphique est à ajouter sous forme de calques (layers).
 Pour les titres, nous utilisons la fonction `labs()` qui permet de donner un titre à tous les éléments possibles de l'aesthetic, ainsi que le titre (`title`), le sous-titre (`subtitle`) et le bas de page (`caption`).
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12, warning=FALSE}
-carte_ronds_prop +
+# date du dernier recensement
+mil_pop <- pop_epci_normands_geo %>% 
+  pull(TIME_PERIOD) %>% 
+  unique()
+
+carte_ronds_prop2 <- carte_ronds_prop +
   labs(
     title = "Population par EPCI en Normandie",
-    subtitle = "En 2015", x = "", y = "",
+    subtitle = paste0("En ", mil_pop), x = "", y = "",
     size = "Nombre d'habitants",
     color = "Poids population\ncomptée à part (%)",
     caption = "Source : INSEE - RP"
   )
+
+carte_ronds_prop2
 ```
 
 A noter qu'il existe plusieurs autres façons de spécifier ces éléments par des fonctions spécifiques: `ggtitle()`, `xlab()`, `ylab()`, ...
@@ -310,25 +332,12 @@ Les fonctions `guide_xx()` et `guides()` permettent de modifier finement la lég
 Les guides peuvent être spécifiées dans chaque `scale_` ou dans une instruction `guides`.
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=10, warning=FALSE}
-carte_ronds_prop2 <- carte_ronds_prop +
-  labs(
-    title = "Population par EPCI en Normandie",
-    subtitle = "En 2015", x = "", y = "",
-    size = "Nombre d'habitants",
-    color = "Poids population\ncomptée à part (%)",
-    caption = "Source : INSEE - RP"
-  ) +
-  guides(color = guide_legend(
-    direction = "horizontal",
-    order = 1,
-    title.position = "top",
-    title.hjust = 0.5,
-    nrow = 1,
-    label.position = "bottom"
-  )) +
+carte_ronds_prop3 <- carte_ronds_prop2 +
+  guides(color = guide_legend(direction = "horizontal", order = 1, nrow = 1, 
+                              title.position = "top", title.hjust = 0.5, label.position = "bottom")) +
   theme(legend.position = "left")
 
-carte_ronds_prop2
+carte_ronds_prop3
 ```
 
 #### Annotation
@@ -336,7 +345,7 @@ carte_ronds_prop2
 Il est aussi possible de rajouter des annotations de type texte, par exemple, "texte  la volée".
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12, warning=FALSE}
-carte_ronds_prop2 +
+carte_ronds_prop3 +
   coord_sf(datum = 2154) +
   annotate("text", x = 400000, y = 6800000, label = "texte à la volée", color = "blue")
 ```
@@ -366,7 +375,7 @@ La taille des éléments de texte reste paramétrable par l'utilisateur.
 Voir l'aide [theme_gouv_map()](https://spyrales.github.io/gouvdown/reference/theme_gouv.html).
 
 ```{r, echo=TRUE, eval=TRUE, fig.height=5, fig.width=12, warning=FALSE}
-carte_ronds_prop2 +
+carte_ronds_prop3 +
   theme_gouv_map(plot_title_size = 20, subtitle_size = 12)
 ```
 
@@ -426,13 +435,15 @@ distiller|utiliser une palette de couleur brewer (variable continue)
 
 
 `{gouvdown}` propose des fonctions scales_xx_yy() mobilisant les palettes de couleurs à la marque Etat :  
-![](pic/palette.PNG)  
+![](https://spyrales.github.io/gouvdown/reference/figures/README-palettes-1.png)  
 
 La [vignette _graph_gouv_ du site de présentation de {gouvdown}](https://spyrales.github.io/gouvdown/articles/graph_gouv.html) propose des exemples d'utilisation des palettes pour {ggplot2}.
 
+
+
 ```{r, echo=TRUE, eval=TRUE}
-carte_ronds_prop2 +
-  scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE)
+carte_ronds_prop3 +
+  scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = TRUE)
 
 ```
 
@@ -445,7 +456,7 @@ gouv_colors("a1")
 On peut utiliser cette fonction pour créer une palette à partir d'un gradient de couleurs : 
 
 ```{r}
-carte_ronds_prop2 +
+carte_ronds_prop3 +
   scale_colour_gradient(low = gouv_colors("b1")[[1]], high = gouv_colors("p1")[[1]])
 
 ```
@@ -454,7 +465,7 @@ carte_ronds_prop2 +
 
 #### Formatage spécifique
 
-Le formatage des valeurs des axes ou de la légende se fait à l'aide d'une fonction de formatage des nombres passée à l'argument 'labels' des fonctions `scale_xx_yy()`
+Le formatage des valeurs des axes ou de la légende se fait à l'aide d'une fonction de formatage des nombres passée à l'argument **'labels'** des fonctions `scale_xx_yy()`
 
 - Transformation en pourcentage ;
 ```{r, echo=TRUE, eval=FALSE}
@@ -470,13 +481,13 @@ scale_y_continuous(labels = function(x) paste(x, " €"))
 
 - Ajout du séparateur des milliers ;
 ```{r, echo=TRUE, eval=TRUE}
-carte_ronds_prop2 +
-  scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
+carte_ronds_prop3 +
+  scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = TRUE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))
 ```
 
 
-### Exercice 3 - Carte des données dvf par quartie de Nantes
+### Exercice 3 - Carte des données dvf par quartier de Nantes
 
 ```{r mod7_exo3, child=charge_exo("m7", "exo3.rmd"), echo=FALSE}
 ```
@@ -490,16 +501,18 @@ Il faut au préalable préparer notre jeu de données en [le passant au format l
 
 ```{r, echo=TRUE, eval=TRUE, warning=FALSE, fig.height=5, fig.width=8}
 
-indic_epci_normands_geo_long <- pop2015_epci_normands_geo %>% 
-  pivot_longer(cols = c(starts_with("pop2015"), densite_pop, poids_pop_a_part), names_to = "indicateurs", values_to = "valeurs") %>% 
-  filter(str_detect(indicateurs, "pop2015_"))
+indic_epci_normands_geo_long <- pop_epci_normands_geo %>% 
+  pivot_longer(cols = c(starts_with("P"), densite_pop, poids_pop_a_part), 
+               names_to = "indicateurs", values_to = "valeurs") %>% 
+  filter(str_detect(indicateurs, "^P"))
   
 ggplot(data = indic_epci_normands_geo_long) +
   geom_sf(aes(fill = valeurs), color = "white") + 
   facet_wrap(~indicateurs) +
   scale_fill_gouv_continuous(trans = "log", breaks = c(100, 1000, 20000, 400000), 
                         label = ~format(.x, big.mark = " ", scientific = FALSE), reverse = TRUE) +
-  labs(fill = "Nb habitants")
+  labs(fill = "Nb habitants") +
+  theme_gouv_map()
 ```
 
 Un deuxième exemple de facette sur la maille géo.
@@ -509,8 +522,8 @@ fonds_carto_empiles <- bind_rows(
   COGiter::epci_geo %>% mutate(TypeZone = "Epci") %>% rename(CodeZone = EPCI),
   COGiter::departements_geo %>% mutate(TypeZone = "Départements") %>% rename(CodeZone = DEP)
   ) %>% 
-  inner_join(pop2015_preparee, by = c("CodeZone", "TypeZone")) %>% 
-  mutate(densite = round(pop2015 / as.numeric(AREA) * 1000000, 0),
+  inner_join(pop_preparee, by = c("CodeZone", "TypeZone")) %>% 
+  mutate(densite = round(PMUN / as.numeric(AREA) * 1000000, 0),
          TypeZone = fct_inorder(TypeZone))
 
 
@@ -534,11 +547,11 @@ Les deux fonctions qui permettent cela sont `annotation_scale()` et `annotation_
 L'utilisation de ces fonctions nécessitent un système de coordonnées géographiques.
 
 ```{r, message=FALSE, warning=FALSE, fig.height=5, fig.width=12}
-carte_ronds_prop2 +
+carte_ronds_prop3 +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE)) +
   annotation_scale(location = "br", line_width = .5) +
-  annotation_north_arrow(location = "bl", height = unit(0.7, "cm"), width = unit(0.7, "cm"))
+  annotation_north_arrow(location = "bl", height = unit(0.5, "cm"), width = unit(0.5, "cm"))
 ```
 
 ### Mettre plusieurs cartes côte à côte
@@ -549,33 +562,33 @@ On peut à partir d'une même carte vouloir réaliser un zoom sur une sous parti
 Pour zoomer sur une carte, `coord_sf()` va avoir besoin des coordonnées *x* et *y* du cadre sur lequel on veut zoomer. 
 Le plus simple pour cela est de filtrer préalablement notre spatial dataframe et de récupérer la bbox de celle-ci. 
 
-Filtrons par exemple sur le Département de l'Orne.
+Filtrons par exemple sur le Département du Calvados.
 
 ```{r}
 bbox_dep <- fonds_carto_normands$departements %>% 
-  filter(DEP == "61") %>%
+  filter(DEP == "14") %>%
   st_bbox()
 ```
 
-On peut ensuite réaliser une carte zoomée sur l'Orne
+On peut ensuite réaliser une carte zoomée sur le Calvados
 
 ```{r, fig.height=5, fig.width=12}
 normandie <- carte_ronds_prop +
   geom_sf(data = fonds_carto_normands$departements, size = 1, color = "gray10", fill = NA) +
   guides(color = "none", size = 'none')
 
-orne <- normandie + 
+calvados <- normandie + 
   coord_sf(xlim = c(bbox_dep[1], bbox_dep[3]), ylim = c(bbox_dep[2], bbox_dep[4])) +
   theme(panel.background = element_rect(fill = "light blue")) +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE)) +
-  labs(title = "Population par EPCI en Normandie",
-       subtitle = "En 2015", x = "", y = "",
+  labs(title = "Population par EPCI du Calvados",
+       subtitle = paste0("En ", mil_pop), x = "", y = "",
        size = "Nombre d'habitants",
        color = "Poids population\ncomptée à part (%)",
        caption = "Source : INSEE - RP")
 
-orne
+calvados
 ```
 
 On peut utiliser ensuite le package `{cowplot}` et sa fonction `plot_grid()` pour afficher nos cartes côte à côte. 
@@ -585,7 +598,7 @@ La fonction `plot_grid()` qui permet de disposer ***n*** graphes sur ***i*** col
 Il faut jouer sur les largeurs relatives pour que les deux cartes s'agencent bien.
 
 ```{r, fig.height=6,fig.width=12}
-plot_grid(orne, normandie, rel_widths = c(1, 2))
+plot_grid(calvados, normandie, rel_widths = c(1, 2))
 ```
 
 
@@ -594,7 +607,7 @@ plot_grid(orne, normandie, rel_widths = c(1, 2))
 ggplot contient une fonction `ggsave()` qui permet d'exporter nos graphiques ou cartes dans les formats suivants : eps, ps, tex (pictex), pdf, jpeg, tiff, png, bmp, svg or wmf.  
 
 ```{r, echo=TRUE, eval=FALSE, fig.height=5, fig.width=12}
-p <- carte_ronds_prop2 +
+p <- carte_ronds_prop3 +
   scale_color_gouv_continuous(palette = "pal_gouv_i", reverse = FALSE) +
   scale_size_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE))
 
@@ -625,13 +638,14 @@ remotes::install_gitlab(repo = "dreal-pdl/csd/mapfactory",
 Il crée des cartes régionales de visualisation d'indicateurs statistiques préparés par `{COGiter}`, aux maille départements, EPCI ou communes. 
 
 ```{r, message=FALSE, warning=FALSE}
-pop2015_prepa_nat <- pop2015 %>% 
-  cogifier() %>% 
-  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100)
+pop_prepa_nat <- pop_preparee_nat %>% 
+  # passage au format large
+  pivot_wider(names_from = POPREF_MEASURE, values_from = OBS_VALUE) %>% 
+  mutate(poids_pop_a_part = PCAP / PTOT * 100)
 
-creer_carte_communes_prop(data = pop2015_prepa_nat, code_region = "02", indicateur = pop2015,
+creer_carte_communes_prop(data = pop_prepa_nat, code_region = "02", indicateur = PMUN,
                           carto = fond_carto("Martinique", ombre = 0), espace = " ",
-                          palette = "pal_gouv_o", titre = "Population par commune", sous_titre = "En 2015", 
+                          palette = "pal_gouv_o", titre = "Population par commune", sous_titre = paste0("En ", mil_pop),
                           bas_de_page = "INSEE - RP", decimales = 0, suffixe = " hab", nclass = 4, method = "quantile")
 
 ```
@@ -642,12 +656,12 @@ Les fonctions principales sont :
 - `creer_carte_epci()`, `creer_carte_communes()` pour créer une carte régionale choroplèthe ;  
 - `creer_carte_epci_prop()`, `creer_carte_communes_prop()` pour créer une carte régionale de visualisation d'un indicateur en rond proportionnel.
 
-Toutes ces fonctions sont des cas particulier de la fonction `creer_carte()` :
+Toutes ces fonctions sont des cas particuliers de la fonction `creer_carte()` :
 
 ```{r, message=FALSE, warning=FALSE}
-creer_carte(data = pop2015_prepa_nat, code_region = "28", indicateur = poids_pop_a_part, maillage = "Département",
-            carto = fond_carto("Normandie"), titre = "Proportion de la population comptée à part", sous_titre = "En 2015",
-            bas_de_page = "INSEE - RP", decimales = 1, pourcent = TRUE, palette = "pal_gouv_b", espace = "\u202f" )
+creer_carte(data = pop_prepa_nat, code_region = "28", indicateur = poids_pop_a_part, maillage = "Département",
+            carto = fond_carto("Normandie"), titre = "Proportion de la population comptée à part", sous_titre = paste0("En ", mil_pop),
+            bas_de_page = "INSEE - RP", decimales = 1, suffixe = " %", palette = "pal_gouv_b", espace = "\u202f" )
 ```
 
 

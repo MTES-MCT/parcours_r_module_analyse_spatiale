@@ -57,6 +57,7 @@ Exemple de lecture d'une donnée au format `GeoPackage`: les données sur la Leu
 
 ```{r, eval=FALSE}
 geo_fichier <- system.file("shapes/NY8_bna_utm18.gpkg", package = "spData")
+geo_fichier # contient l'adresse vers le jeu de données
 NY_leukemia <- st_read(dsn = geo_fichier)
 ```
 
@@ -97,7 +98,7 @@ A noter que `st_write()` peut exporter des tables géographiques au format csv :
 
 ```{r, eval=FALSE}
 st_write(
-  obj = NY_leukemia,
+  obj = NY_leukemia %>% st_centroid(),
   dsn = "extdata/NY_leukemia.csv",
   layer_options = "GEOMETRY=AS_XY",
   delete_layer = TRUE
@@ -118,7 +119,7 @@ Le paramètre `layer_option` permet d'inclure des options propres à chaque driv
 
 #### Exemple 1 (geojson classique):
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>% 
   filter(code > "10") %>% 
   select(code) %>% 
@@ -127,23 +128,24 @@ st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>%
 
 #### Exemple 2 (api)
 
-L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administratif/) permet de charger des contours administratifs.
-Dans l'exemple suivant, nous chargeons les contours des epci du département 44.
+L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administratif) permet de charger des contours administratifs.
+Dans l'exemple suivant, nous chargeons les contours des epci du département 44 en complétant l'URL de base avec des paramètre de requête.
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
 st_read(url) %>%
   select(code) %>% 
   plot()
 ```
 
-### Exemple 3 (geojson compressé)
+#### Exemple 3 (geojson compressé)
 
 `sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les bâtiments de la commune de Nantes provenant du PCI redistribué par Etalab.
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
 batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
+mapview(batiment_nantes %>% head(1000))
 ```
 
 Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/virtual_file_systems.html](https://gdal.org/user/virtual_file_systems.html)
@@ -151,19 +153,30 @@ Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/vir
 
 ### Lire des données WFS
 
-`sf` permet aussi de lire des données WFS.
+`sf` permet aussi de lire des données en flux WFS.
 
-```{r wfs, eval = FALSE}
+```{r wfs, eval = TRUE}
 crte <- sf::st_read(dsn = 'https://datacarto.sigloire.fr/wfs?REQUEST=getCapabilities&service=WFS&VERSION=2.0.0', layer = "ms:r_portrait_crte_r52")
 crte %>% select(nom_territ) %>% plot()
 ```
+
+
+Autres exemple avec la géoplateforme de l'IGN : 
+```{r}
+pref_dep <- st_read("https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities", layer = "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:chef_lieu_de_departement") %>% 
+  select(nom_du_chef_lieu)
+
+
+mapview(pref_dep, legend = FALSE)
+```
+
 
 On indique au niveau du paramètre `dsn` l'url du webservice WFS de la plateforme et au niveau du parametre `layer` le nom de la couche.
 Pour aller plus loin dans l'exploitation des flux WFS dans R : https://inbo.github.io/tutorials/tutorials/spatial_wfs_services/.
 
 ## Lire/écrire des données spatiales sur PostGIS
 
-`PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les manipuler.
+`PostGIS`, c'est l'extension géomatique de `PostgreSQL` permettant de stocker des données géo sur un serveur de données et de les exploiter.
 
 R vous permet de vous connecter simplement à une base PostGIS. 
 Pour cela vous aurez besoin du package `{DBI}` (package permettant de s'interfacer à des bases de données) et du package `{RPostgres}` (interface à PostgreSQL en particulier). 
@@ -186,13 +199,13 @@ con <- dbConnect(drv,
 ```
 
 
-Pour lire des données sur le serveur, on va utiliser encore la fonction `st_read()` en lui définissant 2 paramètres : le connecteur et la requête que l'on veut réaliser.
+Pour lire des données géographique sur le serveur, il faut utiliser encore `{sf}` et sa fonction `st_read()` en lui définissant 2 paramètres : le connecteur et la requête que l'on veut réaliser.
 
 ```{r, eval=FALSE}
 ma_table <- st_read(con, query = "SELECT * FROM le_schema.ma_table")
 ```
 
-L'avantage ici est que vous pouvez faire travailler le serveur directement sans avoir à faire travailler votre poste de travail.
+L'avantage ici est que vous pouvez faire travailler le serveur directement en SQL sans avoir à faire travailler votre poste de travail.
 
 Vous pouvez très bien, dans cette requête sql, réaliser quelques filtres, sélections et agrégations. 
 Celles-ci seront alors réalisées par le serveur posgreSQL et non par votre session R qui ne récupérera que le résultat.
@@ -219,7 +232,9 @@ Les instruction précédentes deviennent :
 remotes::install_gitlab('dreal-pdl/csd/datalibaba', host = "gitlab-forge.din.developpement-durable.gouv.fr")
 library(datalibaba)
 
-poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", pk = 'REG', db = 'referentiels')
+poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", 
+            pk = 'REG', db = 'referentiels')
+
 station <- importer_data(table = "station", schema = "pesticides", base = "production")
 ```
 
@@ -241,7 +256,7 @@ prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y"), crs = 2154)
 ```
 
 
-## Données contenues dans des packages
+## Données administratives contenues dans des packages
 
 Depuis le développement de `{sf}`, de nombreux packages proposent des données géographiques.
 
@@ -281,9 +296,9 @@ plot(normandie$epci)
 
 Le package COGiter propose également :   
 
--   les tables du COG 2022 de l'Insee,
--   une table de passage des COG historiques vers le COG millésimé 2022,
--   des fonctions d'aide à au passage de jeux de données vers le millésime du COG 2022,  
+-   les tables du COG 2025 de l'Insee,
+-   une table de passage des COG historiques vers le COG millésimé 2025,
+-   des fonctions d'aide à au passage de jeux de données vers le millésime du COG 2025,  
 -   des fonctions de calculs d'agrégats aux différentes échelles territoriales,  
 -   des fonctions d'aide à la sélection des différents fond de cartes nécessaire à la mise en page de cartes statistiques.
 
