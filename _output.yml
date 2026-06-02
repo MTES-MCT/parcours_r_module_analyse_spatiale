@@ -10,7 +10,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://mtes-mct.github.io/parcours-r/">Liste des formations R</a></li>
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-        <li><a href="https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale"> target="blank">Code source du support</a></li>
+        <li><a href="https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale" target="blank">Code source du support</a></li>
     pandoc_args: [
       "-M", "toc-title=Table des matières"
     ]
