@@ -271,7 +271,7 @@ remotes::install_github("antuki/CARTElette/CARTElette@RPackage")
 
 `{CARTElette}` propose de télécharger les différents fonds de plan administratifs d'admin-Express COG de l'IGN, de tous les millésimes jusque 2021.
 ```{r}
-charger_carte(COG = 2021, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
+charger_carte(COG = 2015, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
   st_geometry() %>% 
   plot()
 ```
