@@ -71,11 +71,12 @@ popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en %s",
 
 La fonction `addPolygons()` permet de créer la carte choroplète.
 
-La fonction `addProviderTiles()` permet de rajouter un fond cartographique parmis les couches fournies par `leaflet`.
+La fonction `addProviderTiles()` permet de choisir un fond cartographique parmis les couches fournies par `leaflet`.
 
 ```{r, fig.width=7, fig.height=4}
 leaflet(pop_dep_geo) %>%
-  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addProviderTiles("GeoportailFrance.plan") %>% 
+  addTiles() %>%
   addPolygons(data = pop_dep_geo,
               fillColor = ~pal(densite),
               weight = 2,

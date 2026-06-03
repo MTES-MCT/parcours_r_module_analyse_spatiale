@@ -163,7 +163,8 @@ crte %>% select(nom_territ) %>% plot()
 
 Autres exemple avec la géoplateforme de l'IGN : 
 ```{r}
-pref_dep <- st_read("https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities", layer = "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:chef_lieu_de_departement") %>% 
+pref_dep <- st_read("https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities", 
+                    layer = "LIMITES_ADMINISTRATIVES_EXPRESS.LATEST:chef_lieu_de_departement") %>% 
   select(nom_du_chef_lieu)
 
 
@@ -296,11 +297,13 @@ plot(normandie$epci)
 
 Le package COGiter propose également :   
 
--   les tables du COG 2025 de l'Insee,
--   une table de passage des COG historiques vers le COG millésimé 2025,
--   des fonctions d'aide à au passage de jeux de données vers le millésime du COG 2025,  
+-   les tables du dernier millesime du COG de l'Insee,
+-   une table de passage des COG historiques vers le COG à jour,
+-   des fonctions d'aide à au passage de jeux de données vers le millésime actuel du COG,  
 -   des fonctions de calculs d'agrégats aux différentes échelles territoriales,  
 -   des fonctions d'aide à la sélection des différents fond de cartes nécessaire à la mise en page de cartes statistiques.
 
 Son utilisation est désormais [vue lors du module 2](https://mtes-mct.github.io/parcours_r_socle_preparation_des_donnees/nettoyer-des-donn%C3%A9es-territoriales-g%C3%A9rer-les-%C3%A9volutions-du-cog-code-officiel-g%C3%A9ographique.html).  
+
+Il est traditionnellement mis à jour courant avril chaque année.
 
