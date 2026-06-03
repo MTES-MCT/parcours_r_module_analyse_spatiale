@@ -98,7 +98,7 @@ A noter que `st_write()` peut exporter des tables géographiques au format csv :
 
 ```{r, eval=FALSE}
 st_write(
-  obj = NY_leukemia,
+  obj = NY_leukemia %>% st_centroid(),
   dsn = "extdata/NY_leukemia.csv",
   layer_options = "GEOMETRY=AS_XY",
   delete_layer = TRUE
@@ -119,7 +119,7 @@ Le paramètre `layer_option` permet d'inclure des options propres à chaque driv
 
 #### Exemple 1 (geojson classique):
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>% 
   filter(code > "10") %>% 
   select(code) %>% 
@@ -131,7 +131,7 @@ st_read("https://france-geojson.gregoiredavid.fr/repo/regions.geojson") %>%
 L'[api de découpage administratif](https://geo.api.gouv.fr/decoupage-administratif) permet de charger des contours administratifs.
 Dans l'exemple suivant, nous chargeons les contours des epci du département 44 en complétant l'URL de base avec des paramètre de requête.
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 url <- 'https://geo.api.gouv.fr/epcis?codeDepartement=44&format=geojson&geometry=contour'
 st_read(url) %>%
   select(code) %>% 
@@ -142,10 +142,10 @@ st_read(url) %>%
 
 `sf` repose sur `GDAL` et permet également de lire des geojsons compressés.  On pourrait faire de même avec un shapefile compressé en .zip. Cela évite de télécharger le fichier et de le décompresser. Voici un exemple pour récupérer les bâtiments de la commune de Nantes provenant du PCI redistribué par Etalab.
 
-```{r eval = FALSE, message = TRUE, warning = FALSE}
+```{r eval = TRUE, message = TRUE, warning = FALSE}
 dsn <- '/vsigzip//vsicurl/https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes/44/44109/cadastre-44109-batiments.json.gz'
 batiment_nantes <- st_read(dsn = dsn, layer = "cadastre-44109-batiments.json") 
-mapview(batiment_nantes)
+mapview(batiment_nantes %>% head(1000))
 ```
 
 Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/virtual_file_systems.html](https://gdal.org/user/virtual_file_systems.html)
@@ -155,7 +155,7 @@ Pour aller plus loin sur les `Virtual File Systems` : [https://gdal.org/user/vir
 
 `sf` permet aussi de lire des données en flux WFS.
 
-```{r wfs, eval = FALSE}
+```{r wfs, eval = TRUE}
 crte <- sf::st_read(dsn = 'https://datacarto.sigloire.fr/wfs?REQUEST=getCapabilities&service=WFS&VERSION=2.0.0', layer = "ms:r_portrait_crte_r52")
 crte %>% select(nom_territ) %>% plot()
 ```
@@ -232,7 +232,9 @@ Les instruction précédentes deviennent :
 remotes::install_gitlab('dreal-pdl/csd/datalibaba', host = "gitlab-forge.din.developpement-durable.gouv.fr")
 library(datalibaba)
 
-poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", pk = 'REG', db = 'referentiels')
+poster_data(data = regions_geo, schema = "admin_express", table = "n_regions", 
+            pk = 'REG', db = 'referentiels')
+
 station <- importer_data(table = "station", schema = "pesticides", base = "production")
 ```
 
@@ -254,7 +256,7 @@ prefectures_geo <- st_as_sf(prefectures, coords = c("x", "y"), crs = 2154)
 ```
 
 
-## Données adaministratives contenues dans des packages
+## Données administratives contenues dans des packages
 
 Depuis le développement de `{sf}`, de nombreux packages proposent des données géographiques.
 
@@ -269,7 +271,7 @@ remotes::install_github("antuki/CARTElette/CARTElette@RPackage")
 
 `{CARTElette}` propose de télécharger les différents fonds de plan administratifs d'admin-Express COG de l'IGN, de tous les millésimes jusque 2021.
 ```{r}
-charger_carte(COG = 2021, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
+charger_carte(COG = 2015, nivsupra = "REG", geometrie_simplifiee = FALSE) %>% 
   st_geometry() %>% 
   plot()
 ```

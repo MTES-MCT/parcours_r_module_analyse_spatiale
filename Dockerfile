@@ -1,7 +1,13 @@
-ARG R_VERSION=4.4.1
+ARG R_VERSION=4.6.0
 
 FROM inseefrlab/onyxia-rstudio:r${R_VERSION}
+
 RUN apt-get update && apt-get install -y cargo
-RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN R -e "install.packages('pak', repos = c(CRAN = 'https://cloud.r-project.org'))"
 COPY DESCRIPTION DESCRIPTION
-RUN R -e 'remotes::install_deps(dependencies = TRUE)'
+ARG GITHUB_PAT
+RUN git config --global url."https://${GITHUB_PAT}:@github.com/".insteadOf "https://github.com/"
+ENV GITHUB_PAT=${GITHUB_PAT}
+RUN R -e "pak::pkg_install('V8')"
+RUN R -e "pak::pkg_install('hughjonesd/santoku')"
+RUN R -e "pak::local_install_deps(upgrade = FALSE, ask = FALSE)"

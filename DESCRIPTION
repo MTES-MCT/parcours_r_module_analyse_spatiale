@@ -32,6 +32,7 @@ Imports:
     mapedit,
     mapfactory,
     mapview,
+    melodi,
     osmdata,
     osmextract,
     osrm,
@@ -53,6 +54,7 @@ Imports:
 Remotes: 
     antuki/CARTElette/CARTElette@RPackage,
     joelgombin/banR,
+    InseeFrLab/melodi,
     MaelTheuliere/COGiter,
     MaelTheuliere/variousdata,
     MTES-MCT/savoirfR,

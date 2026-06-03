@@ -22,7 +22,7 @@ library(ggiraph)
 library(mapfactory) # remotes::install_gitlab("dreal-pdl/csd/mapfactory", host = "gitlab-forge.din.developpement-durable.gouv.fr")
 ```
 
-Les données utilisées sont issues de `{COGiter}`.
+Les données utilisées sont celles issues de l'API de l'INSEE et préparées au chapitre \@ref(creer-des-cartes-avec-ggplot2), au niveau du paragraphe \@ref(melodi).
 
 ### Carte choroplète
 
@@ -31,26 +31,24 @@ Ci-dessous un exemple avancé de carte choroplète avec `{leaflet}`.
 - Définition des données de départ :  
 
 ```{r}
-pop2015_dep_geo <- pop2015 %>% 
-  # mise à jour du COG et agrégation à l'échelle départementale
-  cogifier(code_commune = DEPCOM, communes = FALSE, epci = FALSE, departements = TRUE, regions = FALSE, metro = FALSE) %>% 
-  inner_join(COGiter::departements_geo, ., by = c("DEP" = "CodeZone")) %>% 
-  mutate(densite = pop2015 / as.numeric(AREA) * 1000000) %>% 
-  filter(substr(DEP, 1, 2) != "97")
+pop_dep_geo <- pop_prepa_nat %>% 
+  filter(TypeZone == "Départements") %>% 
+  inner_join(COGiter::departements_metro_geo, ., by = c("DEP" = "CodeZone")) %>% 
+  mutate(densite = PMUN / as.numeric(AREA) * 1000000) 
 
-glimpse(pop2015_dep_geo)
+glimpse(pop_dep_geo)
 ```
 
 - Transformation de la projection car `leaflet` ne connait que le WGS 84 :  
 
 ```{r}
-pop2015_dep_geo <- st_transform(pop2015_dep_geo, crs=("+proj=longlat +datum=WGS84 +no_defs"))
+pop_dep_geo <- st_transform(pop_dep_geo, crs=("+proj=longlat +datum=WGS84 +no_defs"))
 ```
 
 - Discrétisation de la variable d'intérêt : 
 
 ```{r}
-bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
+bornes <- quantile(pop_dep_geo$densite, na.rm = TRUE)
 ```
 
 - Création d'une palette de couleurs associée : 
@@ -58,14 +56,14 @@ bornes <- quantile(pop2015_dep_geo$densite, na.rm = TRUE)
 `{leaflet}` intègre une fonction `colorBin()` qui permet d'associer à un vecteur de valeurs numériques un vecteur de couleurs en fonction d'une palette et d'un vecteur de bornes.
 
 ```{r}
-pal <- colorBin("YlOrRd", domain = pop2015_dep_geo$densite, bins = bornes)
+pal <- colorBin("YlOrRd", domain = pop_dep_geo$densite, bins = bornes)
 ```
 
 - Création d'étiquettes popover, à afficher en surbrillance au passage de la souris sur la carte :  
 
 ```{r}
-popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en 2015", 
-                   pop2015_dep_geo$Zone, pop2015_dep_geo$densite) %>% 
+popover <- sprintf("<strong>%s</strong><br/>%.1f habitants par km² en %s", 
+                   pop_dep_geo$Zone, pop_dep_geo$densite, mil_pop) %>% 
   lapply(htmltools::HTML)
 ```
 
@@ -76,9 +74,9 @@ La fonction `addPolygons()` permet de créer la carte choroplète.
 La fonction `addProviderTiles()` permet de rajouter un fond cartographique parmis les couches fournies par `leaflet`.
 
 ```{r, fig.width=7, fig.height=4}
-leaflet(pop2015_dep_geo) %>%
+leaflet(pop_dep_geo) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
-  addPolygons(data = pop2015_dep_geo,
+  addPolygons(data = pop_dep_geo,
               fillColor = ~pal(densite),
               weight = 2,
               opacity = 1,
@@ -106,25 +104,25 @@ On cherche cette fois à représenter les populations 2015.
 - Création de la table en entrée :  
 
 ```{r}
-dep_centr <- st_centroid(pop2015_dep_geo)
+dep_centr <- st_centroid(pop_dep_geo)
 ```
 - Discrétisation de la variable d'intérêt :  
 
 ```{r}
-bornes <- quantile(dep_centr$pop2015 / 1000, na.rm = TRUE)
+bornes <- quantile(dep_centr$PMUN / 1000, na.rm = TRUE)
 ```
 
 - Création d'une palette de couleurs associée : 
 
 ```{r}
-pal <- colorBin("YlOrRd", domain = dep_centr$pop2015 / 1000, bins = bornes)
+pal <- colorBin("YlOrRd", domain = dep_centr$PMUN / 1000, bins = bornes)
 ```
 
 - Création d'un label ad-hoc à afficher en surbrillance au passage de la souris sur la carte : 
 
 ```{r}
-popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015", 
-                  dep_centr$Zone, dep_centr$pop2015 / 1000) %>% 
+popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en %s", 
+                  dep_centr$Zone, dep_centr$PMUN / 1000, mil_pop) %>% 
   lapply(htmltools::HTML)
 ```
 
@@ -134,8 +132,8 @@ popover <- sprintf("<strong>%s</strong><br/>%.1f milliers habitants en 2015",
 carte_rond_proportionnel <- leaflet(dep_centr) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
   addCircles(data = dep_centr,
-             fillColor = ~pal(pop2015 / 1000),
-             radius = ~2500*log(pop2015),
+             fillColor = ~pal(PMUN / 1000),
+             radius = ~2500*log(PMUN),
              weight = 2,
              opacity = 1,
              color = "gray",
@@ -152,8 +150,8 @@ carte_rond_proportionnel <- leaflet(dep_centr) %>%
                style = list("font-weight" = "normal", padding = "3px 8px"),
                textsize = "15px",
                direction = "auto")) %>% 
-  addLegend("bottomright", pal = pal, values = ~pop2015,
-            title = "Nombre d'habitants en 2015 - INSEE - RP",
+  addLegend("bottomright", pal = pal, values = ~PMUN,
+            title = paste0("Nombre d'habitants en ", mil_pop, " - INSEE - RP"),
             opacity = 1)
 
 carte_rond_proportionnel
@@ -179,26 +177,12 @@ Les choses que vous devez savoir pour créer un graphique interactif :
 * Au lieu d'utiliser `geom_sf()`, utilisez `geom_sf_interactive()`, au lieu d'utiliser `geom_sf_label()`, utilisez `geom_sf_label_interactive()`... Fournissez au moins une des esthétiques `tooltip`, `data_id` and `onclick` pour créer des éléments interactifs.  
 * Appelez la fonction girafe avec l'objet ggplot afin que le graphique soit traduit en un graphique web interactif.  
 
-
+Dans cet exemple, on réutilise les données issues de l'API de l'INSEE préparées au chapitre \@ref(creer-des-cartes-avec-ggplot2), au niveau du paragraphe \@ref(melodi).
 ```{r, include=FALSE}
-pop2015_preparee <- pop2015 %>% 
-  # mise à jour du COG et agrégation aux différentes échelles adm
-  cogifier(code_commune = DEPCOM, communes = TRUE, epci = TRUE, departements = TRUE, regions = TRUE, metro = FALSE) %>% 
-  # on filtre le jeu de données pour ne garder que les territoires de Normandie et toutes les régions
-  filtrer_cog(reg = "28", garder_supra = ">=") 
 
-# Aperçu du jeu de données
-glimpse(pop2015_preparee)
+# Aperçu du jeu de données 
+glimpse(pop_epci_normands_geo)
 
-# Préparation des fonds carto
-fonds_carto_normands <- filtrer_cog_geo(reg = "28")
-
-#jointure du fond carto EPCI aux données EPCI de Normandie
-pop2015_epci_normands_geo <- fonds_carto_normands$epci %>% 
-  left_join(pop2015_preparee, by = c("EPCI" = "CodeZone")) %>% 
-  # calcul des indicateurs a représenter
-  mutate(poids_pop_a_part = pop2015_a_part / pop2015_totale * 100,
-         densite_pop = as.numeric(pop2015 / AREA * 1000000))
 ```
 
 On reprend notre carte ggplot normande en ronds proportionnels : 
@@ -214,15 +198,15 @@ if(!verif_marianne_ok) {
                              system.file("resources/fonts/marianne/truetype/Marianne-Regular.ttf", 
                                          package = "gouvdown.fonts")) 
 }
-carte_ronds_prop_dyn <- ggplot(data = pop2015_epci_normands_geo) +
+carte_ronds_prop_dyn <- ggplot(data = pop_epci_normands_geo) +
     geom_sf_interactive(aes(tooltip = Zone)) +
-    geom_sf_interactive(data = st_point_on_surface(pop2015_epci_normands_geo), 
-                        mapping = aes(size = pop2015_totale, color = poids_pop_a_part, 
-                                      tooltip = paste0(Zone, "\n", format_fr_nb(pop2015_totale, dec = 0, big_mark = " "), " hab.\ndont ", 
+    geom_sf_interactive(data = st_point_on_surface(pop_epci_normands_geo), 
+                        mapping = aes(size = PTOT, color = poids_pop_a_part, 
+                                      tooltip = paste0(Zone, "\n", format_fr_nb(PTOT, dec = 0, big_mark = " "), " hab.\ndont ", 
                                                        format_fr_nb(poids_pop_a_part, dec = 1, big_mark = " "), " % comptés à part"))) +
     labs(
         title = "Population par EPCI en Normandie",
-        subtitle = "En 2015", x = "", y = "",
+        subtitle = paste0("En ", mil_pop), x = "", y = "",
         size = "Nombre d'habitants",
         color = "Poids population\ncomptée à part (%)",
         caption = "Source : INSEE - RP"
@@ -238,20 +222,23 @@ girafe(ggobj = carte_ronds_prop_dyn)
 ## Les cartes {mapfactory}
 
 {mapfactory} s'appuie sur {ggiraph} pour rendre ses cartes dynamiques. 
-Les arguments de la fonction `creer_carte()` en rapport avec l'interactivité sont 
+Les arguments de la fonction `creer_carte()` en rapport avec l'interactivité sont :  
 
 `interactive`	
 TRUE si on veut une carte html interactive.   
 
 `popover`	 
-Chaîné de texte désignant le contenu de l'info-bulles. Par défaut, L'étiquette qui s'affiche au survol contient "nom du territoire : valeur de l'indicateur et suffixe", obtenu a partir de ".data$nom_ter : .data$valeur".   
+Chaîne de texte désignant le contenu de l'info-bulles. Par défaut, L'étiquette qui s'affiche au survol contient `nom du territoire : valeur de l'indicateur et suffixe`, obtenu a partir de `".data$nom_ter : .data$valeur"`.  
+`valeur` est la colonne qui contient les valeurs de l'indicateur représenté sur la carte.
 
 `indicateur_popover`	
-Un nom d'indicateur présent dans data (sans quote) a mobiliser pour le popover. Utiliser `.data$valeur_popover` au niveau du parametre popover pour afficher les valeurs de cet indicateur, par exemple `.data$nom_ter : .data$valeur_popover unites`.
+On renseigne ici un autre nom d'indicateur présent dans le jeu de données (sans quote), pour le mobiliser dans le popover. Utiliser `.data$valeur_popover` au niveau du parametre `popover` pour afficher les valeurs de cet indicateur, par exemple `.data$nom_ter : .data$valeur_popover unites`.
 
 ```{r}
-creer_carte(data = cogifier(pop2015), code_region = "52", indicateur = pop2015, espace = " ",
-            interactive = TRUE, type_viz = "proportionnel", maillage = "Epci")
+creer_carte(data = pop_prepa_nat, code_region = "52", indicateur = PMUN, espace = " ",
+            interactive = TRUE, type_viz = "proportionnel", maillage = "Epci", 
+            titre = "Population par EPCI en Pays de la Loire", 
+            bas_de_page = paste0("Source RP - INSEE ", mil_pop))
 ```
 
 
