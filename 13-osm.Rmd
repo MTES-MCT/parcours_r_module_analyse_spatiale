@@ -186,17 +186,24 @@ On procède en 2 temps en raison de la limite d'interrogation :
 
 ```{r osrmtable2, eval=TRUE}
 # distances avec les 400 premiers restaurants
+
+# distances avec les 250 premiers restaurants
 mat1 <- osrmTable(src = mes_adresses,                  # dans le résultat, on aura une ligne par point src
-                  dst = restaurants_nantes[1:400, ],   # dans le résultat, on aura une colonne par point dst
+                  dst = restaurants_nantes[1:250, ],   # dans le résultat, on aura une colonne par point dst
                   osrm.profile = "foot")
+# distances avec les 250 restaurants suivants
+mat2 <- osrmTable(src = mes_adresses,                  # dans le résultat, on aura une ligne par point src
+                  dst = restaurants_nantes[251:500, ],   # dans le résultat, on aura une colonne par point dst
+                  osrm.profile = "foot")
+
 # distances avec les restaurants suivants
-mat2 <- osrmTable(src = mes_adresses,
-                 dst = restaurants_nantes[401:nrow(restaurants_nantes), ],
-                 osrm.profile = "foot")
+mat3 <- osrmTable(src = mes_adresses,
+                  dst = restaurants_nantes[501:nrow(restaurants_nantes), ],
+                  osrm.profile = "foot")
 # Assemblage
-mat <- list(durations = bind_cols(mat1$durations, mat2$durations, .name_repair = "unique_quiet"),
-            sources = bind_rows(mat1$sources, mat2$sources),
-            destinations = bind_rows(mat1$destinations, mat2$destinations))
+mat <- list(durations = bind_cols(mat1$durations, mat2$durations, mat3$durations, .name_repair = "unique_quiet"),
+            sources = bind_rows(mat1$sources, mat2$sources, mat3$sources),
+            destinations = bind_rows(mat1$destinations, mat2$destinations, mat3$destinations))
   
 mat1$durations[,1:5]
 ```
