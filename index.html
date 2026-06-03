@@ -5,19 +5,19 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Analyses spatiales avec R</title>
-  <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTE-MAT" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Analyses spatiales avec R" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
+  <meta property="og:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTE-MAT" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Analyses spatiales avec R" />
   
-  <meta name="twitter:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTES/MCTRCT" />
+  <meta name="twitter:description" content="Support de cours du module 7 « Analyse spatiale » de la valise pédagogique Parcours-r MTE-MAT" />
   
 
 <meta name="author" content="Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE" />
@@ -51,36 +51,38 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
 <script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<script src="libs/datatables-binding-0.34.0/datatables.js"></script>
 <link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
 <script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
-<script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
-<script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+<script src="libs/leaflet-binding-2.2.3/leaflet.js"></script>
+<script src="libs/leaflet-providers-3.0.0/leaflet-providers.js"></script>
+<script src="libs/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script>
 <script src="libs/HomeButton-0.0.1/home-button.js"></script>
 <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
-<link href="libs/departements_geo - NOM_DEP-CSS-0.0.1/departements_geo - NOM_DEP_home-button.css" rel="stylesheet" />
+<link href="libs/batiment_nantes_____head_1000_-CSS-0.0.1/batiment_nantes_____head_1000__home-button.css" rel="stylesheet" />
 <script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
 <link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
 <link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
-<link href="libs/regions - INSEE_REG-CSS-0.0.1/regions - INSEE_REG_home-button.css" rel="stylesheet" />
-<link href="libs/regions - NOM_REG-CSS-0.0.1/regions - NOM_REG_home-button.css" rel="stylesheet" />
+<link href="libs/pref_dep-CSS-0.0.1/pref_dep_home-button.css" rel="stylesheet" />
+<link href="libs/departements_geo___NOM_DEP-CSS-0.0.1/departements_geo___NOM_DEP_home-button.css" rel="stylesheet" />
+<link href="libs/regions___INSEE_REG-CSS-0.0.1/regions___INSEE_REG_home-button.css" rel="stylesheet" />
+<link href="libs/regions___NOM_REG-CSS-0.0.1/regions___NOM_REG_home-button.css" rel="stylesheet" />
 <link href="libs/departement_44-CSS-0.0.1/departement_44_home-button.css" rel="stylesheet" />
 <link href="libs/epci_d44-CSS-0.0.1/epci_d44_home-button.css" rel="stylesheet" />
-<link href="libs/Loire-Atlantiqueavecunbufferde5km-CSS-0.0.1/Loire-Atlantiqueavecunbufferde5km_home-button.css" rel="stylesheet" />
-<link href="libs/Loire-Atlantique-CSS-0.0.1/Loire-Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/Loire_Atlantiqueavecunbufferde5km-CSS-0.0.1/Loire_Atlantiqueavecunbufferde5km_home-button.css" rel="stylesheet" />
+<link href="libs/Loire_Atlantique-CSS-0.0.1/Loire_Atlantique_home-button.css" rel="stylesheet" />
 <link href="libs/departement_44_buffer-CSS-0.0.1/departement_44_buffer_home-button.css" rel="stylesheet" />
 <link href="libs/epci_d44_buffer-CSS-0.0.1/epci_d44_buffer_home-button.css" rel="stylesheet" />
 <link href="libs/sirene44_sel-CSS-0.0.1/sirene44_sel_home-button.css" rel="stylesheet" />
@@ -88,9 +90,9 @@
 <link href="libs/grille-CSS-0.0.1/grille_home-button.css" rel="stylesheet" />
 <link href="libs/grille_ajustee-CSS-0.0.1/grille_ajustee_home-button.css" rel="stylesheet" />
 <link href="libs/boul_44-CSS-0.0.1/boul_44_home-button.css" rel="stylesheet" />
-<link href="libs/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud-CSS-0.0.1/Loire-Atlantiqueavecdéplacementaffinede10kmverslenordet10kmverslesud_home-button.css" rel="stylesheet" />
-<link href="libs/EpcideLoire-Atlantique-CSS-0.0.1/EpcideLoire-Atlantique_home-button.css" rel="stylesheet" />
-<link href="libs/EpcideLoire-Atlantiqueavecsurfacediviséespardeux-CSS-0.0.1/EpcideLoire-Atlantiqueavecsurfacediviséespardeux_home-button.css" rel="stylesheet" />
+<link href="libs/Loire_Atlantiquetranslatee-CSS-0.0.1/Loire_Atlantiquetranslatee_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire_Atlantique-CSS-0.0.1/EpcideLoire_Atlantique_home-button.css" rel="stylesheet" />
+<link href="libs/EpcideLoire_Atlantiqueavecsurfacediviséespardeux-CSS-0.0.1/EpcideLoire_Atlantiqueavecsurfacediviséespardeux_home-button.css" rel="stylesheet" />
 <link href="libs/regions-CSS-0.0.1/regions_home-button.css" rel="stylesheet" />
 <link href="libs/regions_52-CSS-0.0.1/regions_52_home-button.css" rel="stylesheet" />
 <link href="libs/nantes-CSS-0.0.1/nantes_home-button.css" rel="stylesheet" />
@@ -99,14 +101,13 @@
 <link href="libs/nantes_proj_buffer-CSS-0.0.1/nantes_proj_buffer_home-button.css" rel="stylesheet" />
 <link href="libs/rennes-CSS-0.0.1/rennes_home-button.css" rel="stylesheet" />
 <link href="libs/mes_adresses_sf-CSS-0.0.1/mes_adresses_sf_home-button.css" rel="stylesheet" />
-<link href="libs/COGiter::regions_geo-CSS-0.0.1/COGiter::regions_geo_home-button.css" rel="stylesheet" />
-<script src="libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
-<script src="libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
-<script src="libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
-<script src="libs/flatbush-4.4.0/flatbush.min.js"></script>
-<link href="libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet" />
-<script src="libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
-<script src="libs/girafe-binding-0.8.13/girafe.js"></script>
+<link href="libs/regions_COGiter-CSS-0.0.1/regions_COGiter_home-button.css" rel="stylesheet" />
+<link href="libs/ggiraphjs-0.9.4/girafe.css" rel="stylesheet" />
+<script src="libs/ggiraphjs-0.9.4/girafe.js"></script>
+<script src="libs/girafe-binding-0.9.6/girafe.js"></script>
+<link href="libs/liberation-sans-0.5.1/css/liberation-sans.css" rel="stylesheet" />
+<link href="libs/liberation-serif-0.5.1/css/liberation-serif.css" rel="stylesheet" />
+<link href="libs/liberation-mono-0.5.1/css/liberation-mono.css" rel="stylesheet" />
 <link href="libs/res-CSS-0.0.1/res_home-button.css" rel="stylesheet" />
 <link href="libs/mes_adresses-CSS-0.0.1/mes_adresses_home-button.css" rel="stylesheet" />
 <link href="libs/trajet-CSS-0.0.1/trajet_home-button.css" rel="stylesheet" />
@@ -115,8 +116,9 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -126,7 +128,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -197,42 +199,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <ul class="summary">
 <li><p style="text-align:center;"><img src="https://mtes-mct.github.io/parcours-r/assets/images/logo_marianne_fond_blanc.png" style="width:100px;"/></p></li>
-<li><a href="./index.html">Les données spatiales avec R</a></li>
+<li><a href="./index.html">Parours-R M7 : Les données spatiales avec R</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#le-parcours-de-formation"><i class="fa fa-check"></i>Le parcours de formation</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#le-groupe-de-r%C3%A9f%C3%A9rents-r-du-p%C3%B4le-minist%C3%A9riel"><i class="fa fa-check"></i>Le groupe de référents R du pôle ministériel</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#le-groupe-de-r%C3%A9f%C3%A9rents-r-du-p%C3%B4le-minist%C3%A9riel"><i class="fa fa-check"></i>Le groupe de référents R du pôle ministériel</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#objectifs-de-ce-module"><i class="fa fa-check"></i>Objectifs de ce module</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i><b>1</b> Bien commencer</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="#cr%C3%A9er-un-projet-sous-rstudio-pour-vous-permettre-de-recenser-vos-travaux."><i class="fa fa-check"></i><b>1.1</b> Créer un projet sous Rstudio pour vous permettre de recenser vos travaux.</a></li>
+<li class="chapter" data-level="1.1" data-path="get-started.html"><a href="get-started.html#cr%C3%A9er-un-projet-sous-rstudio-pour-vous-permettre-de-recenser-vos-travaux."><i class="fa fa-check"></i><b>1.1</b> Créer un projet sous Rstudio pour vous permettre de recenser vos travaux.</a></li>
 <li class="chapter" data-level="1.2" data-path="get-started.html"><a href="get-started.html#utilisation-du-package-savoirfr"><i class="fa fa-check"></i><b>1.2</b> Utilisation du package <code>{savoirfR}</code></a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="#cr%C3%A9er-votre-arborescence-de-projet"><i class="fa fa-check"></i><b>1.3</b> Créer votre arborescence de projet</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="#activer-les-packages-n%C3%A9cessaires"><i class="fa fa-check"></i><b>1.4</b> Activer les packages nécessaires</a></li>
+<li class="chapter" data-level="1.3" data-path="get-started.html"><a href="get-started.html#cr%C3%A9er-votre-arborescence-de-projet"><i class="fa fa-check"></i><b>1.3</b> Créer votre arborescence de projet</a></li>
+<li class="chapter" data-level="1.4" data-path="get-started.html"><a href="get-started.html#activer-les-packages-n%C3%A9cessaires"><i class="fa fa-check"></i><b>1.4</b> Activer les packages nécessaires</a></li>
 <li class="chapter" data-level="1.5" data-path="get-started.html"><a href="get-started.html#bien-structurer-ses-projets-data"><i class="fa fa-check"></i><b>1.5</b> Bien structurer ses projets data</a></li>
 </ul></li>
 <li class="part"><span><b>I Introduction aux données spatiales</b></span></li>
 <li class="chapter" data-level="2" data-path="modelisation.html"><a href="modelisation.html"><i class="fa fa-check"></i><b>2</b> La modélisation des données spatiales</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="index.html"><a href="#les-donn%C3%A9es-vecteur"><i class="fa fa-check"></i><b>2.1</b> Les données vecteur</a></li>
-<li class="chapter" data-level="2.2" data-path="index.html"><a href="#les-donn%C3%A9es-raster"><i class="fa fa-check"></i><b>2.2</b> Les données raster</a></li>
-<li class="chapter" data-level="2.3" data-path="index.html"><a href="#la-structuration-des-donn%C3%A9es-g%C3%A9ographiques-avec-r"><i class="fa fa-check"></i><b>2.3</b> La structuration des données géographiques avec R</a>
+<li class="chapter" data-level="2.1" data-path="modelisation.html"><a href="modelisation.html#les-donn%C3%A9es-vecteur"><i class="fa fa-check"></i><b>2.1</b> Les données vecteur</a></li>
+<li class="chapter" data-level="2.2" data-path="modelisation.html"><a href="modelisation.html#les-donn%C3%A9es-raster"><i class="fa fa-check"></i><b>2.2</b> Les données raster</a></li>
+<li class="chapter" data-level="2.3" data-path="modelisation.html"><a href="modelisation.html#la-structuration-des-donn%C3%A9es-g%C3%A9ographiques-avec-r"><i class="fa fa-check"></i><b>2.3</b> La structuration des données géographiques avec R</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="index.html"><a href="#sf-pour-les-donn%C3%A9es-vecteur"><i class="fa fa-check"></i><b>2.3.1</b> <code>{sf}</code> pour les données vecteur</a></li>
-<li class="chapter" data-level="2.3.2" data-path="index.html"><a href="#terra-raster-et-stars-pour-les-donn%C3%A9es-raster"><i class="fa fa-check"></i><b>2.3.2</b> {terra}, {raster} et {stars} pour les données raster</a></li>
+<li class="chapter" data-level="2.3.1" data-path="modelisation.html"><a href="modelisation.html#sf-pour-les-donn%C3%A9es-vecteur"><i class="fa fa-check"></i><b>2.3.1</b> <code>{sf}</code> pour les données vecteur</a></li>
+<li class="chapter" data-level="2.3.2" data-path="modelisation.html"><a href="modelisation.html#terra-raster-et-stars-pour-les-donn%C3%A9es-raster"><i class="fa fa-check"></i><b>2.3.2</b> {terra}, {raster} et {stars} pour les données raster</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="modelisation.html"><a href="modelisation.html#format-des-objets-spatiaux-sf"><i class="fa fa-check"></i><b>2.4</b> Format des objets spatiaux <code>sf</code></a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="crs.html"><a href="crs.html"><i class="fa fa-check"></i><b>3</b> Les Systèmes de Coordonnées de Référence</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="index.html"><a href="#le-syst%C3%A8me-g%C3%A9od%C3%A9sique-ou-datum"><i class="fa fa-check"></i><b>3.1</b> Le système géodésique ou datum</a></li>
-<li class="chapter" data-level="3.2" data-path="index.html"><a href="#les-coordonn%C3%A9es"><i class="fa fa-check"></i><b>3.2</b> Les coordonnées</a>
+<li class="chapter" data-level="3.1" data-path="crs.html"><a href="crs.html#le-syst%C3%A8me-g%C3%A9od%C3%A9sique-ou-datum"><i class="fa fa-check"></i><b>3.1</b> Le système géodésique ou datum</a></li>
+<li class="chapter" data-level="3.2" data-path="crs.html"><a href="crs.html#les-coordonn%C3%A9es"><i class="fa fa-check"></i><b>3.2</b> Les coordonnées</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="index.html"><a href="#coordonn%C3%A9es-g%C3%A9ographiques"><i class="fa fa-check"></i><b>3.2.1</b> Coordonnées géographiques</a></li>
-<li class="chapter" data-level="3.2.2" data-path="index.html"><a href="#coordonn%C3%A9es-en-projection"><i class="fa fa-check"></i><b>3.2.2</b> Coordonnées en projection</a></li>
+<li class="chapter" data-level="3.2.1" data-path="crs.html"><a href="crs.html#coordonn%C3%A9es-g%C3%A9ographiques"><i class="fa fa-check"></i><b>3.2.1</b> Coordonnées géographiques</a></li>
+<li class="chapter" data-level="3.2.2" data-path="crs.html"><a href="crs.html#coordonn%C3%A9es-en-projection"><i class="fa fa-check"></i><b>3.2.2</b> Coordonnées en projection</a></li>
 <li class="chapter" data-level="3.2.3" data-path="crs.html"><a href="crs.html#exemple-de-projections"><i class="fa fa-check"></i><b>3.2.3</b> Exemple de projections</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="crs.html"><a href="crs.html#code-epsg"><i class="fa fa-check"></i><b>3.3</b> Code EPSG</a></li>
@@ -242,22 +244,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-fichiers-plats"><i class="fa fa-check"></i><b>4.1</b> Lire des fichiers plats</a></li>
 <li class="chapter" data-level="4.2" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#ecrire-des-fichiers-plats"><i class="fa fa-check"></i><b>4.2</b> Ecrire des fichiers plats</a></li>
-<li class="chapter" data-level="4.3" data-path="index.html"><a href="#lire-des-donn%C3%A9es-spatiales-du-web"><i class="fa fa-check"></i><b>4.3</b> Lire des données spatiales du web</a>
+<li class="chapter" data-level="4.3" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-donn%C3%A9es-spatiales-du-web"><i class="fa fa-check"></i><b>4.3</b> Lire des données spatiales du web</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="index.html"><a href="#lire-des-donn%C3%A9es-geojson"><i class="fa fa-check"></i><b>4.3.1</b> Lire des données geojson</a></li>
-<li class="chapter" data-level="4.3.2" data-path="index.html"><a href="#exemple-3-geojson-compress%C3%A9"><i class="fa fa-check"></i><b>4.3.2</b> Exemple 3 (geojson compressé)</a></li>
-<li class="chapter" data-level="4.3.3" data-path="index.html"><a href="#lire-des-donn%C3%A9es-wfs"><i class="fa fa-check"></i><b>4.3.3</b> Lire des données WFS</a></li>
+<li class="chapter" data-level="4.3.1" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-donn%C3%A9es-geojson"><i class="fa fa-check"></i><b>4.3.1</b> Lire des données geojson</a></li>
+<li class="chapter" data-level="4.3.2" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire-des-donn%C3%A9es-wfs"><i class="fa fa-check"></i><b>4.3.2</b> Lire des données WFS</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="index.html"><a href="#lire%C3%A9crire-des-donn%C3%A9es-spatiales-sur-postgis"><i class="fa fa-check"></i><b>4.4</b> Lire/écrire des données spatiales sur PostGIS</a></li>
+<li class="chapter" data-level="4.4" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#lire%C3%A9crire-des-donn%C3%A9es-spatiales-sur-postgis"><i class="fa fa-check"></i><b>4.4</b> Lire/écrire des données spatiales sur PostGIS</a></li>
 <li class="chapter" data-level="4.5" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#convertir-un-dataframe"><i class="fa fa-check"></i><b>4.5</b> Convertir un dataframe</a></li>
-<li class="chapter" data-level="4.6" data-path="index.html"><a href="#donn%C3%A9es-contenues-dans-des-packages"><i class="fa fa-check"></i><b>4.6</b> Données contenues dans des packages</a></li>
+<li class="chapter" data-level="4.6" data-path="lire-des-donnees-spatiales.html"><a href="lire-des-donnees-spatiales.html#donn%C3%A9es-administratives-contenues-dans-des-packages"><i class="fa fa-check"></i><b>4.6</b> Données administratives contenues dans des packages</a></li>
 </ul></li>
 <li class="part"><span><b>III Manipuler des données spatiales</b></span></li>
 <li class="chapter" data-level="5" data-path="operation-sur-donnees-attributaires.html"><a href="operation-sur-donnees-attributaires.html"><i class="fa fa-check"></i><b>5</b> Les opérations sur données attributaires</a></li>
 <li class="chapter" data-level="6" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html"><i class="fa fa-check"></i><b>6</b> Les opérations spatiales sur les données</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#filtrer"><i class="fa fa-check"></i><b>6.1</b> Filtrer</a></li>
-<li class="chapter" data-level="6.2" data-path="index.html"><a href="#pr%C3%A9dicats-spatiaux"><i class="fa fa-check"></i><b>6.2</b> Prédicats spatiaux</a>
+<li class="chapter" data-level="6.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#pr%C3%A9dicats-spatiaux"><i class="fa fa-check"></i><b>6.2</b> Prédicats spatiaux</a>
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#exercice-1---manipuler-des-objets-sf"><i class="fa fa-check"></i><b>6.2.1</b> Exercice 1 - manipuler des objets sf</a></li>
 </ul></li>
@@ -265,7 +266,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#jointure-de-points-avec-des-polygones"><i class="fa fa-check"></i><b>6.3.1</b> Jointure de points avec des polygones</a></li>
 <li class="chapter" data-level="6.3.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#jointure-de-polygones-avec-des-polygones"><i class="fa fa-check"></i><b>6.3.2</b> Jointure de polygones avec des polygones</a></li>
-<li class="chapter" data-level="6.3.3" data-path="index.html"><a href="#exercice-2-exploitation-des-donn%C3%A9es-dvf-en-api"><i class="fa fa-check"></i><b>6.3.3</b> Exercice 2 : exploitation des données DVF en API</a></li>
+<li class="chapter" data-level="6.3.3" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#exercice-2-exploitation-des-donn%C3%A9es-dvf-en-api"><i class="fa fa-check"></i><b>6.3.3</b> Exercice 2 : exploitation des données DVF en API</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#les-mesures"><i class="fa fa-check"></i><b>6.4</b> Les mesures</a>
 <ul>
@@ -275,22 +276,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#carroyage"><i class="fa fa-check"></i><b>6.5</b> Carroyage</a>
 <ul>
-<li class="chapter" data-level="6.5.1" data-path="index.html"><a href="#cr%C3%A9er-une-grille-r%C3%A9guli%C3%A8re"><i class="fa fa-check"></i><b>6.5.1</b> Créer une grille régulière</a></li>
+<li class="chapter" data-level="6.5.1" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#cr%C3%A9er-une-grille-r%C3%A9guli%C3%A8re"><i class="fa fa-check"></i><b>6.5.1</b> Créer une grille régulière</a></li>
 <li class="chapter" data-level="6.5.2" data-path="les-operations-sur-donnees-spatiales.html"><a href="les-operations-sur-donnees-spatiales.html#compter-des-points-dans-un-polygone"><i class="fa fa-check"></i><b>6.5.2</b> Compter des points dans un polygone</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="operations-geometriques.html"><a href="operations-geometriques.html"><i class="fa fa-check"></i><b>7</b> Les opérations géométriques</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="index.html"><a href="#op%C3%A9rations-unaires"><i class="fa fa-check"></i><b>7.1</b> Opérations unaires</a>
+<li class="chapter" data-level="7.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#op%C3%A9rations-unaires"><i class="fa fa-check"></i><b>7.1</b> Opérations unaires</a>
 <ul>
 <li class="chapter" data-level="7.1.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#simplification"><i class="fa fa-check"></i><b>7.1.1</b> Simplification</a></li>
-<li class="chapter" data-level="7.1.2" data-path="index.html"><a href="#centro%C3%AFde"><i class="fa fa-check"></i><b>7.1.2</b> Centroïde</a></li>
+<li class="chapter" data-level="7.1.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#centro%C3%AFde"><i class="fa fa-check"></i><b>7.1.2</b> Centroïde</a></li>
 <li class="chapter" data-level="7.1.3" data-path="operations-geometriques.html"><a href="operations-geometriques.html#buffer"><i class="fa fa-check"></i><b>7.1.3</b> Buffer</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="index.html"><a href="#op%C3%A9rations-binaires"><i class="fa fa-check"></i><b>7.2</b> Opérations binaires</a>
+<li class="chapter" data-level="7.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#op%C3%A9rations-binaires"><i class="fa fa-check"></i><b>7.2</b> Opérations binaires</a>
 <ul>
 <li class="chapter" data-level="7.2.1" data-path="operations-geometriques.html"><a href="operations-geometriques.html#transformation-affine"><i class="fa fa-check"></i><b>7.2.1</b> Transformation affine</a></li>
-<li class="chapter" data-level="7.2.2" data-path="index.html"><a href="#d%C3%A9coupage"><i class="fa fa-check"></i><b>7.2.2</b> Découpage</a></li>
+<li class="chapter" data-level="7.2.2" data-path="operations-geometriques.html"><a href="operations-geometriques.html#d%C3%A9coupage"><i class="fa fa-check"></i><b>7.2.2</b> Découpage</a></li>
 <li class="chapter" data-level="7.2.3" data-path="operations-geometriques.html"><a href="operations-geometriques.html#union"><i class="fa fa-check"></i><b>7.2.3</b> Union</a></li>
 </ul></li>
 </ul></li>
@@ -307,7 +308,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9" data-path="geocodage.html"><a href="geocodage.html"><i class="fa fa-check"></i><b>9</b> Géocodage</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="index.html"><a href="#g%C3%A9olocalisation-%C3%A0-ladresse"><i class="fa fa-check"></i><b>9.1</b> Géolocalisation à l’adresse</a></li>
+<li class="chapter" data-level="9.1" data-path="geocodage.html"><a href="geocodage.html#g%C3%A9olocalisation-%C3%A0-ladresse"><i class="fa fa-check"></i><b>9.1</b> Géolocalisation à l’adresse</a></li>
 <li class="chapter" data-level="9.2" data-path="geocodage.html"><a href="geocodage.html#digitalisation"><i class="fa fa-check"></i><b>9.2</b> Digitalisation</a></li>
 </ul></li>
 <li class="part"><span><b>IV Créer des cartes sous R</b></span></li>
@@ -322,16 +323,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10.4" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#faire-des-cartes-avec-ggplot2"><i class="fa fa-check"></i><b>10.4</b> Faire des cartes avec {ggplot2}</a>
 <ul>
-<li class="chapter" data-level="10.4.1" data-path="index.html"><a href="#pr%C3%A9paration-des-donn%C3%A9es"><i class="fa fa-check"></i><b>10.4.1</b> Préparation des données</a></li>
-<li class="chapter" data-level="10.4.2" data-path="index.html"><a href="#les-cartes-choropl%C3%A8the"><i class="fa fa-check"></i><b>10.4.2</b> Les cartes choroplèthe</a></li>
-<li class="chapter" data-level="10.4.3" data-path="index.html"><a href="#les-cartes-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>10.4.3</b> Les cartes à ronds proportionnels</a></li>
+<li class="chapter" data-level="10.4.1" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#melodi"><i class="fa fa-check"></i><b>10.4.1</b> Préparation des données</a></li>
+<li class="chapter" data-level="10.4.2" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-cartes-choropl%C3%A8the"><i class="fa fa-check"></i><b>10.4.2</b> Les cartes choroplèthe</a></li>
+<li class="chapter" data-level="10.4.3" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-cartes-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>10.4.3</b> Les cartes à ronds proportionnels</a></li>
 <li class="chapter" data-level="10.4.4" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#lhabillage-simple"><i class="fa fa-check"></i><b>10.4.4</b> L’habillage simple</a></li>
-<li class="chapter" data-level="10.4.5" data-path="index.html"><a href="#les-th%C3%A8mes"><i class="fa fa-check"></i><b>10.4.5</b> Les thèmes</a></li>
+<li class="chapter" data-level="10.4.5" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-th%C3%A8mes"><i class="fa fa-check"></i><b>10.4.5</b> Les thèmes</a></li>
 <li class="chapter" data-level="10.4.6" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-scales"><i class="fa fa-check"></i><b>10.4.6</b> Les scales</a></li>
-<li class="chapter" data-level="10.4.7" data-path="index.html"><a href="#exercice-3---carte-des-donn%C3%A9es-dvf-par-quartie-de-nantes"><i class="fa fa-check"></i><b>10.4.7</b> Exercice 3 - Carte des données dvf par quartie de Nantes</a></li>
+<li class="chapter" data-level="10.4.7" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exercice-3---carte-des-donn%C3%A9es-dvf-par-quartier-de-nantes"><i class="fa fa-check"></i><b>10.4.7</b> Exercice 3 - Carte des données dvf par quartier de Nantes</a></li>
 <li class="chapter" data-level="10.4.8" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#les-facettes"><i class="fa fa-check"></i><b>10.4.8</b> Les facettes</a></li>
-<li class="chapter" data-level="10.4.9" data-path="index.html"><a href="#ajouter-une-barre-d%C3%A9chelle-et-la-fl%C3%A8che-du-nord"><i class="fa fa-check"></i><b>10.4.9</b> Ajouter une barre d’échelle et la flèche du nord</a></li>
-<li class="chapter" data-level="10.4.10" data-path="index.html"><a href="#mettre-plusieurs-cartes-c%C3%B4te-%C3%A0-c%C3%B4te"><i class="fa fa-check"></i><b>10.4.10</b> Mettre plusieurs cartes côte à côte</a></li>
+<li class="chapter" data-level="10.4.9" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#ajouter-une-barre-d%C3%A9chelle-et-la-fl%C3%A8che-du-nord"><i class="fa fa-check"></i><b>10.4.9</b> Ajouter une barre d’échelle et la flèche du nord</a></li>
+<li class="chapter" data-level="10.4.10" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#mettre-plusieurs-cartes-c%C3%B4te-%C3%A0-c%C3%B4te"><i class="fa fa-check"></i><b>10.4.10</b> Mettre plusieurs cartes côte à côte</a></li>
 <li class="chapter" data-level="10.4.11" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exporter-sa-carte"><i class="fa fa-check"></i><b>10.4.11</b> Exporter sa carte</a></li>
 <li class="chapter" data-level="10.4.12" data-path="creer-des-cartes-avec-ggplot2.html"><a href="creer-des-cartes-avec-ggplot2.html#exercice-4-assemblage-de-cartes-sur-dvf"><i class="fa fa-check"></i><b>10.4.12</b> Exercice 4 : Assemblage de cartes sur dvf</a></li>
 </ul></li>
@@ -347,8 +348,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="12.1" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-leaflet"><i class="fa fa-check"></i><b>12.1</b> Les cartes Leaflet</a>
 <ul>
-<li class="chapter" data-level="12.1.1" data-path="index.html"><a href="#carte-choropl%C3%A8te"><i class="fa fa-check"></i><b>12.1.1</b> Carte choroplète</a></li>
-<li class="chapter" data-level="12.1.2" data-path="index.html"><a href="#carte-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>12.1.2</b> Carte à ronds proportionnels</a></li>
+<li class="chapter" data-level="12.1.1" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#carte-choropl%C3%A8te"><i class="fa fa-check"></i><b>12.1.1</b> Carte choroplète</a></li>
+<li class="chapter" data-level="12.1.2" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#carte-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>12.1.2</b> Carte à ronds proportionnels</a></li>
 </ul></li>
 <li class="chapter" data-level="12.2" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-ggplot"><i class="fa fa-check"></i><b>12.2</b> Les cartes ggplot</a></li>
 <li class="chapter" data-level="12.3" data-path="creer-des-cartes-pour-le-web.html"><a href="creer-des-cartes-pour-le-web.html#les-cartes-mapfactory"><i class="fa fa-check"></i><b>12.3</b> Les cartes {mapfactory}</a></li>
@@ -359,14 +360,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="13.1" data-path="osm.html"><a href="osm.html#afficher-une-carte-interactive"><i class="fa fa-check"></i><b>13.1</b> Afficher une carte interactive</a></li>
 <li class="chapter" data-level="13.2" data-path="osm.html"><a href="osm.html#importer-les-fonds-de-carte-pour-ggplot"><i class="fa fa-check"></i><b>13.2</b> Importer les fonds de carte pour ggplot</a></li>
-<li class="chapter" data-level="13.3" data-path="index.html"><a href="#importer-des-donn%C3%A9es-osm"><i class="fa fa-check"></i><b>13.3</b> Importer des données OSM</a>
+<li class="chapter" data-level="13.3" data-path="osm.html"><a href="osm.html#importer-des-donn%C3%A9es-osm"><i class="fa fa-check"></i><b>13.3</b> Importer des données OSM</a>
 <ul>
 <li class="chapter" data-level="13.3.1" data-path="osm.html"><a href="osm.html#osmdata"><i class="fa fa-check"></i><b>13.3.1</b> <code>{osmdata}</code></a></li>
 <li class="chapter" data-level="13.3.2" data-path="osm.html"><a href="osm.html#osmextract"><i class="fa fa-check"></i><b>13.3.2</b> <code>osmextract</code></a></li>
 </ul></li>
-<li class="chapter" data-level="13.4" data-path="index.html"><a href="#calculer-des-itin%C3%A9raires"><i class="fa fa-check"></i><b>13.4</b> Calculer des itinéraires</a>
+<li class="chapter" data-level="13.4" data-path="osm.html"><a href="osm.html#calculer-des-itin%C3%A9raires"><i class="fa fa-check"></i><b>13.4</b> Calculer des itinéraires</a>
 <ul>
-<li class="chapter" data-level="13.4.1" data-path="index.html"><a href="#calcul-dun-itin%C3%A9raire"><i class="fa fa-check"></i><b>13.4.1</b> Calcul d’un itinéraire</a></li>
+<li class="chapter" data-level="13.4.1" data-path="osm.html"><a href="osm.html#calcul-dun-itin%C3%A9raire"><i class="fa fa-check"></i><b>13.4.1</b> Calcul d’un itinéraire</a></li>
 <li class="chapter" data-level="13.4.2" data-path="osm.html"><a href="osm.html#calcul-dune-matrice-de-temps"><i class="fa fa-check"></i><b>13.4.2</b> Calcul d’une matrice de temps</a></li>
 </ul></li>
 </ul></li>
@@ -381,12 +382,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html"><i class="fa fa-check"></i><b>15</b> Annexe : créer des cartes avec tmap</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#fonction-tm_shape"><i class="fa fa-check"></i><b>15.1</b> Fonction <code>tm_shape()</code></a></li>
-<li class="chapter" data-level="15.2" data-path="index.html"><a href="#exemple-de-carte-choropl%C3%A8the"><i class="fa fa-check"></i><b>15.2</b> Exemple de carte choroplèthe</a>
+<li class="chapter" data-level="15.2" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemple-de-carte-choropl%C3%A8the"><i class="fa fa-check"></i><b>15.2</b> Exemple de carte choroplèthe</a>
 <ul>
-<li class="chapter" data-level="15.2.1" data-path="index.html"><a href="#pr%C3%A9paration-des-donn%C3%A9es-1"><i class="fa fa-check"></i><b>15.2.1</b> Préparation des données</a></li>
+<li class="chapter" data-level="15.2.1" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#pr%C3%A9paration-des-donn%C3%A9es"><i class="fa fa-check"></i><b>15.2.1</b> Préparation des données</a></li>
 <li class="chapter" data-level="15.2.2" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#cartographie"><i class="fa fa-check"></i><b>15.2.2</b> Cartographie</a></li>
 </ul></li>
-<li class="chapter" data-level="15.3" data-path="index.html"><a href="#exemple-de-carte-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>15.3</b> Exemple de carte à ronds proportionnels</a></li>
+<li class="chapter" data-level="15.3" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemple-de-carte-%C3%A0-ronds-proportionnels"><i class="fa fa-check"></i><b>15.3</b> Exemple de carte à ronds proportionnels</a></li>
 <li class="chapter" data-level="15.4" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#discretisation"><i class="fa fa-check"></i><b>15.4</b> Discretisation</a></li>
 <li class="chapter" data-level="15.5" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#exemples-de-cartes-avec-facet"><i class="fa fa-check"></i><b>15.5</b> Exemples de cartes avec facet</a></li>
 <li class="chapter" data-level="15.6" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#gestion-des-palettes"><i class="fa fa-check"></i><b>15.6</b> Gestion des palettes</a></li>
@@ -395,16 +396,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.9" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#tmap-pour-le-web"><i class="fa fa-check"></i><b>15.9</b> tmap pour le web</a></li>
 <li class="chapter" data-level="15.10" data-path="creer-des-cartes-avec-tmap.html"><a href="creer-des-cartes-avec-tmap.html#export-dune-carte"><i class="fa fa-check"></i><b>15.10</b> Export d’une carte</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="index.html"><a href="#exercices-corrig%C3%A9s"><i class="fa fa-check"></i><b>16</b> Exercices corrigés</a>
+<li class="chapter" data-level="16" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html"><i class="fa fa-check"></i><b>16</b> Exercices corrigés</a>
 <ul>
-<li class="chapter" data-level="16.1" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html"><i class="fa fa-check"></i><b>16.1</b> Exercice 1 - manipuler des objets sf</a></li>
-<li class="chapter" data-level="16.2" data-path="index.html"><a href="#exercice-2-exploitation-des-donn%C3%A9es-dvf-en-api-1"><i class="fa fa-check"></i><b>16.2</b> Exercice 2 : exploitation des données DVF en API</a></li>
-<li class="chapter" data-level="16.3" data-path="index.html"><a href="#exercice-3-ggplot-chap-10-visualisation-des-donn%C3%A9es-dvf-en-api"><i class="fa fa-check"></i><b>16.3</b> Exercice 3 ggplot chap 10 : Visualisation des données DVF en API</a></li>
+<li class="chapter" data-level="16.1" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-1---manipuler-des-objets-sf-1"><i class="fa fa-check"></i><b>16.1</b> Exercice 1 - manipuler des objets sf</a></li>
+<li class="chapter" data-level="16.2" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-2-exploitation-des-donn%C3%A9es-dvf-en-api-1"><i class="fa fa-check"></i><b>16.2</b> Exercice 2 : exploitation des données DVF en API</a></li>
+<li class="chapter" data-level="16.3" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-3-ggplot-chap-10-visualisation-des-donn%C3%A9es-dvf-en-api"><i class="fa fa-check"></i><b>16.3</b> Exercice 3 ggplot chap 10 : Visualisation des données DVF en API</a></li>
 <li class="chapter" data-level="16.4" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-4-assemblage-de-cartes-sur-dvf-1"><i class="fa fa-check"></i><b>16.4</b> Exercice 4 : Assemblage de cartes sur dvf</a></li>
 <li class="chapter" data-level="16.5" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-5-cartes-pour-le-web"><i class="fa fa-check"></i><b>16.5</b> Exercice 5 : cartes pour le web</a></li>
 <li class="chapter" data-level="16.6" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#exercice-6-exercices-bonus-odd"><i class="fa fa-check"></i><b>16.6</b> Exercice 6 : exercices bonus (ODD)</a>
 <ul>
-<li class="chapter" data-level="16.6.1" data-path="index.html"><a href="#chargement-des-donn%C3%A9es-et-datapr%C3%A9paration"><i class="fa fa-check"></i><b>16.6.1</b> Chargement des données et datapréparation</a></li>
+<li class="chapter" data-level="16.6.1" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#chargement-des-donn%C3%A9es-et-datapr%C3%A9paration"><i class="fa fa-check"></i><b>16.6.1</b> Chargement des données et datapréparation</a></li>
 <li class="chapter" data-level="16.6.2" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#datavisualisation"><i class="fa fa-check"></i><b>16.6.2</b> Datavisualisation</a></li>
 <li class="chapter" data-level="16.6.3" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#carte-monde"><i class="fa fa-check"></i><b>16.6.3</b> Carte monde</a></li>
 <li class="chapter" data-level="16.6.4" data-path="exercices-corrigés.html"><a href="exercices-corrigés.html#zoom-sur-les-deux-continents"><i class="fa fa-check"></i><b>16.6.4</b> Zoom sur les deux continents</a></li>
@@ -414,6 +415,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li><a href="https://mtes-mct.github.io/parcours-r/">Liste des formations R</a></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+<li><a href="https://github.com/MTES-MCT/parcours_r_module_analyse_spatiale" target="blank">Code source du support</a></li>
 
 </ul>
 
@@ -435,7 +437,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Analyses spatiales avec R</h1>
 <p class="author"><em>Maël THEULIERE, Jean-Daniel LOMENEDE, Juliette ENGELAERE-LEFEBVRE</em></p>
-<p class="date"><em>25-06-2025</em></p>
+<p class="date"><em>03-06-2026</em></p>
 </div>
 <div id="introduction" class="section level1 unnumbered hasAnchor">
 <h1>Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -468,12 +470,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </div>
 <div id="le-groupe-de-référents-r-du-pôle-ministériel" class="section level2 unnumbered hasAnchor">
-<h2>Le groupe de référents R du pôle ministériel<a href="#le-groupe-de-r%C3%A9f%C3%A9rents-r-du-p%C3%B4le-minist%C3%A9riel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Le groupe de référents R du pôle ministériel<a href="index.html#le-groupe-de-r%C3%A9f%C3%A9rents-r-du-p%C3%B4le-minist%C3%A9riel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
 <li>Un groupe pour structurer une offre de formations sur R</li>
 <li>Un réseau d’entraide</li>
 </ul>
-<p><img src="support_m7_files/figure-html/part_communes_mapg2r-1.png" width="672" /></p>
+<p><img src="support_m7_files/figure-html/part_communes_mapg2r-1.png" alt="" width="672" /></p>
 </div>
 <div id="objectifs-de-ce-module" class="section level2 unnumbered hasAnchor">
 <h2>Objectifs de ce module<a href="index.html#objectifs-de-ce-module" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -550,20 +552,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

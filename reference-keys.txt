@@ -31,7 +31,7 @@ exemple-3-geojson-compressé
 lire-des-données-wfs
 lireécrire-des-données-spatiales-sur-postgis
 convertir-un-dataframe
-données-contenues-dans-des-packages
+données-administratives-contenues-dans-des-packages
 operation-sur-donnees-attributaires
 les-operations-sur-donnees-spatiales
 filtrer
@@ -76,7 +76,7 @@ quelques-rappels-sur-ggplot2-issus-du-module-5-sur-la-datavisualisation
 ggplot2-les-concepts-clefs
 ggplot2-pour-les-cartes
 faire-des-cartes-avec-ggplot2
-préparation-des-données
+melodi
 les-cartes-choroplèthe
 les-cartes-à-ronds-proportionnels
 lhabillage-simple
@@ -86,7 +86,7 @@ annotation
 les-thèmes
 les-scales
 formatage-spécifique
-exercice-3---carte-des-données-dvf-par-quartie-de-nantes
+exercice-3---carte-des-données-dvf-par-quartier-de-nantes
 les-facettes
 ajouter-une-barre-déchelle-et-la-flèche-du-nord
 mettre-plusieurs-cartes-côte-à-côte
@@ -118,7 +118,7 @@ a-propos
 creer-des-cartes-avec-tmap
 fonction-tm_shape
 exemple-de-carte-choroplèthe
-préparation-des-données-1
+préparation-des-données
 cartographie
 exemple-de-carte-à-ronds-proportionnels
 discretisation
